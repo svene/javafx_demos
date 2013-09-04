@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -16,6 +17,7 @@ import org.svenehrke.javafxdemos.common.Styles;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -72,7 +74,21 @@ public class EditAndValidateTableViewDemo extends Application {
 
 		ToUpperCaseStringConverter converter = converter();
 		Function<String, ValidationResult> validator = firstNameValidator(converter);
-		firstNameColumn.setCellFactory(it -> new ValidatingTextFieldTableCell<>(converter, validator));
+
+		firstNameColumn.setCellFactory(it -> new CustomizableUpdateItemTextFieldTableCell<>(converter, new BiConsumer<TextFieldTableCell<String2Bean, String>, String>() {
+			@Override
+			public void accept(final TextFieldTableCell<String2Bean, String> cell, final String item) {
+				boolean isValid = validator.apply(item).isValid();
+				if (item != null) {
+					int idx = cell.getIndex();
+					cell.pseudoClassStateChanged(Styles.CSS_PC_INVALID, !isValid);
+				}
+				else {
+					cell.pseudoClassStateChanged(Styles.CSS_PC_INVALID, isValid);
+				}
+			}
+		}));
+
 		firstNameColumn.setEditable(true);
 		firstNameColumn.setOnEditCommit(event -> {
 			String2Bean item = event.getTableView().getItems().get(event.getTablePosition().getRow());
