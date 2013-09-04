@@ -1,11 +1,11 @@
 package org.svenehrke.javafxdemos.table.editandvalidation;
 
 public class String2Bean {
-	private ValidatedString string1;
+	private ValidatingString string1;
 	private String string2;
 
-	public String2Bean(final String string1, final String string2) {
-		this.string1 = new ValidatedString(string1);
+	public String2Bean(final ValidatingString string1, final String string2) {
+		this.string1 = string1;
 		this.string2 = string2;
 	}
 

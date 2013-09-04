@@ -91,13 +91,6 @@ public class EditAndValidateTableViewDemo extends Application {
 		return new ToUpperCaseStringConverter();
 	}
 
-	private Function<String, ValidationResult> firstNameValidator(final ToUpperCaseStringConverter converter) {
-		return value -> {
-			boolean valid = converter.toString(value).length() > 3;
-			return new ValidationResult(valid, valid ? "" : "error: Length of first name must be greater than 3");
-		};
-	}
-
 	private TableColumn<String2Bean, String> lastNameColumn() {
 		final TableColumn<String2Bean, String> lastNameColumn = new TableColumn<>("Last Name");
 		lastNameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getString2()));
@@ -105,46 +98,57 @@ public class EditAndValidateTableViewDemo extends Application {
 		return lastNameColumn;
 	}
 
+	private Function<String, ValidationResult> firstNameValidator(final ToUpperCaseStringConverter converter) {
+		return value -> {
+			boolean valid = converter.toString(value).length() > 3;
+			return new ValidationResult(valid, valid ? "" : "error: Length of first name must be greater than 3");
+		};
+	}
+
 	private void showInvalidItems() {
-		Function<String, ValidationResult> validator = firstNameValidator(converter());
 		items
 			.stream()
-			.map(item -> {
-				item.getString1Object().setValidationResult(validator.apply(item.getString1()));
-				return item;
-			})
-			.filter(item -> !validator.apply(item.getString1()).isValid())
+			.filter(item -> !item.getString1Object().isValid())
 			.forEach(item -> System.out.printf("%s: %s %s%n", item.getString1Object().getValidationResult().getErrorMessage(), item.getString1(), item.getString2()))
 		;
 	}
 
 	public ObservableList<String2Bean> people() {
 		ObservableList<String2Bean> result = FXCollections.observableArrayList();
-		peopleStream().forEach(result::add);
+		peopleStream(firstNameValidator(converter())).forEach(result::add);
 		return result;
 	}
 
-	Stream<String2Bean> peopleStream() {
+	Stream<String2Bean> peopleStream(Function<String, ValidationResult> validator) {
 		List<String2Bean> result = Arrays.asList(
-			new String2Bean("Essie","Vaill")
-			,new String2Bean("Cruz","Roudabush")
-			,new String2Bean("Billie","Tinnes")
-			,new String2Bean("Zackary","Mockus")
-			,new String2Bean("Rosemarie","Fifield")
-			,new String2Bean("Bernard","Laboy")
-			,new String2Bean("Sue","Haakinson")
-			,new String2Bean("Valerie","Pou")
-			,new String2Bean("Lashawn","Hasty")
-			,new String2Bean("Marianne","Earman")
-			,new String2Bean("Justina","Dragaj")
-			,new String2Bean("Mandy","Mcdonnell")
-			,new String2Bean("Conrad","Lanfear")
-			,new String2Bean("Cyril","Behen")
-			,new String2Bean("Shelley","Groden")
-			,new String2Bean("Rosalind","Krenzke")
-			,new String2Bean("Davis","Brevard")
+			newString2Bean(validatingFirstname("Essie", validator), "Vaill")
+			, newString2Bean(validatingFirstname("Cruz", validator), "Roudabush")
+			, newString2Bean(validatingFirstname("Billie", validator), "Tinnes")
+			, newString2Bean(validatingFirstname("Zackary", validator), "Mockus")
+			, newString2Bean(validatingFirstname("Rosemarie", validator), "Fifield")
+			, newString2Bean(validatingFirstname("Bernard", validator), "Laboy")
+			, newString2Bean(validatingFirstname("Sue", validator), "Haakinson")
+			, newString2Bean(validatingFirstname("Valerie", validator), "Pou")
+			, newString2Bean(validatingFirstname("Lashawn", validator), "Hasty")
+			, newString2Bean(validatingFirstname("Marianne", validator), "Earman")
+			, newString2Bean(validatingFirstname("Justina", validator), "Dragaj")
+			, newString2Bean(validatingFirstname("Mandy", validator), "Mcdonnell")
+			, newString2Bean(validatingFirstname("Conrad", validator), "Lanfear")
+			, newString2Bean(validatingFirstname("Cyril", validator), "Behen")
+			, newString2Bean(validatingFirstname("Shelley", validator), "Groden")
+			, newString2Bean(validatingFirstname("Rosalind", validator), "Krenzke")
+			, newString2Bean(validatingFirstname("Davis", validator), "Brevard")
 		);
 		return result.stream();
+	}
+
+	private ValidatingString validatingFirstname(final String firstname, final Function<String, ValidationResult> validator) {
+		return new ValidatingString(firstname, validator);
+	}
+
+	private String2Bean newString2Bean(ValidatingString vs1, final String ln) {
+
+		return new String2Bean(vs1, ln);
 	}
 
 }
