@@ -1,13 +1,13 @@
 package org.svenehrke.javafxdemos.table.editandvalidation;
 
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -38,17 +38,9 @@ public class EditAndValidateTableViewDemo extends Application {
 		pane.setPadding(new Insets(10));
 
 		ObservableList<String2Bean> items = FXCollections.observableArrayList(people());
-		final TableView<String2Bean> tableView = new TableView<>(items);
-		setupTableView(tableView);
-
-		final TableColumn<String2Bean, String> firstNameColumn = new TableColumn<>("First Name");
-		setupFirstNameColumn(tableView, firstNameColumn);
-
-
-		firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("string1"));
-		final TableColumn<String2Bean, String> lastNameColumn = new TableColumn<>("Last Name");
-		lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("string2"));
-
+		final TableView<String2Bean> tableView = tableView(items);
+		final TableColumn<String2Bean, String> firstNameColumn = firstNameColumn();
+		final TableColumn<String2Bean, String> lastNameColumn = lastNameColumn();
 		tableView.getColumns().addAll(firstNameColumn, lastNameColumn);
 
 		pane.getChildren().addAll(tableView);
@@ -59,12 +51,18 @@ public class EditAndValidateTableViewDemo extends Application {
 		stage.show();
 	}
 
-	private void setupTableView(final TableView<String2Bean> tableView) {
+	private TableView<String2Bean> tableView(final ObservableList<String2Bean> items) {
+		final TableView<String2Bean> tableView = new TableView<>(items);
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		tableView.setEditable(true);
+		return tableView;
 	}
 
-	private void setupFirstNameColumn(final TableView<String2Bean> tableView, final TableColumn<String2Bean, String> firstNameColumn) {
+	private TableColumn<String2Bean, String> firstNameColumn() {
+		final TableColumn<String2Bean, String> firstNameColumn = new TableColumn<>("First Name");
+
+		firstNameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getString1()));
+
 		ToUpperCaseStringConverter converter = new ToUpperCaseStringConverter();
 		Function<String, ValidationResult> validator = value -> new ValidationResult(converter.toString(value).length() > 3);
 		firstNameColumn.setCellFactory(it -> new ValidatingTextFieldTableCell<>(converter, validator));
@@ -78,6 +76,15 @@ public class EditAndValidateTableViewDemo extends Application {
 		});
 
 		firstNameColumn.setPrefWidth(100);
+
+		return firstNameColumn;
+	}
+
+	private TableColumn<String2Bean, String> lastNameColumn() {
+		final TableColumn<String2Bean, String> lastNameColumn = new TableColumn<>("Last Name");
+		lastNameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getString2()));
+
+		return lastNameColumn;
 	}
 
 	public ObservableList<String2Bean> people() {
