@@ -77,9 +77,6 @@ public class EditAndValidateTableViewDemo extends Application {
 		firstNameColumn.setOnEditCommit(event -> {
 			String2Bean item = event.getTableView().getItems().get(event.getTablePosition().getRow());
 			item.setString1(event.getNewValue());
-
-			ValidationResult validationResult = validator.apply(event.getNewValue());
-			item.getString1Object().setValidationResult(validationResult);
 		});
 
 		firstNameColumn.setPrefWidth(100);
@@ -108,8 +105,8 @@ public class EditAndValidateTableViewDemo extends Application {
 	private void showInvalidItems() {
 		items
 			.stream()
-			.filter(item -> !item.getString1Object().isValid())
-			.forEach(item -> System.out.printf("%s: %s %s%n", item.getString1Object().getValidationResult().getErrorMessage(), item.getString1(), item.getString2()))
+			.filter(item -> !item.string1Object().isValid())
+			.forEach(item -> System.out.printf("%s: %s %s%n", item.string1Object().getValidationResult().getErrorMessage(), item.getString1(), item.getString2()))
 		;
 	}
 
@@ -121,34 +118,33 @@ public class EditAndValidateTableViewDemo extends Application {
 
 	Stream<String2Bean> peopleStream(Function<String, ValidationResult> validator) {
 		List<String2Bean> result = Arrays.asList(
-			newString2Bean(validatingFirstname("Essie", validator), "Vaill")
-			, newString2Bean(validatingFirstname("Cruz", validator), "Roudabush")
-			, newString2Bean(validatingFirstname("Billie", validator), "Tinnes")
-			, newString2Bean(validatingFirstname("Zackary", validator), "Mockus")
-			, newString2Bean(validatingFirstname("Rosemarie", validator), "Fifield")
-			, newString2Bean(validatingFirstname("Bernard", validator), "Laboy")
-			, newString2Bean(validatingFirstname("Sue", validator), "Haakinson")
-			, newString2Bean(validatingFirstname("Valerie", validator), "Pou")
-			, newString2Bean(validatingFirstname("Lashawn", validator), "Hasty")
-			, newString2Bean(validatingFirstname("Marianne", validator), "Earman")
-			, newString2Bean(validatingFirstname("Justina", validator), "Dragaj")
-			, newString2Bean(validatingFirstname("Mandy", validator), "Mcdonnell")
-			, newString2Bean(validatingFirstname("Conrad", validator), "Lanfear")
-			, newString2Bean(validatingFirstname("Cyril", validator), "Behen")
-			, newString2Bean(validatingFirstname("Shelley", validator), "Groden")
-			, newString2Bean(validatingFirstname("Rosalind", validator), "Krenzke")
-			, newString2Bean(validatingFirstname("Davis", validator), "Brevard")
+			newString2Bean("Essie", "Vaill", validator)
+			, newString2Bean("Cruz", "Roudabush", validator)
+			, newString2Bean("Billie", "Tinnes", validator)
+			, newString2Bean("Zackary", "Mockus", validator)
+			, newString2Bean("Rosemarie", "Fifield", validator)
+			, newString2Bean("Bernard", "Laboy", validator)
+			, newString2Bean("Sue", "Haakinson", validator)
+			, newString2Bean("Valerie", "Pou", validator)
+			, newString2Bean("Lashawn", "Hasty", validator)
+			, newString2Bean("Marianne", "Earman", validator)
+			, newString2Bean("Justina", "Dragaj", validator)
+			, newString2Bean("Mandy", "Mcdonnell", validator)
+			, newString2Bean("Conrad", "Lanfear", validator)
+			, newString2Bean("Cyril", "Behen", validator)
+			, newString2Bean("Shelley", "Groden", validator)
+			, newString2Bean("Rosalind", "Krenzke", validator)
+			, newString2Bean("Davis", "Brevard", validator)
 		);
 		return result.stream();
 	}
 
-	private ValidatingString validatingFirstname(final String firstname, final Function<String, ValidationResult> validator) {
-		return new ValidatingString(firstname, validator);
-	}
-
-	private String2Bean newString2Bean(ValidatingString vs1, final String ln) {
-
-		return new String2Bean(vs1, ln);
+	private String2Bean newString2Bean(String firstName, final String lastName, Function<String, ValidationResult> firstnameValidator) {
+		String2Bean result = new String2Bean("", "");
+		result.string1Object().addValidatingListener(firstnameValidator);
+		result.setString1(firstName);
+		result.setString2(lastName);
+		return result;
 	}
 
 }

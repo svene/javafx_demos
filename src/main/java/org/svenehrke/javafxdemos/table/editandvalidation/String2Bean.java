@@ -1,19 +1,20 @@
 package org.svenehrke.javafxdemos.table.editandvalidation;
 
 public class String2Bean {
-	private ValidatingString string1;
+	private ValidatedString string1 = new ValidatedString("");
 	private String string2;
 
-	public String2Bean(final ValidatingString string1, final String string2) {
-		this.string1 = string1;
+	public String2Bean(final String string1, final String string2) {
+		this.string1.setText(string1);
 		this.string2 = string2;
+	}
+
+	public ValidatedString string1Object() {
+		return string1;
 	}
 
 	public String getString1() {
 		return string1.getText();
-	}
-	public ValidatedString getString1Object() {
-		return string1;
 	}
 
 	public String getString2() {
