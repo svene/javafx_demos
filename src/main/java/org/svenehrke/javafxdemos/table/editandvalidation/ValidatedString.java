@@ -3,12 +3,10 @@ package org.svenehrke.javafxdemos.table.editandvalidation;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import java.util.function.Function;
-
 public class ValidatedString {
 
 	private StringProperty text = new SimpleStringProperty();
-	private ValidationResult validationResult;
+	private ValidationResult validationResult = new ValidationResult(true, "");
 
 	public ValidatedString(final String text) {
 		setText(text);
@@ -38,10 +36,4 @@ public class ValidatedString {
 		return validationResult != null && validationResult.isValid();
 	}
 
-
-	public void addValidatingListener(Function<String, ValidationResult> validator) {
-		textProperty().addListener((observable, oldValue, newValue) -> {
-			setValidationResult(validator.apply(newValue));
-		});
-	}
 }

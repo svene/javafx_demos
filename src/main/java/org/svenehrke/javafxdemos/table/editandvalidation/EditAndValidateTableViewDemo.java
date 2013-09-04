@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -17,7 +16,6 @@ import org.svenehrke.javafxdemos.common.Styles;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -70,22 +68,19 @@ public class EditAndValidateTableViewDemo extends Application {
 	private TableColumn<String2Bean, String> firstNameColumn() {
 		final TableColumn<String2Bean, String> firstNameColumn = new TableColumn<>("First Name");
 
-		firstNameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getString1()));
+		firstNameColumn.setCellValueFactory(param -> param.getValue().string1Object().textProperty());
 
-		ToUpperCaseStringConverter converter = converter();
-		Function<String, ValidationResult> validator = firstNameValidator(converter);
+		firstNameColumn.setCellFactory(it -> new CustomizableUpdateItemTextFieldTableCell<>(new ToUpperCaseStringConverter(), (cell, item) -> {
+			int idx = cell.getIndex();
+			if (idx < 0 || idx > items.size() - 1) return; // sometimes strange indexes come in which we will simply ignore
 
-		firstNameColumn.setCellFactory(it -> new CustomizableUpdateItemTextFieldTableCell<>(converter, new BiConsumer<TextFieldTableCell<String2Bean, String>, String>() {
-			@Override
-			public void accept(final TextFieldTableCell<String2Bean, String> cell, final String item) {
-				boolean isValid = validator.apply(item).isValid();
-				if (item != null) {
-					int idx = cell.getIndex();
-					cell.pseudoClassStateChanged(Styles.CSS_PC_INVALID, !isValid);
-				}
-				else {
-					cell.pseudoClassStateChanged(Styles.CSS_PC_INVALID, isValid);
-				}
+			String2Bean string2Bean = items.get(idx);
+			boolean isValid = string2Bean.string1Object().isValid();
+			if (item != null) {
+				cell.pseudoClassStateChanged(Styles.CSS_PC_INVALID, !isValid);
+			}
+			else {
+				cell.pseudoClassStateChanged(Styles.CSS_PC_INVALID, isValid);
 			}
 		}));
 
@@ -100,10 +95,6 @@ public class EditAndValidateTableViewDemo extends Application {
 		return firstNameColumn;
 	}
 
-	private ToUpperCaseStringConverter converter() {
-		return new ToUpperCaseStringConverter();
-	}
-
 	private TableColumn<String2Bean, String> lastNameColumn() {
 		final TableColumn<String2Bean, String> lastNameColumn = new TableColumn<>("Last Name");
 		lastNameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getString2()));
@@ -111,9 +102,9 @@ public class EditAndValidateTableViewDemo extends Application {
 		return lastNameColumn;
 	}
 
-	private Function<String, ValidationResult> firstNameValidator(final ToUpperCaseStringConverter converter) {
+	private Function<String, ValidationResult> firstNameValidator() {
 		return value -> {
-			boolean valid = converter.toString(value).length() > 3;
+			boolean valid = value.length() > 3;
 			return new ValidationResult(valid, valid ? "" : "error: Length of first name must be greater than 3");
 		};
 	}
@@ -128,7 +119,7 @@ public class EditAndValidateTableViewDemo extends Application {
 
 	public ObservableList<String2Bean> people() {
 		ObservableList<String2Bean> result = FXCollections.observableArrayList();
-		peopleStream(firstNameValidator(converter())).forEach(result::add);
+		peopleStream(firstNameValidator()).forEach(result::add);
 		return result;
 	}
 
@@ -157,7 +148,7 @@ public class EditAndValidateTableViewDemo extends Application {
 
 	private String2Bean newString2Bean(String firstName, final String lastName, Function<String, ValidationResult> firstnameValidator) {
 		String2Bean result = new String2Bean("", "");
-		result.string1Object().addValidatingListener(firstnameValidator);
+		ValidatedStrings.bindValidatorToValidatedString(result.string1Object(), firstnameValidator);
 		result.setString1(firstName);
 		result.setString2(lastName);
 		return result;
