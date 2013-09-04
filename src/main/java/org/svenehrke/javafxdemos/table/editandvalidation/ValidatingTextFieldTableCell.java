@@ -19,7 +19,7 @@ public class ValidatingTextFieldTableCell<S, T> extends TextFieldTableCell<S, T>
 	/** Called when the list view is initially loaded with data or when the editing process of a cell is finished. */
 	public void updateItem(final T item, final boolean empty) {
 		super.updateItem(item, empty);
-		boolean isValid = validator.apply(item).isValid;
+		boolean isValid = validator.apply(item).isValid();
 		if (item != null) {
 			int idx = getIndex();
 			this.pseudoClassStateChanged(Styles.CSS_PC_INVALID, !isValid);

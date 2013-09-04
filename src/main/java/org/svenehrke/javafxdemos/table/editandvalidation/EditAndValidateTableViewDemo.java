@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
@@ -19,6 +20,8 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class EditAndValidateTableViewDemo extends Application {
+
+	private ObservableList<String2Bean> items;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -37,13 +40,17 @@ public class EditAndValidateTableViewDemo extends Application {
 		VBox pane = new VBox();
 		pane.setPadding(new Insets(10));
 
-		ObservableList<String2Bean> items = FXCollections.observableArrayList(people());
+		this.items = people();
+		ObservableList<String2Bean> items = FXCollections.observableArrayList(this.items);
 		final TableView<String2Bean> tableView = tableView(items);
 		final TableColumn<String2Bean, String> firstNameColumn = firstNameColumn();
 		final TableColumn<String2Bean, String> lastNameColumn = lastNameColumn();
 		tableView.getColumns().addAll(firstNameColumn, lastNameColumn);
 
-		pane.getChildren().addAll(tableView);
+		Button button = new Button("show invalid entries");
+		button.setOnAction(event -> showInvalidItems());
+
+		pane.getChildren().addAll(tableView, button);
 
 		Scene scene = new Scene(pane, 300, 500, Color.DODGERBLUE);
 		Styles.addStyleSheetTo(scene);
@@ -63,8 +70,8 @@ public class EditAndValidateTableViewDemo extends Application {
 
 		firstNameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getString1()));
 
-		ToUpperCaseStringConverter converter = new ToUpperCaseStringConverter();
-		Function<String, ValidationResult> validator = value -> new ValidationResult(converter.toString(value).length() > 3);
+		ToUpperCaseStringConverter converter = converter();
+		Function<String, ValidationResult> validator = firstNameValidator(converter);
 		firstNameColumn.setCellFactory(it -> new ValidatingTextFieldTableCell<>(converter, validator));
 		firstNameColumn.setEditable(true);
 		firstNameColumn.setOnEditCommit(event -> {
@@ -72,7 +79,7 @@ public class EditAndValidateTableViewDemo extends Application {
 			item.setString1(event.getNewValue());
 
 			ValidationResult validationResult = validator.apply(event.getNewValue());
-			System.out.println("validationResult = " + validationResult.isValid);
+			item.getString1Object().setValidationResult(validationResult);
 		});
 
 		firstNameColumn.setPrefWidth(100);
@@ -80,11 +87,35 @@ public class EditAndValidateTableViewDemo extends Application {
 		return firstNameColumn;
 	}
 
+	private ToUpperCaseStringConverter converter() {
+		return new ToUpperCaseStringConverter();
+	}
+
+	private Function<String, ValidationResult> firstNameValidator(final ToUpperCaseStringConverter converter) {
+		return value -> {
+			boolean valid = converter.toString(value).length() > 3;
+			return new ValidationResult(valid, valid ? "" : "error: Length of first name must be greater than 3");
+		};
+	}
+
 	private TableColumn<String2Bean, String> lastNameColumn() {
 		final TableColumn<String2Bean, String> lastNameColumn = new TableColumn<>("Last Name");
 		lastNameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getString2()));
 
 		return lastNameColumn;
+	}
+
+	private void showInvalidItems() {
+		Function<String, ValidationResult> validator = firstNameValidator(converter());
+		items
+			.stream()
+			.map(item -> {
+				item.getString1Object().setValidationResult(validator.apply(item.getString1()));
+				return item;
+			})
+			.filter(item -> !validator.apply(item.getString1()).isValid())
+			.forEach(item -> System.out.printf("%s: %s %s%n", item.getString1Object().getValidationResult().getErrorMessage(), item.getString1(), item.getString2()))
+		;
 	}
 
 	public ObservableList<String2Bean> people() {
