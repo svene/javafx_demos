@@ -16,3 +16,14 @@ dependencies {
 	testCompile group: 'junit', name: 'junit', version: '4.10'
 }
 
+
+sourceCompatibility = '1.8'
+
+test.scanForTestClasses = false
+
+test {
+	include 'org/svenehrke/javafxdemos/**/*Test.class'
+	exclude '**/*$*.class' // exclude anonymous inner classes
+}
+
+

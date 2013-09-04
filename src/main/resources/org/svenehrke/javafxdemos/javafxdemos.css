@@ -1,0 +1,7 @@
+.text-field:javafxdemos-invalid {
+	-fx-background-color: red;
+}
+.table-cell:javafxdemos-invalid {
+	-fx-background-color: red;
+	-fx-text-fill       : white;
+}
