@@ -1,0 +1,18 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group='org.svenehrke.javafxdemos'
+version = '0.0.1'
+
+repositories {
+	mavenCentral()
+}
+
+def javaHome = System.env['JAVA_HOME']
+
+dependencies {
+	//compile 'org.jfxtras:jfxtras-labs:2.2-r4'
+	compile files("${javaHome}/jre/lib/jfxrt.jar")
+	testCompile group: 'junit', name: 'junit', version: '4.10'
+}
+
