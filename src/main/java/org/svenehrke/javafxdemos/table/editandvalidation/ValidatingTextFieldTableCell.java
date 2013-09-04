@@ -4,20 +4,24 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.StringConverter;
 import org.svenehrke.javafxdemos.common.Styles;
 
+import java.util.function.Function;
+
 public class ValidatingTextFieldTableCell<S, T> extends TextFieldTableCell<S, T> {
 
-	public ValidatingTextFieldTableCell(final StringConverter<T> converter) {
+	private final Function<T, ValidationResult> validator;
+
+	public ValidatingTextFieldTableCell(final StringConverter<T> converter, final Function<T, ValidationResult> validator) {
 		super(converter);
+		this.validator = validator;
 	}
 
 	@Override
 	/** Called when the list view is initially loaded with data or when the editing process of a cell is finished. */
 	public void updateItem(final T item, final boolean empty) {
 		super.updateItem(item, empty);
-		boolean isValid = getValidationResult(item);
+		boolean isValid = validator.apply(item).isValid;
 		if (item != null) {
 			int idx = getIndex();
-			System.out.println("isvalid " + isValid);
 			this.pseudoClassStateChanged(Styles.CSS_PC_INVALID, !isValid);
 		}
 		else {
@@ -25,7 +29,5 @@ public class ValidatingTextFieldTableCell<S, T> extends TextFieldTableCell<S, T>
 		}
 	}
 
-	private boolean getValidationResult(final T item) {
-		return getConverter().toString(item).length() > 3;
-	}
+
 }

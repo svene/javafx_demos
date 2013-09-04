@@ -3,32 +3,19 @@ package org.svenehrke.javafxdemos.table.editandvalidation;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-import javafx.util.converter.DefaultStringConverter;
 import org.svenehrke.javafxdemos.common.Styles;
-import org.svenehrke.javafxdemos.table.editandvalidation.String2Bean;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class EditAndValidateTableViewDemo extends Application {
@@ -78,12 +65,16 @@ public class EditAndValidateTableViewDemo extends Application {
 	}
 
 	private void setupFirstNameColumn(final TableView<String2Bean> tableView, final TableColumn<String2Bean, String> firstNameColumn) {
-		firstNameColumn.setCellFactory(it -> new ValidatingTextFieldTableCell<>(new DefaultStringConverter()));
+		ToUpperCaseStringConverter converter = new ToUpperCaseStringConverter();
+		Function<String, ValidationResult> validator = value -> new ValidationResult(converter.toString(value).length() > 3);
+		firstNameColumn.setCellFactory(it -> new ValidatingTextFieldTableCell<>(converter, validator));
 		firstNameColumn.setEditable(true);
 		firstNameColumn.setOnEditCommit(event -> {
-			System.out.println("name.commit: event.getNewValue() = " + event.getNewValue());
-			System.out.println(event.getSource().getClass().getName());
-			event.getTableView().getItems().get(event.getTablePosition().getRow()).setString1(event.getNewValue());
+			String2Bean item = event.getTableView().getItems().get(event.getTablePosition().getRow());
+			item.setString1(event.getNewValue());
+
+			ValidationResult validationResult = validator.apply(event.getNewValue());
+			System.out.println("validationResult = " + validationResult.isValid);
 		});
 
 		firstNameColumn.setPrefWidth(100);
@@ -117,5 +108,6 @@ public class EditAndValidateTableViewDemo extends Application {
 		);
 		return result.stream();
 	}
+
 }
 
