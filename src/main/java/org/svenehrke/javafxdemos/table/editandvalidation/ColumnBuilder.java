@@ -6,7 +6,7 @@ import org.svenehrke.javafxdemos.common.Styles;
 
 import java.util.function.Function;
 
-class ColumnConstructor {
+class ColumnBuilder {
 
 	static TableColumn<PersonTableBean, String> editableColumn(final IColumnSpecification columnSpecification) {
 		final TableColumn<PersonTableBean, String> result = new TableColumn<>(columnSpecification.title());

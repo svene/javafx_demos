@@ -1,25 +1,40 @@
 package org.svenehrke.javafxdemos.table.editandvalidation;
 
+import java.math.BigDecimal;
 import java.util.function.Function;
 
 import static org.svenehrke.javafxdemos.table.editandvalidation.ValidatedStrings.bindValidatorToValidatedString;
 
 class PersonTableBeanBuilder {
-	private final ITableSpecification tableSpecification;
+	private final PersonTableSpecification tableSpecification;
 
-	static PersonTableBeanBuilder newPersonTableBeanBuilder(ITableSpecification tableSpecification) {
+	static PersonTableBeanBuilder newPersonTableBeanBuilder(PersonTableSpecification tableSpecification) {
 		return new PersonTableBeanBuilder(tableSpecification);
 	}
 
-	PersonTableBeanBuilder(ITableSpecification tableSpecification) {
+	PersonTableBeanBuilder(PersonTableSpecification tableSpecification) {
 		this.tableSpecification = tableSpecification;
 	}
 
-	PersonTableBean newPersonTableBean(String firstName, final String lastName, String value) {
-		PersonTableBean result = new PersonTableBean("", "", "");
+	/** Will be needed to add new Persons from the GUI */
+	PersonTableBean fromPresentation(long id, String firstName, final String lastName, String value) {
+		PersonTableBean result = new PersonTableBean(id, "", "", "");
 
-		initValidatedString(firstName, tableSpecification.getColumnSpecifications().get(0).validator(), result.firstName());
-		initValidatedString(value, tableSpecification.getColumnSpecifications().get(2).validator(), result.bigDecimalValue());
+		initValidatedString(firstName, tableSpecification.firstNameSpec().validator(), result.firstName());
+		initValidatedString(value, tableSpecification.bdValueSpec().validator(), result.bigDecimalValue());
+
+		result.setLastName(lastName);
+		return result;
+	}
+
+
+	PersonTableBean fromPersistence(long id, String firstName, final String lastName, BigDecimal value) {
+		PersonTableBean result = new PersonTableBean(id, "", "", "");
+
+		initValidatedString(firstName, tableSpecification.firstNameSpec().validator(), result.firstName());
+
+		String bigDecimalAsString = tableSpecification.bdValueSpec().format(value.toString());
+		initValidatedString(bigDecimalAsString, tableSpecification.bdValueSpec().validator(), result.bigDecimalValue());
 
 		result.setLastName(lastName);
 		return result;

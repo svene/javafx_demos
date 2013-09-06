@@ -14,8 +14,8 @@ import org.svenehrke.javafxdemos.common.Styles;
 
 import java.util.Arrays;
 
-import static org.svenehrke.javafxdemos.table.editandvalidation.ColumnConstructor.editableColumn;
-import static org.svenehrke.javafxdemos.table.editandvalidation.ColumnConstructor.readOnlyColumn;
+import static org.svenehrke.javafxdemos.table.editandvalidation.ColumnBuilder.editableColumn;
+import static org.svenehrke.javafxdemos.table.editandvalidation.ColumnBuilder.readOnlyColumn;
 
 public class EditAndValidateTableViewDemo extends Application {
 
@@ -39,13 +39,13 @@ public class EditAndValidateTableViewDemo extends Application {
 		pane.setPadding(new Insets(10));
 		pane.setSpacing(10);
 
-		ITableSpecification tableSpecification = new DefaultTableSpecification(Arrays.<IColumnSpecification>asList(
+		PersonTableSpecification tableSpecification = new PersonTableSpecification(Arrays.<IColumnSpecification>asList(
 			new FirstNameColumnSpecification(),
 			null,
 			new BigDecimalColumnSpecification())
 		);
 
-		this.items = DataProvider.people(PersonTableBeanBuilder.newPersonTableBeanBuilder(tableSpecification));
+		this.items = PersistenceAndGUIMapper.people(PersonTableBeanBuilder.newPersonTableBeanBuilder(tableSpecification));
 		ObservableList<PersonTableBean> items = FXCollections.observableArrayList(this.items);
 		final TableView<PersonTableBean> tableView = tableView(items);
 

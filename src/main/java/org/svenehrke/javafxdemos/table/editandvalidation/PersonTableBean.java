@@ -1,11 +1,13 @@
 package org.svenehrke.javafxdemos.table.editandvalidation;
 
 public class PersonTableBean {
+	private long id;
 	private ValidatedString firstName = new ValidatedString("");
 	private String lastName;
 	private ValidatedString bigDecimalValue = new ValidatedString("");
 
-	public PersonTableBean(final String firstName, final String lastName, final String bigDecimalValue) {
+	public PersonTableBean(long id, final String firstName, final String lastName, final String bigDecimalValue) {
+		this.id = id;
 		this.firstName.setText(firstName);
 		this.lastName = lastName;
 		this.bigDecimalValue.setText(bigDecimalValue);
