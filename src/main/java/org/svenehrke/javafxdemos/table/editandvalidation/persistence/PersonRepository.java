@@ -42,4 +42,13 @@ public class PersonRepository {
 		return people;
 	}
 
+	public void removePerson(final long id) {
+		for (int i = 0; i < people.size(); i++) {
+			Person person = people.get(i);
+			if (id == person.getId()) {
+				people.remove(i);
+				return;
+			}
+		}
+	}
 }

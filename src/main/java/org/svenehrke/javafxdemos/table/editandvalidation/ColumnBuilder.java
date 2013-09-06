@@ -29,7 +29,7 @@ class ColumnBuilder {
 		result.setEditable(true);
 		result.setOnEditCommit(event -> {
 			PersonTableBean item = event.getTableView().getItems().get(event.getTablePosition().getRow());
-			columnSpecification.validatedStringProvider().apply(item).setText(event.getNewValue());
+			columnSpecification.validatedStringProvider().apply(item).textProperty().setValue(event.getNewValue());
 		});
 
 		result.setPrefWidth(100);

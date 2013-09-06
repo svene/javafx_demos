@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
@@ -14,8 +15,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.svenehrke.javafxdemos.common.Styles;
 import org.svenehrke.javafxdemos.table.editandvalidation.persistence.IdGenerator;
+import org.svenehrke.javafxdemos.table.editandvalidation.persistence.Person;
+import org.svenehrke.javafxdemos.table.editandvalidation.persistence.PersonRepository;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 import static org.svenehrke.javafxdemos.table.editandvalidation.ColumnBuilder.editableColumn;
 import static org.svenehrke.javafxdemos.table.editandvalidation.ColumnBuilder.readOnlyColumn;
@@ -24,6 +28,7 @@ public class EditAndValidateTableViewDemo extends Application {
 
 	private ObservableList<PersonTableBean> items = FXCollections.observableArrayList();
 	private PersonTableBeanBuilder personTableBeanBuilder;
+	private ListChangeListener<PersonTableBean> itemsListener;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -51,22 +56,19 @@ public class EditAndValidateTableViewDemo extends Application {
 		);
 
 		personTableBeanBuilder = PersonTableBeanBuilder.newPersonTableBeanBuilder(tableSpecification);
-		loadItems();
 
-		items.addListener(new ListChangeListener<PersonTableBean>() {
-			@Override
-			public void onChanged(final Change<? extends PersonTableBean> c) {
-				while (c.next()) {
-					System.out.println("CHANGE:");
-					System.out.println("c.wasAdded() = " + c.wasAdded());
-					System.out.println("c.wasPermutated() = " + c.wasPermutated());
-					System.out.println("c.wasRemoved() = " + c.wasRemoved());
-					System.out.println("c.wasReplaced() = " + c.wasReplaced());
-					System.out.println("c.wasUpdated() = " + c.wasUpdated());
-					System.out.println("c = " + c);
+		itemsListener = (ListChangeListener<PersonTableBean>) c -> {
+			while (c.next()) {
+				System.out.println("CHANGE:" + c);
+				if (c.wasRemoved()) {
+					System.out.println("c.getRemovedSize() = " + c.getRemovedSize());
+					PersonTableBean personTableBean = c.getRemoved().get(0);
+					PersonRepository.getInstance().removePerson(personTableBean.getId());
 				}
 			}
-		});
+		};
+		loadItems();
+		items.addAll(PersistenceAndGUIMapper.people(personTableBeanBuilder, personStream()));
 
 		final TableView<PersonTableBean> tableView = tableView(items);
 
@@ -83,7 +85,7 @@ public class EditAndValidateTableViewDemo extends Application {
 		addButton.setOnAction(event -> addItem());
 
 		Button delButton = new Button("-");
-		delButton.setOnAction(event -> delItem());
+		delButton.setOnAction(event -> delItem(tableView));
 
 		Button saveButton = new Button("Save");
 		saveButton.setOnAction(event -> save());
@@ -106,21 +108,27 @@ public class EditAndValidateTableViewDemo extends Application {
 		stage.show();
 	}
 
+	private void clear() {
+		items.removeListener(itemsListener);
+		items.clear();
+		items.addListener(itemsListener);
+	}
 	private void loadItems() {
-		clear();
-		items.addAll(PersistenceAndGUIMapper.people(personTableBeanBuilder));
+		items.removeListener(itemsListener);
+		items.addAll(PersistenceAndGUIMapper.people(personTableBeanBuilder, personStream()));
+		items.addListener(itemsListener);
 	}
 
-	private void clear() {
-		items.clear();
+	public static Stream<Person> personStream() {
+		return PersonRepository.getInstance().people().stream();
 	}
 
 	private void save() {
 		//To change body of created methods use File | Settings | File Templates.
 	}
 
-	private void delItem() {
-		//To change body of created methods use File | Settings | File Templates.
+	private void delItem(final TableView<PersonTableBean> tableView) {
+		tableView.getSelectionModel().getSelectedIndices().forEach(idx -> items.remove((int)idx));
 	}
 
 	private void addItem() {
@@ -133,6 +141,7 @@ public class EditAndValidateTableViewDemo extends Application {
 		final TableView<PersonTableBean> tableView = new TableView<>(items);
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		tableView.setEditable(true);
+		tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		return tableView;
 	}
 

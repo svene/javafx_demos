@@ -13,7 +13,11 @@ public class PersonTableBean {
 		this.bigDecimalValue.setText(bigDecimalValue);
 	}
 
-	// --- fields to be validated ---
+	public long getId() {
+		return id;
+	}
+
+// --- fields to be validated ---
 
 	public ValidatedString firstName() {
 		return firstName;
