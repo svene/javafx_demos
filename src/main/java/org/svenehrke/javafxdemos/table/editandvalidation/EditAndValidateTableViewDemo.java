@@ -51,7 +51,7 @@ public class EditAndValidateTableViewDemo extends Application {
 
 		pane.getChildren().addAll(tableView, button);
 
-		Scene scene = new Scene(pane, 300, 500);
+		Scene scene = new Scene(pane, 400, 500);
 		Styles.addStyleSheetTo(scene);
 		stage.setScene(scene);
 		stage.show();
@@ -65,10 +65,16 @@ public class EditAndValidateTableViewDemo extends Application {
 	}
 
 	private void showInvalidItems() {
+		// todo: provide a combined validation result on 'PersonTableBean' instead of doing it here:
 		items
 			.stream()
 			.filter(item -> !item.firstName().isValid())
 			.forEach(item -> System.out.printf("%s: %s %s%n", item.firstName().getValidationResult().getErrorMessage(), item.firstName().getText(), item.getLastName()))
+		;
+		items
+			.stream()
+			.filter(item -> !item.bigDecimalValue().isValid())
+			.forEach(item -> System.out.printf("%s: %s %s%n", item.bigDecimalValue().getValidationResult().getErrorMessage(), item.firstName().getText(), item.getLastName()))
 		;
 	}
 
