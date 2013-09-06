@@ -10,8 +10,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.converter.DefaultStringConverter;
 import org.svenehrke.javafxdemos.common.Styles;
+
+import java.util.Arrays;
 
 import static org.svenehrke.javafxdemos.table.editandvalidation.ColumnConstructor.editableColumn;
 import static org.svenehrke.javafxdemos.table.editandvalidation.ColumnConstructor.readOnlyColumn;
@@ -38,12 +39,20 @@ public class EditAndValidateTableViewDemo extends Application {
 		pane.setPadding(new Insets(10));
 		pane.setSpacing(10);
 
-		this.items = DataProvider.people(DataProvider.newPersonTableBeanBuilder());
+		ITableSpecification tableSpecification = new DefaultTableSpecification(Arrays.<IColumnSpecification>asList(
+			new FirstNameColumnSpecification(),
+			null,
+			new BigDecimalColumnSpecification())
+		);
+
+		this.items = DataProvider.people(PersonTableBeanBuilder.newPersonTableBeanBuilder(tableSpecification));
 		ObservableList<PersonTableBean> items = FXCollections.observableArrayList(this.items);
 		final TableView<PersonTableBean> tableView = tableView(items);
-		final TableColumn<PersonTableBean, String> firstNameColumn = editableColumn("First Name", PersonTableBean::firstName, new ToUpperCaseStringConverter());
+
+		final TableColumn<PersonTableBean, String> firstNameColumn = editableColumn(tableSpecification.getColumnSpecifications().get(0));
 		final TableColumn<PersonTableBean, String> lastNameColumn = readOnlyColumn("Last Name", PersonTableBean::getLastName);
-		final TableColumn<PersonTableBean, String> bigDecimalColumn = editableColumn("BigDecimal", PersonTableBean::bigDecimalValue, new DefaultStringConverter());
+		final TableColumn<PersonTableBean, String> bigDecimalColumn = editableColumn(tableSpecification.getColumnSpecifications().get(2));
+
 		tableView.getColumns().addAll(firstNameColumn, lastNameColumn, bigDecimalColumn);
 
 		Button button = new Button("show invalid entries");
@@ -66,15 +75,17 @@ public class EditAndValidateTableViewDemo extends Application {
 
 	private void showInvalidItems() {
 		// todo: provide a combined validation result on 'PersonTableBean' instead of doing it here:
+		System.out.println("Validation Results:");
+		System.out.println("===================");
 		items
 			.stream()
 			.filter(item -> !item.firstName().isValid())
-			.forEach(item -> System.out.printf("%s: %s %s%n", item.firstName().getValidationResult().getErrorMessage(), item.firstName().getText(), item.getLastName()))
+			.forEach(item -> System.out.printf("Validation Error: %s %s: %s%n", item.firstName().getText(), item.getLastName(), item.firstName().getValidationResult().getErrorMessage()))
 		;
 		items
 			.stream()
 			.filter(item -> !item.bigDecimalValue().isValid())
-			.forEach(item -> System.out.printf("%s: %s %s%n", item.bigDecimalValue().getValidationResult().getErrorMessage(), item.firstName().getText(), item.getLastName()))
+			.forEach(item -> System.out.printf("Validation Error: %s %s: %s%n", item.firstName().getText(), item.getLastName(), item.bigDecimalValue().getValidationResult().getErrorMessage()))
 		;
 	}
 

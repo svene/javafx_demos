@@ -5,23 +5,28 @@ import java.util.function.Function;
 import static org.svenehrke.javafxdemos.table.editandvalidation.ValidatedStrings.bindValidatorToValidatedString;
 
 class PersonTableBeanBuilder {
-	final Function<String, ValidationResult> firstnameValidator, bigDecimalValueValidator;
+	private final ITableSpecification tableSpecification;
 
-	PersonTableBeanBuilder(final Function<String, ValidationResult> firstnameValidator, final Function<String, ValidationResult> bigDecimalValueValidator) {
-		this.firstnameValidator = firstnameValidator;
-		this.bigDecimalValueValidator = bigDecimalValueValidator;
+	static PersonTableBeanBuilder newPersonTableBeanBuilder(ITableSpecification tableSpecification) {
+		return new PersonTableBeanBuilder(tableSpecification);
+	}
+
+	PersonTableBeanBuilder(ITableSpecification tableSpecification) {
+		this.tableSpecification = tableSpecification;
 	}
 
 	PersonTableBean newPersonTableBean(String firstName, final String lastName, String value) {
 		PersonTableBean result = new PersonTableBean("", "", "");
 
-		bindValidatorToValidatedString(result.firstName(), firstnameValidator);
-		result.firstName().setText(firstName);
-
-		bindValidatorToValidatedString(result.bigDecimalValue(), bigDecimalValueValidator);
-		result.bigDecimalValue().setText(value);
+		initValidatedString(firstName, tableSpecification.getColumnSpecifications().get(0).validator(), result.firstName());
+		initValidatedString(value, tableSpecification.getColumnSpecifications().get(2).validator(), result.bigDecimalValue());
 
 		result.setLastName(lastName);
 		return result;
+	}
+
+	private void initValidatedString(final String value, Function<String, ValidationResult> validator, ValidatedString validatedString) {
+		bindValidatorToValidatedString(validatedString, validator);
+		validatedString.setText(value);
 	}
 }
