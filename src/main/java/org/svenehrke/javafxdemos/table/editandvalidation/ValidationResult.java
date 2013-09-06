@@ -4,6 +4,8 @@ public class ValidationResult {
 	private final boolean isValid;
 	private final String errorMessage;
 
+	public static ValidationResult VALID = new ValidationResult(true, "");
+
 	public ValidationResult(final boolean valid, final String errorMessage) {
 		isValid = valid;
 		this.errorMessage = errorMessage;

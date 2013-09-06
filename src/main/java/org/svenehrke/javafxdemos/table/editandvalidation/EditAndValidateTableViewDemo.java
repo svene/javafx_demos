@@ -10,6 +10,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.converter.DefaultStringConverter;
 import org.svenehrke.javafxdemos.common.Styles;
 
 import static org.svenehrke.javafxdemos.table.editandvalidation.ColumnConstructor.editableColumn;
@@ -35,13 +36,14 @@ public class EditAndValidateTableViewDemo extends Application {
 	public void start(Stage stage) throws Exception {
 		VBox pane = new VBox();
 		pane.setPadding(new Insets(10));
+		pane.setSpacing(10);
 
-		this.items = DataProvider.people();
+		this.items = DataProvider.people(DataProvider.newPersonTableBeanBuilder());
 		ObservableList<PersonTableBean> items = FXCollections.observableArrayList(this.items);
 		final TableView<PersonTableBean> tableView = tableView(items);
 		final TableColumn<PersonTableBean, String> firstNameColumn = editableColumn("First Name", PersonTableBean::firstName, new ToUpperCaseStringConverter());
 		final TableColumn<PersonTableBean, String> lastNameColumn = readOnlyColumn("Last Name", PersonTableBean::getLastName);
-		final TableColumn<PersonTableBean, String> bigDecimalColumn = editableColumn("BigDecimal", PersonTableBean::bigDecimalValue, new ToUpperCaseStringConverter());
+		final TableColumn<PersonTableBean, String> bigDecimalColumn = editableColumn("BigDecimal", PersonTableBean::bigDecimalValue, new DefaultStringConverter());
 		tableView.getColumns().addAll(firstNameColumn, lastNameColumn, bigDecimalColumn);
 
 		Button button = new Button("show invalid entries");
@@ -66,7 +68,7 @@ public class EditAndValidateTableViewDemo extends Application {
 		items
 			.stream()
 			.filter(item -> !item.firstName().isValid())
-			.forEach(item -> System.out.printf("%s: %s %s%n", item.firstName().getValidationResult().getErrorMessage(), item.firstName(), item.getLastName()))
+			.forEach(item -> System.out.printf("%s: %s %s%n", item.firstName().getValidationResult().getErrorMessage(), item.firstName().getText(), item.getLastName()))
 		;
 	}
 
