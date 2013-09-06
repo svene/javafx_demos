@@ -1,11 +1,11 @@
 package org.svenehrke.javafxdemos.table.editandvalidation.persistence;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class IdGenerator {
-	static AtomicInteger currentValue = new AtomicInteger(0);
+	static AtomicLong currentValue = new AtomicLong(0);
 
-	static int next() {
+	public static long next() {
 		return currentValue.incrementAndGet();
 	}
 }
