@@ -2,7 +2,6 @@ package org.svenehrke.javafxdemos.table.editandvalidation;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -26,9 +25,10 @@ import static org.svenehrke.javafxdemos.table.editandvalidation.ColumnBuilder.re
 
 public class EditAndValidateTableViewDemo extends Application {
 
+	private final ObservableList<PersonTableBean> itemsToBeDeleted = FXCollections.observableArrayList();
 	private ObservableList<PersonTableBean> items = FXCollections.observableArrayList();
+
 	private PersonTableBeanBuilder personTableBeanBuilder;
-	private ListChangeListener<PersonTableBean> itemsListener;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -57,19 +57,7 @@ public class EditAndValidateTableViewDemo extends Application {
 
 		personTableBeanBuilder = PersonTableBeanBuilder.newPersonTableBeanBuilder(tableSpecification);
 
-		itemsListener = (ListChangeListener<PersonTableBean>) c -> {
-			while (c.next()) {
-				System.out.println("CHANGE:" + c);
-				if (c.wasRemoved()) {
-					System.out.println("c.getRemovedSize() = " + c.getRemovedSize());
-					PersonTableBean personTableBean = c.getRemoved().get(0);
-					PersonRepository.getInstance().removePerson(personTableBean.getId());
-				}
-			}
-		};
 		loadItems();
-		items.addAll(PersistenceAndGUIMapper.people(personTableBeanBuilder, personStream()));
-
 		final TableView<PersonTableBean> tableView = tableView(items);
 
 		final TableColumn<PersonTableBean, String> firstNameColumn = editableColumn(tableSpecification.getColumnSpecifications().get(0));
@@ -78,8 +66,8 @@ public class EditAndValidateTableViewDemo extends Application {
 
 		tableView.getColumns().addAll(firstNameColumn, lastNameColumn, bigDecimalColumn);
 
-		Button showInvalidItemsButton = new Button("show invalid entries");
-		showInvalidItemsButton.setOnAction(event -> showInvalidItems());
+		Button showInvalidItemsButton = new Button("show entries");
+		showInvalidItemsButton.setOnAction(event -> showInvalidItems(tableView));
 
 		Button addButton = new Button("+");
 		addButton.setOnAction(event -> addItem());
@@ -109,26 +97,22 @@ public class EditAndValidateTableViewDemo extends Application {
 	}
 
 	private void clear() {
-		items.removeListener(itemsListener);
 		items.clear();
-		items.addListener(itemsListener);
+		itemsToBeDeleted.clear();
 	}
 	private void loadItems() {
-		items.removeListener(itemsListener);
-		items.addAll(PersistenceAndGUIMapper.people(personTableBeanBuilder, personStream()));
-		items.addListener(itemsListener);
+		itemsToBeDeleted.clear();
+		ObservableList<PersonTableBean> people = PersistenceAndGUIMapper.people(personTableBeanBuilder, personStream());
+		items.addAll(people);
 	}
 
 	public static Stream<Person> personStream() {
 		return PersonRepository.getInstance().people().stream();
 	}
 
-	private void save() {
-		//To change body of created methods use File | Settings | File Templates.
-	}
-
 	private void delItem(final TableView<PersonTableBean> tableView) {
-		tableView.getSelectionModel().getSelectedIndices().forEach(idx -> items.remove((int)idx));
+		tableView.getSelectionModel().getSelectedItems().forEach(itemsToBeDeleted::add);
+		itemsToBeDeleted.forEach(items::remove);
 	}
 
 	private void addItem() {
@@ -137,28 +121,40 @@ public class EditAndValidateTableViewDemo extends Application {
 		System.out.println("items.size() = " + items.size());
 	}
 
+	private void showInvalidItems(final TableView<PersonTableBean> tableView) {
+		// todo: provide a combined validation result on 'PersonTableBean' instead of doing it here:
+		System.out.println("Status of Items:");
+		System.out.println("================");
+		for (PersonTableBean item : items) {
+			checkValidity(item, item.firstName());
+			checkValidity(item, item.bigDecimalValue());
+		}
+		itemsToBeDeleted.forEach(item -> System.out.printf("Delete: %s %s%n", item.firstName().getText(), item.getLastName()));
+		tableView.getSelectionModel().getSelectedItems().forEach(item -> {
+			System.out.printf("selected: %d, %s%n", item.getId(), item.toString());
+		});
+	}
+
+	private void save() {
+		for (PersonTableBean item : itemsToBeDeleted) {
+			System.out.printf("deleting: %d, %s%n", item.getId(), item.toString());
+			PersonRepository.getInstance().removePerson(item.getId());
+		}
+		itemsToBeDeleted.clear();
+	}
+
+	private void checkValidity(final PersonTableBean item, ValidatedString validatedString) {
+		if (!validatedString.isValid()) {
+			System.out.printf("Validation Error: %s %s: %s%n", item.firstName().getText(), item.getLastName(), validatedString.getValidationResult().getErrorMessage());
+		}
+	}
+
 	private TableView<PersonTableBean> tableView(final ObservableList<PersonTableBean> items) {
 		final TableView<PersonTableBean> tableView = new TableView<>(items);
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		tableView.setEditable(true);
 		tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		return tableView;
-	}
-
-	private void showInvalidItems() {
-		// todo: provide a combined validation result on 'PersonTableBean' instead of doing it here:
-		System.out.println("Validation Results:");
-		System.out.println("===================");
-		items
-			.stream()
-			.filter(item -> !item.firstName().isValid())
-			.forEach(item -> System.out.printf("Validation Error: %s %s: %s%n", item.firstName().getText(), item.getLastName(), item.firstName().getValidationResult().getErrorMessage()))
-		;
-		items
-			.stream()
-			.filter(item -> !item.bigDecimalValue().isValid())
-			.forEach(item -> System.out.printf("Validation Error: %s %s: %s%n", item.firstName().getText(), item.getLastName(), item.bigDecimalValue().getValidationResult().getErrorMessage()))
-		;
 	}
 
 }

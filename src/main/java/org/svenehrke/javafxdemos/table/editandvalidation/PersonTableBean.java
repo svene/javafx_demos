@@ -2,6 +2,7 @@ package org.svenehrke.javafxdemos.table.editandvalidation;
 
 public class PersonTableBean {
 	private long id;
+
 	private ValidatedString firstName = new ValidatedString("");
 	private String lastName;
 	private ValidatedString bigDecimalValue = new ValidatedString("");
