@@ -13,7 +13,10 @@ def javaHome = System.env['JAVA_HOME']
 dependencies {
 	//compile 'org.jfxtras:jfxtras-labs:2.2-r4'
 	compile files("${javaHome}/jre/lib/jfxrt.jar")
+	compile 'com.miglayout:miglayout-javafx:4.2'
+
 	testCompile group: 'junit', name: 'junit', version: '4.10'
+	testCompile 'org.mockito:mockito-all:1.9.5'
 }
 
 
