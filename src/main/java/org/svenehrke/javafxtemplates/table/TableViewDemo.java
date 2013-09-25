@@ -3,25 +3,13 @@ package org.svenehrke.javafxtemplates.table;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.SnapshotResult;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
 
 public class TableViewDemo extends Application {
 
@@ -50,7 +38,7 @@ public class TableViewDemo extends Application {
 
 		pane.getChildren().addAll(tableView);
 
-		Scene scene = new Scene(pane, 300, 500, Color.DODGERBLUE);
+		Scene scene = new Scene(pane, 300, 500);
 		stage.setScene(scene);
 		stage.show();
 	}
