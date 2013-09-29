@@ -1,0 +1,91 @@
+package org.svenehrke.javafxdemos.table.tablepopulation;
+
+import javafx.application.Application;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.util.Callback;
+
+import java.util.Collection;
+
+/**
+ * As 'TablePopulation3Demo' but with editing support.
+ * This means:
+ * 1) calling 'setEditable(true)' on the tableView and the TableColumns
+ * 2) setting an appropriate CellFactory
+ * 3) calling 'setOnEditCommit()' on the TableColumns
+ *
+ * This demo implements all 3) and when you execute the demo it is possible to change a value in the first column
+ * say in the second row from '1' to '111'. But when you double click the cell again to edit it a second time you
+ * will notice that it shows again '1' in the cell editor since 3) is not really implementing a commit. This will
+ * be done in the next demo. The same will happen without editing: when you scroll a bit down so that the second row
+ * is not visible anymore and then scroll up again you will see that the '111' got replace by '1' again.
+ *
+ */
+public class TablePopulation3Demo extends Application {
+
+
+	public static void main(String[] args) {
+		launch(args);
+	}
+
+	@Override
+	public void start(final Stage stage) throws Exception {
+		stage.setTitle("TableView Demo");
+
+		VBox pane = new VBox();
+		pane.setPadding(new Insets(10));
+
+		Collection<Integer> items1 = FakeCollections.integerItems(1_000_000);
+		ObservableList<Integer> items = FXCollections.observableArrayList(items1);
+		final TableView<Integer> tableView = tableView(items);
+		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+		tableView.getColumns().addAll(firstColumn(), secondColumn());
+
+		pane.getChildren().addAll(tableView);
+
+		Scene scene = new Scene(pane, 300, 500);
+		stage.setScene(scene);
+		stage.show();
+	}
+
+	private TableView<Integer> tableView(final ObservableList<Integer> items) {
+		TableView<Integer> result = new TableView<>(items);
+		result.setEditable(true);
+		return result;
+	}
+
+	private TableColumn<Integer, String> firstColumn() {
+		TableColumn<Integer, String> result = new TableColumn<>("A");
+
+		result.setCellValueFactory(param -> new SimpleObjectProperty<>(String.valueOf(param.getValue())));
+
+		// make it editable:
+		result.setEditable(true);
+		result.setCellFactory(TextFieldTableCell.forTableColumn());
+		result.setOnEditCommit(event -> {
+			System.out.printf("COMMIT: rowvalue: %s, oldvalue: %s, newvalue: %s%n", event.getRowValue(), event.getOldValue(), event.getNewValue());
+		});
+
+		return result;
+	}
+	private TableColumn<Integer, String> secondColumn() {
+		TableColumn<Integer, String> result = new TableColumn<>("B");
+		result.setEditable(true);
+		result.setCellValueFactory(param -> new SimpleObjectProperty<>("b"));
+		return result;
+	}
+
+
+}
+
