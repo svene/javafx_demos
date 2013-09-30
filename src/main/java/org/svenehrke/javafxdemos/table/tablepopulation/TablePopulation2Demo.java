@@ -18,6 +18,9 @@ import java.util.Collection;
  * This makes use of 'FakeCollections.integerItems(...)' and thus avoids the need for population of the table's items
  * which both saves memory and improves performance. As a side effect we receive the row index in the CellValueFactory since
  * the values the factories receive are created from the row index.
+ *
+ * Unfortunately, if we use 'FXCollections.observableArrayList(fakeCollection)' this still invokes 'get(idx)' 1_000_000 times
+ * since it calls 'addAll(fakeCollection)' internally. We will solve this in the next demo.
  */
 public class TablePopulation2Demo extends Application {
 
@@ -54,7 +57,7 @@ public class TablePopulation2Demo extends Application {
 	}
 	private TableColumn<Integer, String> secondColumn() {
 		TableColumn<Integer, String> result = new TableColumn<>("B");
-		result.setCellValueFactory(param -> new SimpleObjectProperty<>("b"));
+		result.setCellValueFactory(param -> new SimpleObjectProperty<>("b " + String.valueOf(param.getValue())));
 		return result;
 	}
 

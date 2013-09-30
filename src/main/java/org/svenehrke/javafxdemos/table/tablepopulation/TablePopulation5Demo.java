@@ -2,20 +2,17 @@ package org.svenehrke.javafxdemos.table.tablepopulation;
 
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * As 'TablePopulation4Demo' but with editing support.
@@ -27,16 +24,17 @@ import java.util.Collection;
  * This demo implements all 3) and when you execute the demo it is possible to change a value in the first column
  * say in the second row from '1' to '111'. But when you double click the cell again to edit it a second time you
  * will notice that it shows again '1' in the cell editor since 3) is not really implementing a commit. This will
- * be done in the next demo. The same will happen without editing: when you scroll a bit down so that the second row
- * is not visible anymore and then scroll up again you will see that the '111' got replace by '1' again.
+ * be done in the next demo.
  *
  */
-public class TablePopulation4Demo extends Application {
+public class TablePopulation5Demo extends Application {
 
 
 	public static void main(String[] args) {
 		launch(args);
 	}
+
+	Map<Integer, String> data = new HashMap();
 
 	@Override
 	public void start(final Stage stage) throws Exception {
@@ -67,13 +65,14 @@ public class TablePopulation4Demo extends Application {
 	private TableColumn<Integer, String> firstColumn() {
 		TableColumn<Integer, String> result = new TableColumn<>("A");
 
-		result.setCellValueFactory(param -> new SimpleObjectProperty<>(String.valueOf(param.getValue())));
+		result.setCellValueFactory(param -> new SimpleObjectProperty<>(String.valueOf(data.containsKey(param.getValue()) ? data.get(param.getValue()) :  param.getValue())));
 
 		// make it editable:
 		result.setEditable(true);
 		result.setCellFactory(TextFieldTableCell.forTableColumn());
 		result.setOnEditCommit(event -> {
 			System.out.printf("COMMIT: rowvalue: %s, oldvalue: %s, newvalue: %s%n", event.getRowValue(), event.getOldValue(), event.getNewValue());
+			data.put(event.getRowValue(), event.getNewValue());
 		});
 
 		return result;

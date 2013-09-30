@@ -1,7 +1,11 @@
 package org.svenehrke.javafxdemos.table.tablepopulation;
 
+import com.sun.javafx.collections.ObservableListWrapper;
+import javafx.collections.ObservableList;
+
 import java.util.AbstractList;
 import java.util.Collection;
+import java.util.List;
 
 public class FakeCollections {
 	public static <S> Collection<S> items(int howMany) {
@@ -18,18 +22,26 @@ public class FakeCollections {
 			}
 		};
 	}
-	public static Collection<Integer> integerItems(int howMany) {
+	public static List<Integer> integerItems(int howMany) {
 		return new AbstractList<Integer>() {
 
 			@Override
 			public Integer get(final int index) {
+				System.out.println(index);
 				return index;
+//				return index == 5 ? null : index;
 			}
 
 			@Override
 			public int size() {
 				return howMany;
 			}
+		};
+	}
+
+	public static ObservableList<Integer> integerObservableList(final List<Integer> integerList) {
+		return new ObservableListWrapper<Integer>(integerList) {
+
 		};
 	}
 }
