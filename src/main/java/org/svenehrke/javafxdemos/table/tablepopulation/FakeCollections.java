@@ -39,8 +39,8 @@ public class FakeCollections {
 		};
 	}
 
-	public static ObservableList<Integer> integerObservableList(final List<Integer> integerList) {
-		return new ObservableListWrapper<Integer>(integerList) {
+	public static <T> ObservableList<T> newObservableList(final List<T> integerList) {
+		return new ObservableListWrapper<T>(integerList) {
 
 		};
 	}

@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
- * As 'TablePopulation2Demo' but using 'FakeCollections.integerObservableList()' instead of ' FXCollections.observableArrayList'.
+ * As 'TablePopulation2Demo' but using 'FakeCollections.newObservableList()' instead of ' FXCollections.observableArrayList'.
  * Internally that makes use of a 'ObservableListWrapper' which wraps the original list instead of copying it's elements. Since
  * there is no copy process involved the iteration for 'addAll' does not happen anymore which leads to lazy calls to 'get(idx)'.
  */
@@ -29,7 +29,7 @@ public class TablePopulation3Demo extends Application {
 		VBox pane = new VBox();
 		pane.setPadding(new Insets(10));
 
-		ObservableList<Integer> items = FakeCollections.integerObservableList(FakeCollections.integerItems(1_000_000));  // <== instead of ' FXCollections.observableArrayList'
+		ObservableList<Integer> items = FakeCollections.newObservableList(FakeCollections.integerItems(1_000_000));  // <== instead of ' FXCollections.observableArrayList'
 		final TableView<Integer> tableView = new TableView<>(items);
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 

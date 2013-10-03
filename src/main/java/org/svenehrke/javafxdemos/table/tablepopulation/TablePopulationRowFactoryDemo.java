@@ -36,7 +36,6 @@ public class TablePopulationRowFactoryDemo extends Application {
 		ObservableList<Integer> items = FXCollections.observableArrayList(items(100));
 		final TableView<Integer> tableView = new TableView<>(items);
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		Map<Integer, CountDownLatch> rowLatches = new HashMap<>();
 
 		tableView.setRowFactory(new Callback<TableView<Integer>, TableRow<Integer>>() {
 			@Override
@@ -46,7 +45,6 @@ public class TablePopulationRowFactoryDemo extends Application {
 					@Override
 					public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
 //						System.out.printf("index: %s -> %s%n", oldValue, newValue);
-						rowLatches.put(newValue.intValue(), new CountDownLatch(1));
 						System.out.println("withPresentationModel: requesting PM " + newValue);
 						Executors.newSingleThreadExecutor().execute(new Runnable() {
 							@Override
@@ -57,7 +55,6 @@ public class TablePopulationRowFactoryDemo extends Application {
 									System.out.println("onFinishedHandler: got PM " + newValue);
 								} catch (InterruptedException e) {
 								}
-								rowLatches.get(newValue.intValue()).countDown();// notify that PM is available
 							}
 						});
 					}
@@ -70,15 +67,6 @@ public class TablePopulationRowFactoryDemo extends Application {
 		firstColumn.setCellValueFactory(param -> {
 			Integer value = param.getValue();
 
-			CountDownLatch latch = rowLatches.get(value); // here not the value but the rowIndex should be used, but I do not know how to get access to it here
-			if (latch != null) {
-				System.out.println("CellValueFactory: waiting for " + value);
-				try {
-					latch.await(); // wait until PM is available
-				} catch (InterruptedException e) {
-				}
-				System.out.println("CellValueFactory: got " + value);
-			}
 			return new SimpleObjectProperty<>(value);
 		});
 		tableView.getColumns().addAll(firstColumn);
@@ -109,6 +97,7 @@ public class TablePopulationRowFactoryDemo extends Application {
 		System.out.println("done");
 		return result;
 	}
+
 
 
 }

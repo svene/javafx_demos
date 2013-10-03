@@ -2,20 +2,14 @@ package org.svenehrke.javafxdemos.table.tablepopulation;
 
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-
-import java.util.Collection;
 
 /**
  * As 'TablePopulation4Demo' but with editing support.
@@ -45,7 +39,7 @@ public class TablePopulation4Demo extends Application {
 		VBox pane = new VBox();
 		pane.setPadding(new Insets(10));
 
-		ObservableList<Integer> items = FakeCollections.integerObservableList(FakeCollections.integerItems(1_000_000));
+		ObservableList<Integer> items = FakeCollections.newObservableList(FakeCollections.integerItems(1_000_000));
 		final TableView<Integer> tableView = tableView(items);
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
