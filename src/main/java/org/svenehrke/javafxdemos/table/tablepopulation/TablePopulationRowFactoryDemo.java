@@ -37,30 +37,21 @@ public class TablePopulationRowFactoryDemo extends Application {
 		final TableView<Integer> tableView = new TableView<>(items);
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-		tableView.setRowFactory(new Callback<TableView<Integer>, TableRow<Integer>>() {
-			@Override
-			public TableRow<Integer> call(final TableView<Integer> param) {
-				TableRow<Integer> tableRow = new TableRow<>();
-				tableRow.indexProperty().addListener(new ChangeListener<Number>() {
-					@Override
-					public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
+		tableView.setRowFactory(param -> {
+			TableRow<Integer> tableRow = new TableRow<>();
+			tableRow.indexProperty().addListener((observable, oldValue, newValue) -> {
 //						System.out.printf("index: %s -> %s%n", oldValue, newValue);
-						System.out.println("withPresentationModel: requesting PM " + newValue);
-						Executors.newSingleThreadExecutor().execute(new Runnable() {
-							@Override
-							public void run() {
-								// Simulate wait time until onFinishedHandler of 'dolphin.clientModelStore.withPresentationModel' is done:
-								try {
-									Thread.sleep(300);
-									System.out.println("onFinishedHandler: got PM " + newValue);
-								} catch (InterruptedException e) {
-								}
-							}
-						});
+				System.out.println("withPresentationModel: requesting PM " + newValue);
+				Executors.newSingleThreadExecutor().execute(() -> {
+					// Simulate wait time until onFinishedHandler of 'dolphin.clientModelStore.withPresentationModel' is done:
+					try {
+						Thread.sleep(300);
+						System.out.println("onFinishedHandler: got PM " + newValue);
+					} catch (InterruptedException e) {
 					}
 				});
-				return tableRow;
-			}
+			});
+			return tableRow;
 		});
 
 		final TableColumn<Integer, Integer> firstColumn = new TableColumn<>("A");

@@ -31,16 +31,13 @@ public class TakeSnapshotDemo extends Application {
 		button.setOnAction(event -> {
 
 			WritableImage wim = new WritableImage(300, 500);
-			stage.getScene().snapshot(new Callback<SnapshotResult, Void>() {
-				@Override
-				public Void call(final SnapshotResult param) {
-					try {
-						ImageIO.write(SwingFXUtils.fromFXImage(wim, null), "png", new File("javafxsnapshot.png"));
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					return null;
+			stage.getScene().snapshot(param -> {
+				try {
+					ImageIO.write(SwingFXUtils.fromFXImage(wim, null), "png", new File("javafxsnapshot.png"));
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
+				return null;
 			}, wim);
 
 		});
