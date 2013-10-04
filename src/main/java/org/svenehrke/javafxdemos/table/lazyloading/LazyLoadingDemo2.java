@@ -17,33 +17,17 @@ import org.svenehrke.javafxdemos.table.tablepopulation.FakeCollections;
 
 import java.util.AbstractList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
- * Lazy Loading Demo 1.
- *
- * Uses 'FakedPersonList' in order to lazily instantiate Beans (FXPerson) for TableView's items.
- * The faked PersonList is initialized with a certain number of entries (e.g. 100'000). Note the individual entries will not
- * be created in advance which would consume a lot of memory even though it is clear that not all entries will be used of even shown.
- * Instead the will be created on demand when FakedPersonList.get(index) is called by the TableView.
- *
- * When created, FXPerson objects are empty except for the field 'rowIndex' which is populated
- * with the index of the corresponding entry in the table's item list.
- *
- * In this approach the population of the FXPerson objects (see loadPresentationModel()) is triggered by a listener of TableRow.indexProperty.
- * TableRow.indexProperty is fired when a row of the TableView will become visible. The listener then retrieves the
- * real data from the backend (asynchronously) and when loaded populates the FXPerson objects with the data from the backend
- * (in this demo the "backend" sends a "presentation model" against which the FXPerson object will be bound).
- * Note that 'loadPresentationModel()' checks if a PM is already loaded or is being loaded at the moment. If that is the case it does nothing.
- *
- * Additional notes:
- *
- * - 'FakedPersonList.get(int index)' is always called (even several times for the same index) before the notifier of 'TableRow.indexProperty' fires.
- *   This makes it a much better candidate to trigger the population with the real data and will be shown in the next demo.
+ * Lazy Loading Demo2 . As LazyLoadingDemo2 but lazy loading (loadPresentationModel call) is triggered by calls to 'FakedPersonList.get(int index)'
+ * and thus the listener to 'TableRow.indexProperty' could be removed completely.
  *
  */
-public class LazyLoadingDemo1 extends Application {
-
+public class LazyLoadingDemo2 extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
@@ -57,7 +41,7 @@ public class LazyLoadingDemo1 extends Application {
 		pane.setPadding(new Insets(10));
 		pane.setSpacing(10);
 
-		FakedPersonList fakedPersonList = new FakedPersonList(100_000);
+		FakedPersonList fakedPersonList = new FakedPersonList(100_000, this::loadPresentationModel);
 		ObservableList<FXPerson> items = FakeCollections.newObservableList(fakedPersonList);
 		final TableView<FXPerson> tableView = tableView(items);
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -76,18 +60,12 @@ public class LazyLoadingDemo1 extends Application {
 
 	private TableView<FXPerson> tableView(final ObservableList<FXPerson> items) {
 		TableView<FXPerson> tableView = new TableView<>(items);
-		tableView.setRowFactory(param -> {
-			TableRow<FXPerson> row = new TableRow<>();
-			row.indexProperty().addListener((observable, oldValue, visibleRowIndex) -> loadPresentationModel(items, visibleRowIndex.intValue()));
-			return row;
-		});
 		return tableView;
 	}
 
-	private void loadPresentationModel(final ObservableList<FXPerson> items, int rowIdx) {
+	private void loadPresentationModel(int rowIdx, final FXPerson person) {
 		if (rowIdx == -1) return;
-		System.out.println("TableRow.indexProperty: rowIdx = " + rowIdx);
-		final FXPerson person = items.get(rowIdx);
+		System.out.println("loadPresentationModel: rowIdx = " + rowIdx);
 		if (person.getLoadState() == LoadState.LOADED) return;
 		if (person.getLoadState() == LoadState.LOADING) return;
 
@@ -120,13 +98,15 @@ public class LazyLoadingDemo1 extends Application {
 
 	private static class FakedPersonList extends AbstractList<FXPerson> {
 		private final int size;
+		private final BiConsumer<Integer, FXPerson> getAtConsumer;
 
 		private final IntegerProperty fillSize = new SimpleIntegerProperty(0);
 
 		private final Map<Integer, FXPerson> people = new HashMap<>();
 
-		private FakedPersonList(final int size) {
+		private FakedPersonList(final int size, BiConsumer<Integer, FXPerson> getAtConsumer) {
 			this.size = size;
+			this.getAtConsumer = getAtConsumer;
 		}
 
 		@Override
@@ -140,6 +120,9 @@ public class LazyLoadingDemo1 extends Application {
 			FXPerson fxPerson = new FXPerson(index, -1, "not loaded", "not loaded");
 			people.put(index, fxPerson);
 			fillSize.setValue(fillSize.getValue() + 1);
+
+			getAtConsumer.accept(index, fxPerson);
+
 			return fxPerson;
 		}
 

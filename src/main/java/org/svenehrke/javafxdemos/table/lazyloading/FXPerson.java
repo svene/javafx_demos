@@ -6,7 +6,7 @@ import javafx.beans.property.StringProperty;
 public class FXPerson {
 	private final int rowIndex;
 	private int dbId;
-	private LazyLoadingDemo1.LoadState loadState;
+	private LoadState loadState;
 	private final StringProperty firstName;
 	private final StringProperty lastName;
 
@@ -15,7 +15,7 @@ public class FXPerson {
 		this.dbId = dbId;
 		this.firstName = new SimpleStringProperty(firstName);
 		this.lastName = new SimpleStringProperty(lastName);
-		loadState = LazyLoadingDemo1.LoadState.NOT_LOADED;
+		loadState = LoadState.NOT_LOADED;
 	}
 
 	public int getRowIndex() {
@@ -30,11 +30,11 @@ public class FXPerson {
 		this.dbId = dbId;
 	}
 
-	public LazyLoadingDemo1.LoadState getLoadState() {
+	public LoadState getLoadState() {
 		return loadState;
 	}
 
-	public void setLoadState(final LazyLoadingDemo1.LoadState loadState) {
+	public void setLoadState(final LoadState loadState) {
 		this.loadState = loadState;
 	}
 
