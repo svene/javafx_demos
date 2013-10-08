@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Lazy Loading Demo2 . As LazyLoadingDemo2 but lazy loading (loadPresentationModel call) is triggered by calls to 'FakedPersonList.get(int index)'
@@ -41,7 +42,7 @@ public class LazyLoadingDemo2 extends Application {
 		pane.setPadding(new Insets(10));
 		pane.setSpacing(10);
 
-		FakedPersonList fakedPersonList = new FakedPersonList(100_000, this::loadPresentationModel);
+		LazyList<FXPerson> fakedPersonList = new LazyList<>(100_000, (idx) -> new FXPerson(idx, -1, "not loaded", "not loaded"), this::loadPresentationModel);
 		ObservableList<FXPerson> items = FakeCollections.newObservableList(fakedPersonList);
 		final TableView<FXPerson> tableView = tableView(items);
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -96,34 +97,36 @@ public class LazyLoadingDemo2 extends Application {
 		return result;
 	}
 
-	private static class FakedPersonList extends AbstractList<FXPerson> {
+	private static class LazyList<S> extends AbstractList<S> {
 		private final int size;
-		private final BiConsumer<Integer, FXPerson> getAtConsumer;
+		private final Function<Integer, S> itemProducer;
+		private final BiConsumer<Integer, S> getAtConsumer;
 
 		private final IntegerProperty fillSize = new SimpleIntegerProperty(0);
 
-		private final Map<Integer, FXPerson> people = new HashMap<>();
+		private final Map<Integer, S> items = new HashMap<>();
 
-		private FakedPersonList(final int size, BiConsumer<Integer, FXPerson> getAtConsumer) {
+		private LazyList(final int size, final Function<Integer, S> itemProducer, BiConsumer<Integer, S> getAtConsumer) {
 			this.size = size;
+			this.itemProducer = itemProducer;
 			this.getAtConsumer = getAtConsumer;
 		}
 
 		@Override
-		public FXPerson get(final int index) {
-			if (people.containsKey(index)) {
+		public S get(final int index) {
+			if (items.containsKey(index)) {
 				System.out.println("map hit for index = " + index);
-				return people.get(index);
+				return items.get(index);
 			}
 
-			System.out.println("creating person for rowIdx " + index + ". size: " + people.size());
-			FXPerson fxPerson = new FXPerson(index, -1, "not loaded", "not loaded");
-			people.put(index, fxPerson);
+			System.out.println("creating item for rowIdx " + index + ". size: " + items.size());
+			S item = itemProducer.apply(index);
+			items.put(index, item);
 			fillSize.setValue(fillSize.getValue() + 1);
 
-			getAtConsumer.accept(index, fxPerson);
+			getAtConsumer.accept(index, item);
 
-			return fxPerson;
+			return item;
 		}
 
 		@Override
