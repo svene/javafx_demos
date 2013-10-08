@@ -16,7 +16,7 @@ import java.util.*;
  * Demo for TableView Population.
  * Demonstrates that it is not necessary that the items (the Collection passed into the 'new TableView(items)' constructor
  * really contains elements. It is sufficient that it is a Collections which pretends that it holds the elements. This is shown
- * by using 'FakeCollections.items(howMany)' where 'howMany' defines the number of rows the table should have.
+ * by using 'LazyCollections.items(howMany)' where 'howMany' defines the number of rows the table should have.
  *
  * In the introduction example the row type of the table was 'Person'. In this example the row type was purposely chose to be 'Integer'
  * which normally would not make sense for a table (except for a one column table but then a list would probably make more sense).
@@ -36,7 +36,7 @@ public class TablePopulation1Demo extends Application {
 		VBox pane = new VBox();
 		pane.setPadding(new Insets(10));
 
-		Collection<Integer> items1 = FakeCollections.items(1_000_000);
+		Collection<Integer> items1 = LazyCollections.items(1_000_000);
 		ObservableList<Integer> items = FXCollections.observableArrayList(items1);
 		final TableView<Integer> tableView = new TableView<>(items);
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);

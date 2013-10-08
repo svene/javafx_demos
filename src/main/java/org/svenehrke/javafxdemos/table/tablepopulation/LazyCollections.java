@@ -7,7 +7,7 @@ import java.util.AbstractList;
 import java.util.Collection;
 import java.util.List;
 
-public class FakeCollections {
+public class LazyCollections {
 	public static <S> Collection<S> items(int howMany) {
 		return new AbstractList<S>() {
 

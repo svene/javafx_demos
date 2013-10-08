@@ -15,7 +15,7 @@ import java.util.Collection;
 
 /**
  * As 'TablePopulation1Demo' but using Integers calculated on demand from row index as values for first column.
- * This makes use of 'FakeCollections.integerItems(...)' and thus avoids the need for population of the table's items
+ * This makes use of 'LazyCollections.integerItems(...)' and thus avoids the need for population of the table's items
  * which both saves memory and improves performance. As a side effect we receive the row index in the CellValueFactory since
  * the values the factories receive are created from the row index.
  *
@@ -36,7 +36,7 @@ public class TablePopulation2Demo extends Application {
 		VBox pane = new VBox();
 		pane.setPadding(new Insets(10));
 
-		Collection<Integer> items1 = FakeCollections.integerItems(1_000_000);
+		Collection<Integer> items1 = LazyCollections.integerItems(1_000_000);
 		ObservableList<Integer> items = FXCollections.observableArrayList(items1);
 		final TableView<Integer> tableView = new TableView<>(items);
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);

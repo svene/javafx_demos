@@ -1,8 +1,6 @@
 package org.svenehrke.javafxdemos.table.lazyloading;
 
 import javafx.application.Application;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -13,19 +11,15 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.svenehrke.javafxdemos.table.tablepopulation.FakeCollections;
-
-import java.util.AbstractList;
-import java.util.HashMap;
-import java.util.Map;
+import org.svenehrke.javafxdemos.table.tablepopulation.LazyCollections;
 
 /**
  * Lazy Loading Demo 1.
  *
- * Uses 'FakedPersonList' in order to lazily instantiate Beans (FXPerson) for TableView's items.
- * The faked PersonList is initialized with a certain number of entries (e.g. 100'000). Note the individual entries will not
+ * Uses 'LazyList' in order to lazily instantiate Beans (FXPerson) for TableView's items.
+ * The lazy list is initialized with a certain number of entries (e.g. 100'000). Note the individual entries will not
  * be created in advance which would consume a lot of memory even though it is clear that not all entries will be used of even shown.
- * Instead the will be created on demand when FakedPersonList.get(index) is called by the TableView.
+ * Instead the will be created on demand when LazyList.get(index) is called by the TableView.
  *
  * When created, FXPerson objects are empty except for the field 'rowIndex' which is populated
  * with the index of the corresponding entry in the table's item list.
@@ -38,7 +32,7 @@ import java.util.Map;
  *
  * Additional notes:
  *
- * - 'FakedPersonList.get(int index)' is always called (even several times for the same index) before the notifier of 'TableRow.indexProperty' fires.
+ * - 'LazyList.get(int index)' is always called (even several times for the same index) before the notifier of 'TableRow.indexProperty' fires.
  *   This makes it a much better candidate to trigger the population with the real data and will be shown in the next demo.
  *
  */
@@ -57,15 +51,15 @@ public class LazyLoadingDemo1 extends Application {
 		pane.setPadding(new Insets(10));
 		pane.setSpacing(10);
 
-		FakedPersonList fakedPersonList = new FakedPersonList(100_000);
-		ObservableList<FXPerson> items = FakeCollections.newObservableList(fakedPersonList);
+		LazyList<FXPerson> lazyPersonList = new LazyList<>(100_000, (idx) -> new FXPerson(idx, -1, "not loaded", "not loaded"), (idx, person) -> {} );
+		ObservableList<FXPerson> items = LazyCollections.newObservableList(lazyPersonList);
 		final TableView<FXPerson> tableView = tableView(items);
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 		tableView.getColumns().addAll(firstColumn(), secondColumn());
 
 		Label fillSizeLabel = new Label("0");
-		fakedPersonList.fillSizeProperty().addListener((s,o,n) -> fillSizeLabel.setText(String.valueOf(n)));
+		lazyPersonList.fillSizeProperty().addListener((s,o,n) -> fillSizeLabel.setText(String.valueOf(n)));
 
 		pane.getChildren().addAll(tableView, fillSizeLabel);
 
@@ -118,39 +112,5 @@ public class LazyLoadingDemo1 extends Application {
 		return result;
 	}
 
-	private static class FakedPersonList extends AbstractList<FXPerson> {
-		private final int size;
-
-		private final IntegerProperty fillSize = new SimpleIntegerProperty(0);
-
-		private final Map<Integer, FXPerson> people = new HashMap<>();
-
-		private FakedPersonList(final int size) {
-			this.size = size;
-		}
-
-		@Override
-		public FXPerson get(final int index) {
-			if (people.containsKey(index)) {
-				System.out.println("map hit for index = " + index);
-				return people.get(index);
-			}
-
-			System.out.println("creating person for rowIdx " + index + ". size: " + people.size());
-			FXPerson fxPerson = new FXPerson(index, -1, "not loaded", "not loaded");
-			people.put(index, fxPerson);
-			fillSize.setValue(fillSize.getValue() + 1);
-			return fxPerson;
-		}
-
-		@Override
-		public int size() {
-			return size;
-		}
-
-		private IntegerProperty fillSizeProperty() {
-			return fillSize;
-		}
-	}
 }
 

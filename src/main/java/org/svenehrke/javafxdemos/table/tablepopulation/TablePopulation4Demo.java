@@ -39,7 +39,7 @@ public class TablePopulation4Demo extends Application {
 		VBox pane = new VBox();
 		pane.setPadding(new Insets(10));
 
-		ObservableList<Integer> items = FakeCollections.newObservableList(FakeCollections.integerItems(1_000_000));
+		ObservableList<Integer> items = LazyCollections.newObservableList(LazyCollections.integerItems(1_000_000));
 		final TableView<Integer> tableView = tableView(items);
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
