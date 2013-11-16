@@ -49,20 +49,17 @@ public class EditAndValidateTableViewDemo extends Application {
 		pane.setPadding(new Insets(10));
 		pane.setSpacing(10);
 
-		PersonTableSpecification tableSpecification = new PersonTableSpecification(Arrays.<IColumnSpecification>asList(
-			new FirstNameColumnSpecification(),
-			null,
-			new BigDecimalColumnSpecification())
-		);
+		ObservableList<IColumnSpecification> columnSpecifications = FXCollections.observableArrayList();
+		columnSpecifications.addAll(new FirstNameColumnSpecification(), null, new BigDecimalColumnSpecification());
 
-		personTableBeanBuilder = PersonTableBeanBuilder.newPersonTableBeanBuilder(tableSpecification);
+		personTableBeanBuilder = PersonTableBeanBuilder.newPersonTableBeanBuilder(columnSpecifications);
 
 		loadItems();
 		final TableView<PersonTableBean> tableView = tableView(items);
 
-		final TableColumn<PersonTableBean, String> firstNameColumn = editableColumn(tableSpecification.getColumnSpecifications().get(0));
+		final TableColumn<PersonTableBean, String> firstNameColumn = editableColumn(PersonTableSpecification2.firstNameSpec(columnSpecifications));
 		final TableColumn<PersonTableBean, String> lastNameColumn = readOnlyColumn("Last Name", PersonTableBean::getLastName);
-		final TableColumn<PersonTableBean, String> bigDecimalColumn = editableColumn(tableSpecification.getColumnSpecifications().get(2));
+		final TableColumn<PersonTableBean, String> bigDecimalColumn = editableColumn(PersonTableSpecification2.bdValueSpec(columnSpecifications));
 
 		tableView.getColumns().addAll(firstNameColumn, lastNameColumn, bigDecimalColumn);
 
