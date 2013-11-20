@@ -24,7 +24,7 @@ public class HelloWorldApp extends Application {
 
 		pane.getChildren().addAll(button);
 
-		Scene scene = new Scene(pane, 300, 500, Color.DODGERBLUE);
+		Scene scene = new Scene(pane, 300, 500);
 		stage.setScene(scene);
 		stage.setTitle("Hello World");
 		stage.show();
