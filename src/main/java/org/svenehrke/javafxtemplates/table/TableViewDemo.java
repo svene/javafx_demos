@@ -26,21 +26,33 @@ public class TableViewDemo extends Application {
 		pane.setPadding(new Insets(10));
 
 		ObservableList<Person> items = FXCollections.observableArrayList(people(100));
-		final TableView<Person> tableView = new TableView<>(items);
-		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-		final TableColumn<Person, String> firstNameColumn = new TableColumn<>("First Name");
-		firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-		final TableColumn<Person, String> lastNameColumn = new TableColumn<>("Last Name");
-		lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-
-		tableView.getColumns().addAll(firstNameColumn, lastNameColumn);
+		final TableView<Person> tableView = newTableView(items);
+		tableView.getColumns().addAll(firstNameColumn(), lastNameColumn());
 
 		pane.getChildren().addAll(tableView);
 
 		Scene scene = new Scene(pane, 300, 500);
 		stage.setScene(scene);
 		stage.show();
+	}
+
+	private TableColumn<Person, String> firstNameColumn() {
+		final TableColumn<Person, String> firstNameColumn = new TableColumn<>("First Name");
+		firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+		return firstNameColumn;
+	}
+
+	private TableColumn<Person, String> lastNameColumn() {
+		final TableColumn<Person, String> lastNameColumn = new TableColumn<>("Last Name");
+		lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+		return lastNameColumn;
+	}
+
+	private TableView<Person> newTableView(final ObservableList<Person> items) {
+		final TableView<Person> tableView = new TableView<>(items);
+		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		return tableView;
 	}
 
 	public static ObservableList<Person> people(int howMany) {
