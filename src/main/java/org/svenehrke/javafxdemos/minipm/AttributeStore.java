@@ -26,4 +26,17 @@ public class AttributeStore {
 			.filter(attr -> propertyName.equals(attr.getPropertyName()) && tag == attr.getTag())
 			.findFirst().orElseGet(null);
 	}
+
+	Attribute newValueAttribute(final String propertyName, final Object value) {
+		Attribute attribute = Attribute.newValueAttribute(propertyName, value);
+		put(attribute);
+		return attribute;
+	}
+	Attribute newValidAttribute(final String propertyName) {
+		Attribute attribute = new Attribute(propertyName, Boolean.TRUE, Tag.VALID);
+		put(attribute);
+		return attribute;
+	}
+
+
 }
