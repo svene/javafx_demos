@@ -1,6 +1,10 @@
 package org.svenehrke.javafxdemos.table.contextmenu;
 
 import javafx.application.Application;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -16,9 +20,15 @@ import javafx.util.converter.DefaultStringConverter;
 public class TableViewContextMenuDemo extends Application {
 
 
+	public static final String FIRST_NAME_TITLE = "First Name";
+	public static final String LAST_NAME_TITLE = "Last Name";
+
 	public static void main(String[] args) {
 		launch(args);
 	}
+
+	private StringProperty columnUnderMouse = new SimpleStringProperty("");
+	private IntegerProperty rowUnderMouse = new SimpleIntegerProperty(-1);
 
 	@Override
 	public void start(final Stage stage) throws Exception {
@@ -31,23 +41,23 @@ public class TableViewContextMenuDemo extends Application {
 
 		final TableView<Person> tableView = newTableView(items);
 		tableView.getColumns().addAll(firstNameColumn(), lastNameColumn());
-
 		pane.getChildren().addAll(tableView);
 
 		Scene scene = new Scene(pane, 300, 500);
 		stage.setScene(scene);
+
 		stage.show();
 	}
 
 	private TableColumn<Person, String> firstNameColumn() {
-		final TableColumn<Person, String> firstNameColumn = new TableColumn<>("First Name");
+		final TableColumn<Person, String> firstNameColumn = new TableColumn<>(FIRST_NAME_TITLE);
 		firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
 		setCellFactory(firstNameColumn);
 		return firstNameColumn;
 	}
 
 	private TableColumn<Person, String> lastNameColumn() {
-		final TableColumn<Person, String> lastNameColumn = new TableColumn<>("Last Name");
+		final TableColumn<Person, String> lastNameColumn = new TableColumn<>(LAST_NAME_TITLE);
 		lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
 		setCellFactory(lastNameColumn);
 		return lastNameColumn;
@@ -58,6 +68,8 @@ public class TableViewContextMenuDemo extends Application {
 			TextFieldTableCell<Person, String> cell = new TextFieldTableCell<>(new DefaultStringConverter());
 			cell.hoverProperty().addListener((s, o, n) -> {
 				System.out.println("hover " + cell.getIndex() + "/" + cell.getTableColumn().getText());
+				columnUnderMouse.set(cell.getTableColumn().getText());
+				rowUnderMouse.set(cell.getIndex());
 			});
 			return cell;
 		});
@@ -70,7 +82,16 @@ public class TableViewContextMenuDemo extends Application {
 	private TableView<Person> newTableView(final ObservableList<Person> items) {
 		final TableView<Person> tableView = new TableView<>(items);
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-		addContextMenuTo(tableView);
+
+		columnUnderMouse.addListener((s,o,n) -> {
+			ContextMenu contextMenu = columnUnderMouse.get().equals(FIRST_NAME_TITLE) ? firstNameContextMenu(rowUnderMouse.get()) : lastNameContextMenu(rowUnderMouse.get());
+			tableView.setContextMenu(contextMenu);
+		});
+		rowUnderMouse.addListener((s,o,n) -> {
+			ContextMenu contextMenu = columnUnderMouse.get().equals(FIRST_NAME_TITLE) ? firstNameContextMenu(rowUnderMouse.get()) : lastNameContextMenu(rowUnderMouse.get());
+			tableView.setContextMenu(contextMenu);
+		});
+
 		return tableView;
 	}
 
@@ -101,12 +122,19 @@ public class TableViewContextMenuDemo extends Application {
 		}
 	}
 
-	private void addContextMenuTo(final TableView<Person> tableView) {
+	private ContextMenu firstNameContextMenu(final int row) {
 		ContextMenu menu = new ContextMenu();
-		MenuItem item = new MenuItem("you can click me");
-		item.setOnAction(event -> System.out.println("you've clicked the menu item"));
+		MenuItem item = new MenuItem("first name row " + row);
+		item.setOnAction(event -> System.out.println("you've clicked the first name column on row: " + row));
 		menu.getItems().add(item);
-		tableView.setContextMenu(menu);
+		return menu;
+	}
+	private ContextMenu lastNameContextMenu(final int row) {
+		ContextMenu menu = new ContextMenu();
+		MenuItem item = new MenuItem("last name row " + row);
+		item.setOnAction(event -> System.out.println("you've clicked the last name column on row: " + row));
+		menu.getItems().add(item);
+		return menu;
 	}
 
 	static class MyCell<S> extends TableCell<S, String> {
