@@ -10,6 +10,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.svenehrke.javafxdemos.common.Styles;
 
 public class TableViewDemo extends Application {
 
@@ -33,6 +34,7 @@ public class TableViewDemo extends Application {
 		pane.getChildren().addAll(tableView);
 
 		Scene scene = new Scene(pane, 300, 500);
+		Styles.addStyleSheetTo(scene);
 		stage.setScene(scene);
 		stage.show();
 	}

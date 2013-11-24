@@ -1,6 +1,8 @@
 package org.svenehrke.javafxdemos.minipm;
 
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -23,11 +25,14 @@ public class Main extends Application {
 	MainAttributeScope mainAttributeScope = new MainAttributeScope(attributeStore);
 	MainGUIScope mainGUIScope;
 
+	BooleanProperty impulse = new SimpleBooleanProperty(false);
+
 	@Override
 	public void start(Stage stage) throws Exception {
 
 		// 1: Create attributes and their internal binding:
 		mainAttributeScope.initilizePMs();
+		AttributeBinder.bindImpulseListener(impulse, () -> System.out.println("hello world"));
 
 		VBox pane = new VBox();
 		pane.setPadding(new Insets(10));
@@ -38,7 +43,9 @@ public class Main extends Application {
 		TextField textField1 = new TextField();
 		TextField textField2 = new TextField();
 		Button button = new Button("Say Hello World");
-		button.setOnAction(event -> System.out.println("hello world"));
+		button.setOnAction(event -> {
+			impulse.setValue(true);
+		});
 
 		pane.getChildren().addAll(label, textField1, textField2, button);
 

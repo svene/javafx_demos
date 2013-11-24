@@ -5,3 +5,11 @@
 	-fx-background-color: red;
 	-fx-text-fill       : white;
 }
+
+.table-cell {
+	-fx-alignment: center-left;
+}
+
+.table-row-cell {
+	-fx-cell-size: 50px;
+}
