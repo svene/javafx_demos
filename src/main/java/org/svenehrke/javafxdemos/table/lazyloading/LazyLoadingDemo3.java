@@ -1,7 +1,10 @@
 package org.svenehrke.javafxdemos.table.lazyloading;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -13,11 +16,10 @@ import javafx.stage.Stage;
 import org.svenehrke.javafxdemos.table.tablepopulation.LazyCollections;
 
 /**
- * Lazy Loading Demo2 . As LazyLoadingDemo2 but lazy loading (loadPresentationModel call) is triggered by calls to 'LazyList.get(int index)'
- * and thus the listener to 'TableRow.indexProperty' could be removed completely.
+ * Lazy Loading Demo3 . As LazyLoadingDemo3 but using JavaFX means (Service) for asynchronous calls instead of 'ExecutorService' (in PMProvider)
  *
  */
-public class LazyLoadingDemo2 extends Application {
+public class LazyLoadingDemo3 extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
@@ -61,13 +63,17 @@ public class LazyLoadingDemo2 extends Application {
 
 		// Simulate 'withPresentationModel' call:
 		person.setLoadState(LoadState.LOADING);
-		PMProvider.withPresentationModel(rowIdx, (pm) -> {
-			// Populate p2 from PM:
+
+		LoadService loadService = new LoadService(rowIdx);
+		loadService.setOnSucceeded(event -> {
+			FakedPresentationModel pm = (FakedPresentationModel) event.getSource().getValue();
 			person.setDbId(rowIdx); //pm.dbId
 			person.firstNameProperty().bindBidirectional(pm.firstNameProperty());
 			person.lastNameProperty().bindBidirectional(pm.lastNameProperty());
 			person.setLoadState(LoadState.LOADED);
 		});
+		loadService.start();
+
 	}
 
 	private TableColumn<FXPerson, String> firstColumn() {
@@ -82,6 +88,27 @@ public class LazyLoadingDemo2 extends Application {
 		result.setCellValueFactory(param -> param.getValue().lastNameProperty());
 		return result;
 	}
+
+	static class LoadService extends Service<FakedPresentationModel> {
+		private final int rowIdx;
+
+		LoadService(final int rowIdx) {
+			this.rowIdx = rowIdx;
+		}
+
+		@Override
+		protected Task<FakedPresentationModel> createTask() {
+			return new Task<FakedPresentationModel>() {
+				@Override
+				protected FakedPresentationModel call() throws Exception {
+					Thread.sleep(1000); // Simulate DB-Query time
+					FakedPresentationModel pm = new FakedPresentationModel(rowIdx, rowIdx, "first " + rowIdx, "last " + rowIdx);
+					return pm;
+				}
+			};
+		}
+	}
+
 
 }
 

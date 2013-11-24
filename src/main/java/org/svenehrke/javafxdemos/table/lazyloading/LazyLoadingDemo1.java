@@ -45,7 +45,7 @@ public class LazyLoadingDemo1 extends Application {
 
 	@Override
 	public void start(final Stage stage) throws Exception {
-		stage.setTitle("TableView Demo");
+		stage.setTitle(getClass().getSimpleName());
 
 		VBox pane = new VBox();
 		pane.setPadding(new Insets(10));
