@@ -1,8 +1,7 @@
 package org.svenehrke.javafxdemos.table.tablepair;
 
 import javafx.application.Application;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -13,6 +12,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.svenehrke.javafxdemos.common.Styles;
 
 public class TableViewPairDemo extends Application {
@@ -45,11 +45,10 @@ public class TableViewPairDemo extends Application {
 		buttonBox.setSpacing(10);
 
 		Button shortTextButton = new Button("short text");
-		shortTextButton.getStyleClass().addAll("small");
-		shortTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue("short"));
+		shortTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue(new TableCellItem("short", false)));
 
 		Button longTextButton = new Button("long text");
-		longTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue("some longer text"));
+		longTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue(new TableCellItem("some longer text", false)));
 
 		buttonBox.getChildren().addAll(shortTextButton, longTextButton);
 
@@ -62,30 +61,30 @@ public class TableViewPairDemo extends Application {
 		stage.show();
 	}
 
-	private TableColumn<Person, String> col1(TableViewState tableViewState) {
-		final TableColumn<Person, String> tc = new TableColumn<>("1");
+	private TableColumn<Person, TableCellItem> col1(TableViewState tableViewState) {
+		final TableColumn<Person, TableCellItem> tc = new TableColumn<>("1");
 		tc.setId("1");
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name1Property());
 		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;
 	}
 
-	private TableColumn<Person, String> col2(TableViewState tableViewState) {
-		final TableColumn<Person, String> tc = new TableColumn<>("2");
+	private TableColumn<Person, TableCellItem> col2(TableViewState tableViewState) {
+		final TableColumn<Person, TableCellItem> tc = new TableColumn<>("2");
 		tc.setId("2");
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name2Property());
 		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;
 	}
-	private TableColumn<Person, String> col3(TableViewState tableViewState) {
-		final TableColumn<Person, String> tc = new TableColumn<>("3");
+	private TableColumn<Person, TableCellItem> col3(TableViewState tableViewState) {
+		final TableColumn<Person, TableCellItem> tc = new TableColumn<>("3");
 		tc.setId("3");
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name3Property());
 		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;
 	}
-	private TableColumn<Person, String> col4(TableViewState tableViewState) {
-		final TableColumn<Person, String> tc = new TableColumn<>("4");
+	private TableColumn<Person, TableCellItem> col4(TableViewState tableViewState) {
+		final TableColumn<Person, TableCellItem> tc = new TableColumn<>("4");
 		tc.setId("4");
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name4Property());
 		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
@@ -105,40 +104,6 @@ public class TableViewPairDemo extends Application {
 
 		}
 		return result;
-	}
-
-	public static class Person {
-		private final StringProperty name1;
-		private final StringProperty name2;
-		private final StringProperty name3;
-		private final StringProperty name4;
-
-		public Person(final int rowIdx) {
-			this.name1 = newProperty(1, rowIdx);
-			this.name2 = newProperty(2, rowIdx);
-			this.name3 = newProperty(3, rowIdx);
-			this.name4 = newProperty(4, rowIdx);
-		}
-
-		private SimpleStringProperty newProperty(int colIdx, final int rowIdx) {
-			return new SimpleStringProperty("name " + colIdx + " / " + rowIdx);
-		}
-
-		public StringProperty name1Property() {
-			return name1;
-		}
-
-		public StringProperty name2Property() {
-			return name2;
-		}
-
-		public StringProperty name3Property() {
-			return name3;
-		}
-
-		public StringProperty name4Property() {
-			return name4;
-		}
 	}
 
 }

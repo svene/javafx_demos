@@ -1,14 +1,12 @@
 package org.svenehrke.javafxdemos.table.tablepair;
 
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-class PersonTableCell extends TableCell<TableViewPairDemo.Person, String> {
+class PersonTableCell extends TableCell<Person, TableCellItem> {
 	private final Rectangle smallRect = new Rectangle(100, 30);
 	private final Rectangle bigRect = new Rectangle(100, 60);
 	private final TableViewState tableViewState;
@@ -28,7 +26,7 @@ class PersonTableCell extends TableCell<TableViewPairDemo.Person, String> {
 	}
 
 	@Override
-	protected void updateItem(final String item, final boolean empty) {
+	protected void updateItem(final TableCellItem item, final boolean empty) {
 		super.updateItem(item, empty);
 		System.out.printf("PersonTableCell.updateItem: col: %s, idx: %s%n", getTableColumn().getId(), getIndex());
 
@@ -37,12 +35,12 @@ class PersonTableCell extends TableCell<TableViewPairDemo.Person, String> {
 		if (getIndex() == -1) return;
 		if (getTableRow() == null) return;
 
-		TableViewPairDemo.Person p = (TableViewPairDemo.Person) getTableRow().getItem();
+		Person p = (Person) getTableRow().getItem();
 		p.name1Property().setValue(item);
 		p.name2Property().setValue(item);
 		p.name4Property().setValue(item);
 
-		Boolean bigRow = isBig(item);
+		Boolean bigRow = isBig(item.valueProperty().getValue());
 
 		Platform.runLater(() -> {
 			if (bigRow) {
