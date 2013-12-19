@@ -32,11 +32,13 @@ public class TableViewPairDemo extends Application {
 
 		ObservableList<Person> items = FXCollections.observableArrayList(people(100));
 
+		TableViewState tableViewState = new TableViewState();
+
 		final TableView<Person> leftTV = newTableView(items);
-		leftTV.getColumns().addAll(col1(), col2());
+		leftTV.getColumns().addAll(col1(tableViewState), col2(tableViewState));
 
 		final TableView<Person> rightTV = newTableView(items);
-		rightTV.getColumns().addAll(col3(), col4());
+		rightTV.getColumns().addAll(col3(tableViewState), col4(tableViewState));
 
 		VBox buttonBox = new VBox();
 		buttonBox.setPadding(new Insets(10));
@@ -60,29 +62,33 @@ public class TableViewPairDemo extends Application {
 		stage.show();
 	}
 
-	private TableColumn<Person, String> col1() {
+	private TableColumn<Person, String> col1(TableViewState tableViewState) {
 		final TableColumn<Person, String> tc = new TableColumn<>("1");
+		tc.setId("1");
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name1Property());
-		tc.setCellFactory(param -> new PersonTableCell());
+		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;
 	}
 
-	private TableColumn<Person, String> col2() {
+	private TableColumn<Person, String> col2(TableViewState tableViewState) {
 		final TableColumn<Person, String> tc = new TableColumn<>("2");
+		tc.setId("2");
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name2Property());
-		tc.setCellFactory(param -> new PersonTableCell());
+		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;
 	}
-	private TableColumn<Person, String> col3() {
+	private TableColumn<Person, String> col3(TableViewState tableViewState) {
 		final TableColumn<Person, String> tc = new TableColumn<>("3");
+		tc.setId("3");
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name3Property());
-		tc.setCellFactory(param -> new PersonTableCell());
+		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;
 	}
-	private TableColumn<Person, String> col4() {
+	private TableColumn<Person, String> col4(TableViewState tableViewState) {
 		final TableColumn<Person, String> tc = new TableColumn<>("4");
+		tc.setId("4");
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name4Property());
-		tc.setCellFactory(param -> new PersonTableCell());
+		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;
 	}
 
