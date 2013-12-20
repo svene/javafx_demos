@@ -3,7 +3,6 @@ package org.svenehrke.javafxdemos.table.tablepair;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 
 import java.util.Arrays;
@@ -11,10 +10,10 @@ import java.util.List;
 
 public class Person {
 
-	private final ObjectProperty<TableCellItem> name1;
-	private final ObjectProperty<TableCellItem> name2;
-	private final ObjectProperty<TableCellItem> name3;
-	private final ObjectProperty<TableCellItem> name4;
+	private final MySimpleObjectProperty<TableCellItem> name1;
+	private final MySimpleObjectProperty<TableCellItem> name2;
+	private final MySimpleObjectProperty<TableCellItem> name3;
+	private final MySimpleObjectProperty<TableCellItem> name4;
 
 	private final BooleanProperty big;
 
@@ -33,13 +32,13 @@ public class Person {
 
 		big.addListener((s,o,n) -> {
 			System.out.printf("Person.big: %s -> %s%n", o, n);
-			attributes().forEach(a -> a.setValue(new TableCellItem(a.getValue().getValue())));
+			attributes().forEach(a -> a.fireValueChangedEvent());
 		});
 	}
 
-	private ObjectProperty<TableCellItem> newProperty(int colIdx, final int rowIdx) {
+	private MySimpleObjectProperty<TableCellItem> newProperty(int colIdx, final int rowIdx) {
 		TableCellItem tci = new TableCellItem("name " + colIdx + " / " + rowIdx);
-		return new SimpleObjectProperty<>(tci);
+		return new MySimpleObjectProperty<>(tci);
 	}
 
 	public ObjectProperty<TableCellItem> name1Property() {
@@ -66,7 +65,7 @@ public class Person {
 		return big;
 	}
 
-	public List<ObjectProperty<TableCellItem>> attributes() {
+	public List<MySimpleObjectProperty<TableCellItem>> attributes() {
 		return Arrays.asList(name1, name2, name3, name4);
 	}
 
