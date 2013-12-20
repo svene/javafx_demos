@@ -10,7 +10,11 @@ public class TableCellItem {
 
 	public TableCellItem(final String value, final boolean big) {
 		this.value = new SimpleStringProperty(value);
-		this.big = big;
+		this.big = Person._isBig(value);
+	}
+
+	public String getValue() {
+		return value.get();
 	}
 
 	public StringProperty valueProperty() {
@@ -19,5 +23,9 @@ public class TableCellItem {
 
 	public boolean isBig() {
 		return big;
+	}
+
+	public void setBig(final boolean big) {
+		this.big = big;
 	}
 }
