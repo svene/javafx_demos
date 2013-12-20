@@ -43,10 +43,10 @@ public class TableViewPairDemo extends Application {
 		buttonBox.setSpacing(10);
 
 		Button shortTextButton = new Button("short text");
-		shortTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue(new TableCellItem("short")));
+		shortTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue("short"));
 
 		Button longTextButton = new Button("long text");
-		longTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue(new TableCellItem("some longer text")));
+		longTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue("some longer textsome longer text"));
 
 		buttonBox.getChildren().addAll(shortTextButton, longTextButton);
 
@@ -59,30 +59,30 @@ public class TableViewPairDemo extends Application {
 		stage.show();
 	}
 
-	private TableColumn<Person, TableCellItem> col1(TableViewState tableViewState) {
-		final TableColumn<Person, TableCellItem> tc = new TableColumn<>("1");
+	private TableColumn<Person, String> col1(TableViewState tableViewState) {
+		final TableColumn<Person, String> tc = new TableColumn<>("1");
 		tc.setId("1");
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name1Property());
 		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;
 	}
 
-	private TableColumn<Person, TableCellItem> col2(TableViewState tableViewState) {
-		final TableColumn<Person, TableCellItem> tc = new TableColumn<>("2");
+	private TableColumn<Person, String> col2(TableViewState tableViewState) {
+		final TableColumn<Person, String> tc = new TableColumn<>("2");
 		tc.setId("2");
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name2Property());
 		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;
 	}
-	private TableColumn<Person, TableCellItem> col3(TableViewState tableViewState) {
-		final TableColumn<Person, TableCellItem> tc = new TableColumn<>("3");
+	private TableColumn<Person, String> col3(TableViewState tableViewState) {
+		final TableColumn<Person, String> tc = new TableColumn<>("3");
 		tc.setId("3");
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name3Property());
 		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;
 	}
-	private TableColumn<Person, TableCellItem> col4(TableViewState tableViewState) {
-		final TableColumn<Person, TableCellItem> tc = new TableColumn<>("4");
+	private TableColumn<Person, String> col4(TableViewState tableViewState) {
+		final TableColumn<Person, String> tc = new TableColumn<>("4");
 		tc.setId("4");
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name4Property());
 		tc.setCellFactory(param -> new PersonTableCell(tableViewState));

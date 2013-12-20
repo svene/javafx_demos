@@ -8,7 +8,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-class PersonTableCell extends TableCell<Person, TableCellItem> {
+class PersonTableCell extends TableCell<Person, String> {
 
 	private final Rectangle smallRect = new Rectangle(100, 30);
 	private final Rectangle bigRect = new Rectangle(100, 60);
@@ -36,10 +36,10 @@ class PersonTableCell extends TableCell<Person, TableCellItem> {
 	}
 
 	@Override
-	protected void updateItem(final TableCellItem item, final boolean empty) {
+	protected void updateItem(final String item, final boolean empty) {
 		super.updateItem(item, empty);
 
-		System.out.printf("PersonTableCell.updateItem: col: %s, idx: %s%n", getTableColumn().getId(), getIndex());
+		System.out.printf("PersonTableCell.updateItem: col: %s, idx: %s, item: %s (%s)%n", getTableColumn().getId(), getIndex(), item, (item == null ? "-" : item.length()));
 
 		if (item == null) return;
 		if (getIndex() == -1) return;
