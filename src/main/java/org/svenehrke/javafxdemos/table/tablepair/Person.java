@@ -24,7 +24,7 @@ public class Person {
 		big = new SimpleBooleanProperty();
 
 		ChangeListener<String> listener = (s,o,n) -> {
-			big.setValue(_isBig(name1.getValue()) || _isBig(name2.getValue()) || _isBig(name3.getValue()) || _isBig(name4.getValue()) );
+			big.setValue(isBig(name1.getValue()) || isBig(name2.getValue()) || isBig(name3.getValue()) || isBig(name4.getValue()) );
 		};
 		attributes().forEach(a -> a.addListener(listener));
 
@@ -61,15 +61,11 @@ public class Person {
 		return big.get();
 	}
 
-	public BooleanProperty bigProperty() {
-		return big;
-	}
-
 	public List<StringProperty> attributes() {
 		return Arrays.asList(name1, name2, name3, name4);
 	}
 
-	public static boolean _isBig(final String item) {
+	public static boolean isBig(final String item) {
 		return item != null && itemValue(item).length() > 17;
 	}
 
