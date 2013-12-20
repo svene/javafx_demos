@@ -8,32 +8,12 @@ import java.util.List;
 
 public class Person {
 
-	private final ObjectProperty<String> name1 = newStringProperty();
-	private final ObjectProperty<String> name2 = newStringProperty();
-	private final ObjectProperty<String> name3 = newStringProperty();
-	private final ObjectProperty<String> name4 = newStringProperty();
+	private final StringProperty name1 = new BetterStringProperty();
+	private final StringProperty name2 = new BetterStringProperty();
+	private final StringProperty name3 = new BetterStringProperty();
+	private final StringProperty name4 = new BetterStringProperty();
 
 	private final BooleanProperty big;
-
-	public static ObjectProperty<String> newStringProperty() {
-
-		return new SimpleObjectProperty<String>() {
-
-			@Override
-			public void set(final String v) {
-				if (v == null && getValue() == null) {
-					fireValueChangedEvent();
-				}
-				else if (v.equals(getValue())) {
-					fireValueChangedEvent();
-				}
-				else {
-					super.set(v);
-				}
-
-			}
-		};
-	}
 
 	public Person(final int rowIdx) {
 		name1.setValue(valueFrom(1, rowIdx));
@@ -51,8 +31,9 @@ public class Person {
 		big.addListener((s,o,n) -> {
 			System.out.printf("Person.big: %s -> %s%n", o, n);
 
-			// Force change notification:
-			attributes().forEach(a -> a.setValue(a.getValue()));
+			// Force change notification so that 'TableCell.updateItem() is triggered:
+//			attributes().forEach(a -> ((SetWithNotificationAble) a).setWithNotification(a.getValue()));
+			attributes().forEach(a -> ((Fireable)a).fireValueChangedEvent());
 		});
 	}
 
@@ -60,19 +41,19 @@ public class Person {
 		return "name " + colIdx + " / " + rowIdx;
 	}
 
-	public ObjectProperty<String> name1Property() {
+	public StringProperty name1Property() {
 		return name1;
 	}
 
-	public ObjectProperty<String> name2Property() {
+	public StringProperty name2Property() {
 		return name2;
 	}
 
-	public ObjectProperty<String> name3Property() {
+	public StringProperty name3Property() {
 		return name3;
 	}
 
-	public ObjectProperty<String> name4Property() {
+	public StringProperty name4Property() {
 		return name4;
 	}
 
@@ -84,7 +65,7 @@ public class Person {
 		return big;
 	}
 
-	public List<ObjectProperty<String>> attributes() {
+	public List<StringProperty> attributes() {
 		return Arrays.asList(name1, name2, name3, name4);
 	}
 
