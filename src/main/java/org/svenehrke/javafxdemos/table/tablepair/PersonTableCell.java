@@ -1,8 +1,6 @@
 package org.svenehrke.javafxdemos.table.tablepair;
 
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
 import javafx.scene.paint.Color;
@@ -12,15 +10,10 @@ class PersonTableCell extends TableCell<Person, String> {
 
 	private final Rectangle smallRect = new Rectangle(100, 30);
 	private final Rectangle bigRect = new Rectangle(100, 60);
-	private final BooleanProperty bigProperty = new SimpleBooleanProperty();
 
 	PersonTableCell(TableViewState tableViewState) {
 		smallRect.setFill(Color.GREEN);
 		bigRect.setFill(Color.RED);
-
-		bigProperty.addListener((observable, oldValue, newValue) -> {
-			System.out.printf("cell's bigProperty: %s -> %s%n", oldValue, newValue);
-		});
 
 		indexProperty().addListener((s,o,n) -> {
 			int idx = n.intValue();
@@ -28,8 +21,6 @@ class PersonTableCell extends TableCell<Person, String> {
 
 			System.out.printf("getIndex() = %s -> %s%n", o, n);
 			tableViewState.put(idx, getTableColumn().getId(), this);
-
-			bigProperty.bind(getTableView().getItems().get(idx).bigProperty());
 
 		});
 
