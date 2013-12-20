@@ -4,6 +4,7 @@ import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class Person {
@@ -33,8 +34,7 @@ public class Person {
 
 			// Force change notification:
 			attributes().forEach(a -> {
-				String old = a.getValue();
-				a.setValue(old + "x");
+				a.setValue(String.valueOf(new Date().getTime()) + "|" + itemValue(a.getValue()));
 			});
 		});
 	}
@@ -72,7 +72,12 @@ public class Person {
 	}
 
 	public static boolean _isBig(final String item) {
-		return item != null && item.length() > 17;
+		return item != null && itemValue(item).length() > 17;
+	}
+
+	private static String itemValue(String item) {
+		int idx = item.indexOf('|');
+		return idx == -1 ? item : item.substring(idx + 1);
 	}
 
 }
