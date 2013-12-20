@@ -1,7 +1,6 @@
 package org.svenehrke.javafxdemos.table.tablepair;
 
 import javafx.application.Application;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -12,7 +11,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import org.svenehrke.javafxdemos.common.Styles;
 
 public class TableViewPairDemo extends Application {
@@ -45,10 +43,10 @@ public class TableViewPairDemo extends Application {
 		buttonBox.setSpacing(10);
 
 		Button shortTextButton = new Button("short text");
-		shortTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue(new TableCellItem("short", false)));
+		shortTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue(new TableCellItem("short")));
 
 		Button longTextButton = new Button("long text");
-		longTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue(new TableCellItem("some longer text", false)));
+		longTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue(new TableCellItem("some longer text")));
 
 		buttonBox.getChildren().addAll(shortTextButton, longTextButton);
 

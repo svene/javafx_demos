@@ -29,22 +29,16 @@ public class Person {
 		ChangeListener<TableCellItem> listener = (s,o,n) -> {
 			big.setValue(_isBig(name1.getValue().getValue()) || _isBig(name2.getValue().getValue()) || _isBig(name3.getValue().getValue()) || _isBig(name4.getValue().getValue()) );
 		};
-		name1.addListener(listener);
-		name2.addListener(listener);
-		name3.addListener(listener);
-		name4.addListener(listener);
+		attributes().forEach(a -> a.addListener(listener));
 
 		big.addListener((s,o,n) -> {
 			System.out.printf("Person.big: %s -> %s%n", o, n);
-			name1.setValue(new TableCellItem(name1.getValue().getValue(), false));
-			name2.setValue(new TableCellItem(name2.getValue().getValue(), false));
-			name3.setValue(new TableCellItem(name3.getValue().getValue(), false));
-			name4.setValue(new TableCellItem(name4.getValue().getValue(), false));
+			attributes().forEach(a -> a.setValue(new TableCellItem(a.getValue().getValue())));
 		});
 	}
 
 	private ObjectProperty<TableCellItem> newProperty(int colIdx, final int rowIdx) {
-		TableCellItem tci = new TableCellItem("name " + colIdx + " / " + rowIdx, false);
+		TableCellItem tci = new TableCellItem("name " + colIdx + " / " + rowIdx);
 		return new SimpleObjectProperty<>(tci);
 	}
 
