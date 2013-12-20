@@ -4,23 +4,42 @@ import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class Person {
 
-	private final StringProperty name1;
-	private final StringProperty name2;
-	private final StringProperty name3;
-	private final StringProperty name4;
+	private final ObjectProperty<String> name1 = newStringProperty();
+	private final ObjectProperty<String> name2 = newStringProperty();
+	private final ObjectProperty<String> name3 = newStringProperty();
+	private final ObjectProperty<String> name4 = newStringProperty();
 
 	private final BooleanProperty big;
 
+	public static ObjectProperty<String> newStringProperty() {
+
+		return new SimpleObjectProperty<String>() {
+
+			@Override
+			public void set(final String v) {
+				if (v == null && getValue() == null) {
+					fireValueChangedEvent();
+				}
+				else if (v.equals(getValue())) {
+					fireValueChangedEvent();
+				}
+				else {
+					super.set(v);
+				}
+
+			}
+		};
+	}
+
 	public Person(final int rowIdx) {
-		this.name1 = newProperty(1, rowIdx);
-		this.name2 = newProperty(2, rowIdx);
-		this.name3 = newProperty(3, rowIdx);
-		this.name4 = newProperty(4, rowIdx);
+		name1.setValue(valueFrom(1, rowIdx));
+		name2.setValue(valueFrom(2, rowIdx));
+		name3.setValue(valueFrom(3, rowIdx));
+		name4.setValue(valueFrom(4, rowIdx));
 
 		big = new SimpleBooleanProperty();
 
@@ -33,29 +52,27 @@ public class Person {
 			System.out.printf("Person.big: %s -> %s%n", o, n);
 
 			// Force change notification:
-			attributes().forEach(a -> {
-				a.setValue(String.valueOf(new Date().getTime()) + "|" + itemValue(a.getValue()));
-			});
+			attributes().forEach(a -> a.setValue(a.getValue()));
 		});
 	}
 
-	private StringProperty newProperty(int colIdx, final int rowIdx) {
-		return new SimpleStringProperty("name " + colIdx + " / " + rowIdx);
+	private String valueFrom(final int colIdx, final int rowIdx) {
+		return "name " + colIdx + " / " + rowIdx;
 	}
 
-	public StringProperty name1Property() {
+	public ObjectProperty<String> name1Property() {
 		return name1;
 	}
 
-	public StringProperty name2Property() {
+	public ObjectProperty<String> name2Property() {
 		return name2;
 	}
 
-	public StringProperty name3Property() {
+	public ObjectProperty<String> name3Property() {
 		return name3;
 	}
 
-	public StringProperty name4Property() {
+	public ObjectProperty<String> name4Property() {
 		return name4;
 	}
 
@@ -67,7 +84,7 @@ public class Person {
 		return big;
 	}
 
-	public List<StringProperty> attributes() {
+	public List<ObjectProperty<String>> attributes() {
 		return Arrays.asList(name1, name2, name3, name4);
 	}
 
