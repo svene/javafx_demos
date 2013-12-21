@@ -7,10 +7,10 @@ import java.util.List;
 
 public class Person {
 
-	private final StringProperty name1 = new BetterStringProperty();
-	private final StringProperty name2 = new BetterStringProperty();
-	private final StringProperty name3 = new BetterStringProperty();
-	private final StringProperty name4 = new BetterStringProperty();
+	private final BetterStringProperty name1 = new BetterStringProperty();
+	private final BetterStringProperty name2 = new BetterStringProperty();
+	private final BetterStringProperty name3 = new BetterStringProperty();
+	private final BetterStringProperty name4 = new BetterStringProperty();
 
 	public static final String BIG = "big";
 	private final RowItemInfo rowItemInfo = new RowItemInfo();
@@ -50,7 +50,7 @@ public class Person {
 		return name4;
 	}
 
-	public List<StringProperty> attributes() {
+	private List<BetterStringProperty> attributes() {
 		return Arrays.asList(name1, name2, name3, name4);
 	}
 
