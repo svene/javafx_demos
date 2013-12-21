@@ -21,6 +21,7 @@ public class Person {
 		name3.setValue(valueFrom(3, rowIdx));
 		name4.setValue(valueFrom(4, rowIdx));
 
+		rowItemInfo.addProperty(RowItemInfo.BIG, a -> RowItemInfo.isBig(a.getValue()));
 		rowItemInfo.bind(this);
 	}
 
@@ -46,10 +47,6 @@ public class Person {
 
 	public List<StringProperty> attributes() {
 		return Arrays.asList(name1, name2, name3, name4);
-	}
-
-	public static boolean isBig(final String item) {
-		return item != null && item.length() > 17;
 	}
 
 	private String valueFrom(final int colIdx, final int rowIdx) {

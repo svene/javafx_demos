@@ -37,9 +37,11 @@ class PersonTableCell extends TableCell<Person, String> {
 		if (getTableRow() == null) return;
 
 		Person p = getTableView().getItems().get(getIndex());
-		System.out.printf("  p.getBig(): %s%n", p.getRowItemInfo().getBig());
 
-		Platform.runLater(() -> setGraphic(p.getRowItemInfo().getBig() ? bigRect : smallRect));
+		boolean bigRow = p.getRowItemInfo().getProperties().get(RowItemInfo.BIG).get();
+		System.out.printf("  bigRow: %s%n", bigRow);
+
+		Platform.runLater(() -> setGraphic(bigRow ? bigRect : smallRect));
 
 		setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 	}
