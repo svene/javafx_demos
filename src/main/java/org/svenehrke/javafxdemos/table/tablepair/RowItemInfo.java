@@ -27,7 +27,7 @@ public class RowItemInfo {
 		return properties;
 	}
 
-	public void bind(List<StringProperty> attributes) {
+	public <T extends StringProperty & Fireable> void bind(List<T> attributes) {
 
 		// Listen on each attribute for change. In case of a attribute change change row property:
 		attributes.forEach(a -> a.addListener((ChangeListener<String>) (s, o, n) -> {
@@ -36,9 +36,8 @@ public class RowItemInfo {
 
 		// In case of a row property change fire ValueChangeEvent on all attributes:
 		properties.values().forEach(property -> property.addListener((s,o,n) -> {
-			// Force change notification so that 'TableCell.updateItem() is triggered:
-//				person.attributes().forEach(a -> ((SetWithNotificationAble) a).setWithNotification(a.getValue()));
-			attributes.forEach(a -> ((Fireable) a).fireValueChangedEvent());
+			// Force change notification so that 'TableCell.updateItem() is triggered even when the value is the same:
+			attributes.forEach(T::fireValueChangedEvent);
 		}));
 
 	}
