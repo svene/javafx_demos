@@ -37,7 +37,7 @@ public class RowItemInfo {
 		// In case of a row property change fire ValueChangeEvent on all attributes:
 		properties.values().forEach(property -> property.addListener((s,o,n) -> {
 			// Force change notification so that 'TableCell.updateItem() is triggered even when the value is the same:
-			attributes.forEach(T::fireValueChangedEvent);
+			attributes.forEach(a -> a.fireValueChangedEvent());
 		}));
 
 	}

@@ -43,10 +43,16 @@ public class TableViewPairDemo extends Application {
 		buttonBox.setSpacing(10);
 
 		Button shortTextButton = new Button("short text");
-		shortTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue("short"));
+		shortTextButton.setOnAction((evt) -> {
+			items.get(1).name3Property().setValue("short");
+			items.get(3).name1Property().setValue("short");
+		});
 
 		Button longTextButton = new Button("long text");
-		longTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue("some longer textsome longer text"));
+		longTextButton.setOnAction((evt) -> {
+			items.get(1).name3Property().setValue("some longer textsome longer text");
+			items.get(3).name1Property().setValue("some longer textsome longer text");
+		});
 
 		buttonBox.getChildren().addAll(shortTextButton, longTextButton);
 

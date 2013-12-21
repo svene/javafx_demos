@@ -3,6 +3,8 @@ package org.svenehrke.javafxdemos.table.tablepair;
 import javafx.application.Platform;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -11,9 +13,14 @@ class PersonTableCell extends TableCell<Person, String> {
 	private final Rectangle smallRect = new Rectangle(100, 30);
 	private final Rectangle bigRect = new Rectangle(100, 60);
 
+	private final TextField textField = new TextField();
+	private final TextArea textArea = new TextArea();
+
 	PersonTableCell(TableViewState tableViewState) {
 		smallRect.setFill(Color.GREEN);
 		bigRect.setFill(Color.RED);
+
+		textArea.setWrapText(true);
 
 		indexProperty().addListener((s,o,n) -> {
 			int idx = n.intValue();
@@ -41,7 +48,10 @@ class PersonTableCell extends TableCell<Person, String> {
 		boolean longText = p.getRowItemInfo().getProperties().get(Person.LONG_TEXT).get();
 		System.out.printf("  longText: %s%n", longText);
 
-		Platform.runLater(() -> setGraphic(longText ? bigRect : smallRect));
+//		Platform.runLater(() -> setGraphic(longText ? bigRect : smallRect));
+		textField.setText(item);
+		textArea.setText(item);
+		Platform.runLater(() -> setGraphic(longText ? textArea : textField));
 
 		setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 	}
