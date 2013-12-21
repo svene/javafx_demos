@@ -12,6 +12,7 @@ public class Person {
 	private final StringProperty name3 = new BetterStringProperty();
 	private final StringProperty name4 = new BetterStringProperty();
 
+	public static final String BIG = "big";
 	private final RowItemInfo rowItemInfo = new RowItemInfo();
 
 
@@ -21,8 +22,12 @@ public class Person {
 		name3.setValue(valueFrom(3, rowIdx));
 		name4.setValue(valueFrom(4, rowIdx));
 
-		rowItemInfo.addProperty(RowItemInfo.BIG, a -> RowItemInfo.isBig(a.getValue()));
+		rowItemInfo.addProperty(BIG, a -> isBig(a.getValue()));
 		rowItemInfo.bind(this);
+	}
+
+	public static boolean isBig(final String item) {
+		return item != null && item.length() > 17;
 	}
 
 	public RowItemInfo getRowItemInfo() {
