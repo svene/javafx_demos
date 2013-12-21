@@ -22,7 +22,7 @@ public class Person {
 		name3.setValue(valueFrom(3, rowIdx));
 		name4.setValue(valueFrom(4, rowIdx));
 
-		rowItemInfo.addProperty(BIG, a -> isBig(a.getValue()));
+		rowItemInfo.addProperty(BIG, a -> isBig(a.getValue()), (b1, b2) -> b1 || b2);
 		rowItemInfo.bind(this);
 	}
 
