@@ -3,7 +3,6 @@ package org.svenehrke.javafxdemos.table.tablepair;
 import javafx.beans.property.StringProperty;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class Person {
 
@@ -12,7 +11,7 @@ public class Person {
 	private final BetterStringProperty name3 = new BetterStringProperty();
 	private final BetterStringProperty name4 = new BetterStringProperty();
 
-	public static final String BIG = "big";
+	public static final String LONG_TEXT = "long_text";
 	private final RowItemInfo rowItemInfo = new RowItemInfo();
 
 
@@ -22,11 +21,11 @@ public class Person {
 		name3.setValue(valueFrom(3, rowIdx));
 		name4.setValue(valueFrom(4, rowIdx));
 
-		rowItemInfo.addProperty(BIG, a -> isBig(a.getValue()), (b1, b2) -> b1 || b2);
-		rowItemInfo.bind(this.attributes());
+		rowItemInfo.addProperty(LONG_TEXT, a -> isLongText(a.getValue()), (b1, b2) -> b1 || b2);
+		rowItemInfo.bind(Arrays.asList(name1, name2, name3, name4));
 	}
 
-	public static boolean isBig(final String item) {
+	private static boolean isLongText(final String item) {
 		return item != null && item.length() > 17;
 	}
 
@@ -48,10 +47,6 @@ public class Person {
 
 	public StringProperty name4Property() {
 		return name4;
-	}
-
-	private List<BetterStringProperty> attributes() {
-		return Arrays.asList(name1, name2, name3, name4);
 	}
 
 	private String valueFrom(final int colIdx, final int rowIdx) {

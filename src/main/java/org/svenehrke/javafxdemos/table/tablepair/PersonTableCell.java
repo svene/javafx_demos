@@ -38,10 +38,10 @@ class PersonTableCell extends TableCell<Person, String> {
 
 		Person p = getTableView().getItems().get(getIndex());
 
-		boolean bigRow = p.getRowItemInfo().getProperties().get(Person.BIG).get();
-		System.out.printf("  bigRow: %s%n", bigRow);
+		boolean longText = p.getRowItemInfo().getProperties().get(Person.LONG_TEXT).get();
+		System.out.printf("  longText: %s%n", longText);
 
-		Platform.runLater(() -> setGraphic(bigRow ? bigRect : smallRect));
+		Platform.runLater(() -> setGraphic(longText ? bigRect : smallRect));
 
 		setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 	}
