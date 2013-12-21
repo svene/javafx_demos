@@ -6,6 +6,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -26,18 +27,18 @@ public class RowItemInfo {
 		return properties;
 	}
 
-	public void bind(final Person person) {
+	public void bind(List<StringProperty> attributes) {
 
 		// Listen on each attribute for change. In case of a attribute change change row property:
-		person.attributes().forEach(a -> a.addListener((ChangeListener<String>) (s,o,n) -> {
-			properties.keySet().forEach(key -> properties.get(key).setValue(person.attributes().stream().map(mappers.get(key)).reduce(reducers.get(key)).get()));
+		attributes.forEach(a -> a.addListener((ChangeListener<String>) (s, o, n) -> {
+			properties.keySet().forEach(key -> properties.get(key).setValue(attributes.stream().map(mappers.get(key)).reduce(reducers.get(key)).get()));
 		}));
 
 		// In case of a row property change fire ValueChangeEvent on all attributes:
 		properties.values().forEach(property -> property.addListener((s,o,n) -> {
 			// Force change notification so that 'TableCell.updateItem() is triggered:
 //				person.attributes().forEach(a -> ((SetWithNotificationAble) a).setWithNotification(a.getValue()));
-			person.attributes().forEach(a -> ((Fireable)a).fireValueChangedEvent());
+			attributes.forEach(a -> ((Fireable) a).fireValueChangedEvent());
 		}));
 
 	}

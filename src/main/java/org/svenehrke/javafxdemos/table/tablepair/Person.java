@@ -23,7 +23,7 @@ public class Person {
 		name4.setValue(valueFrom(4, rowIdx));
 
 		rowItemInfo.addProperty(BIG, a -> isBig(a.getValue()), (b1, b2) -> b1 || b2);
-		rowItemInfo.bind(this);
+		rowItemInfo.bind(this.attributes());
 	}
 
 	public static boolean isBig(final String item) {
