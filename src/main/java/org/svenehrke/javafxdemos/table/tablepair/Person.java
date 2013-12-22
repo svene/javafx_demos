@@ -1,76 +1,81 @@
 package org.svenehrke.javafxdemos.table.tablepair;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
+import javafx.beans.property.StringProperty;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class Person {
 
-	private final MySimpleObjectProperty<TableCellItem> name1;
-	private final MySimpleObjectProperty<TableCellItem> name2;
-	private final MySimpleObjectProperty<TableCellItem> name3;
-	private final MySimpleObjectProperty<TableCellItem> name4;
+	private final BetterStringProperty name1 = new BetterStringProperty();
+	private final BetterStringProperty name2 = new BetterStringProperty();
+	private final BetterStringProperty name3 = new BetterStringProperty();
+	private final BetterStringProperty name4 = new BetterStringProperty();
 
-	private final BooleanProperty big;
+	public static final String LONG_TEXT = "long_text";
+	private final RowItemInfo rowItemInfo = new RowItemInfo();
+
 
 	public Person(final int rowIdx) {
-		this.name1 = newProperty(1, rowIdx);
-		this.name2 = newProperty(2, rowIdx);
-		this.name3 = newProperty(3, rowIdx);
-		this.name4 = newProperty(4, rowIdx);
 
-		big = new SimpleBooleanProperty();
+		rowItemInfo.addProperty(LONG_TEXT, a -> isLongText(a.getValue()), (b1, b2) -> b1 || b2);
+		rowItemInfo.bind(Arrays.asList(name1, name2, name3, name4));
 
-		ChangeListener<TableCellItem> listener = (s,o,n) -> {
-			big.setValue(_isBig(name1.getValue().getValue()) || _isBig(name2.getValue().getValue()) || _isBig(name3.getValue().getValue()) || _isBig(name4.getValue().getValue()) );
-		};
-		attributes().forEach(a -> a.addListener(listener));
+		name1.setValue(valueFrom(1, rowIdx));
+		name2.setValue(valueFrom(2, rowIdx));
+		name3.setValue(valueFrom(3, rowIdx));
+		name4.setValue(valueFrom(4, rowIdx));
 
-		big.addListener((s,o,n) -> {
-			System.out.printf("Person.big: %s -> %s%n", o, n);
-			attributes().forEach(a -> a.fireValueChangedEvent());
-		});
 	}
 
-	private MySimpleObjectProperty<TableCellItem> newProperty(int colIdx, final int rowIdx) {
-		TableCellItem tci = new TableCellItem("name " + colIdx + " / " + rowIdx);
-		return new MySimpleObjectProperty<>(tci);
+	private static boolean isLongText(final String item) {
+		return item != null && item.length() > 17;
 	}
 
-	public ObjectProperty<TableCellItem> name1Property() {
+	public RowItemInfo getRowItemInfo() {
+		return rowItemInfo;
+	}
+
+	public StringProperty name1Property() {
 		return name1;
 	}
 
-	public ObjectProperty<TableCellItem> name2Property() {
+	public StringProperty name2Property() {
 		return name2;
 	}
 
-	public ObjectProperty<TableCellItem> name3Property() {
+	public StringProperty name3Property() {
 		return name3;
 	}
 
-	public ObjectProperty<TableCellItem> name4Property() {
+	public StringProperty name4Property() {
 		return name4;
 	}
 
-	public boolean getBig() {
-		return big.get();
+	private String valueFrom(final int colIdx, final int rowIdx) {
+		String s = "";
+		s = String.format("%d %030d", rowIdx, 0);
+		if (colIdx == 1) {
+			if (rowIdx % 3 == 0) {
+				return s;
+			}
+		}
+		else if (colIdx == 3) {
+			if (rowIdx % 5 == 0) {
+				return s;
+			}
+		}
+		else if (colIdx == 2) {
+			if (rowIdx % 4 == 0) {
+				return s;
+			}
+		}
+		else if (colIdx == 4) {
+			if (rowIdx % 7 == 0) {
+				return s;
+			}
+		}
+		return "name " + colIdx + " / " + rowIdx;
 	}
 
-	public BooleanProperty bigProperty() {
-		return big;
-	}
-
-	public List<MySimpleObjectProperty<TableCellItem>> attributes() {
-		return Arrays.asList(name1, name2, name3, name4);
-	}
-
-	public static boolean _isBig(final String item) {
-		return item.length() > 12;
-	}
 
 }
