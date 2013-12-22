@@ -16,13 +16,15 @@ public class Person {
 
 
 	public Person(final int rowIdx) {
+
+		rowItemInfo.addProperty(LONG_TEXT, a -> isLongText(a.getValue()), (b1, b2) -> b1 || b2);
+		rowItemInfo.bind(Arrays.asList(name1, name2, name3, name4));
+
 		name1.setValue(valueFrom(1, rowIdx));
 		name2.setValue(valueFrom(2, rowIdx));
 		name3.setValue(valueFrom(3, rowIdx));
 		name4.setValue(valueFrom(4, rowIdx));
 
-		rowItemInfo.addProperty(LONG_TEXT, a -> isLongText(a.getValue()), (b1, b2) -> b1 || b2);
-		rowItemInfo.bind(Arrays.asList(name1, name2, name3, name4));
 	}
 
 	private static boolean isLongText(final String item) {
@@ -50,6 +52,28 @@ public class Person {
 	}
 
 	private String valueFrom(final int colIdx, final int rowIdx) {
+		String s = "";
+		s = String.format("%d %030d", rowIdx, 0);
+		if (colIdx == 1) {
+			if (rowIdx % 3 == 0) {
+				return s;
+			}
+		}
+		else if (colIdx == 3) {
+			if (rowIdx % 5 == 0) {
+				return s;
+			}
+		}
+		else if (colIdx == 2) {
+			if (rowIdx % 4 == 0) {
+				return s;
+			}
+		}
+		else if (colIdx == 4) {
+			if (rowIdx % 7 == 0) {
+				return s;
+			}
+		}
 		return "name " + colIdx + " / " + rowIdx;
 	}
 
