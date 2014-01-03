@@ -1,46 +1,48 @@
 package org.svenehrke.javafxdemos.table.tablepair;
 
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
 
 public class RowSizeInfo {
 
-/*
-	private final DoubleProperty rowSize = new SimpleDoubleProperty();
-	private final Function<StringProperty, Double> mapper;
-	private final BinaryOperator<Double> reducer;
+	private final DoubleProperty rowSize1 = new SimpleDoubleProperty(0);
+	private final DoubleProperty rowSize2 = new SimpleDoubleProperty(0);
+//	private final DoubleProperty rowSize = new SimpleDoubleProperty(1);
+//	private final NumberBinding rowSize;
 
-	public void addProperty(String key, Function<StringProperty, Double> mapper, BinaryOperator<Double> reducer) {
-		this.mapper = mapper;
-		this.reducers.put(key, reducer);
+	public RowSizeInfo(final TableViewState tableViewState, final int rowIndex) {
+
+//		rowSize = Bindings.max(rowSize1, rowSize2);
+
+		if (Util.isDebugIndex(rowIndex)) {
+			rowSize1.addListener((s, o, n) -> {
+				System.out.printf("RowSizeInfo: Left, row %s: %s -> %s%n", rowIndex, o, n);
+			});
+			rowSize2.addListener((s,o,n) -> {
+				System.out.printf("RowSizeInfo: Right, row %s: %s -> %s%n", rowIndex, o, n);
+			});
+		}
+
+		rowSize1.addListener((s,o,n) -> {
+			if (rowIndex < 0 || rowIndex >= tableViewState.getItems().size()) return;
+			if (n.intValue() <= 0) {
+				return;
+			}
+			Person person = tableViewState.getItems().get(rowIndex);
+			Fireable f = (Fireable) person.name1Property();
+			f.fireValueChangedEvent();
+			Platform.runLater(() -> rowSize1.setValue(-1));
+		});
+
+
 	}
 
-	public Map<String, DoubleProperty> getProperties() {
-		return properties;
+	public DoubleProperty rowSize1Property() {
+		return rowSize1;
 	}
-
-	public <T extends StringProperty & Fireable> void bind(List<T> attributes) {
-
-		// Listen on each attribute for change. In case of a attribute change change row property:
-		attributes.forEach(a -> a.addListener((ChangeListener<String>) (s, o, n) -> {
-			rowSize.setValue(attributes.stream().map(mappers.get(key)).reduce(reducers.get(key)).get()));
-		}));
-
-		// In case of a row property change fire ValueChangeEvent on all attributes:
-		properties.values().forEach(property -> property.addListener((s,o,n) -> {
-			// Force change notification so that 'TableCell.updateItem() is triggered even when the value is the same:
-			attributes.forEach(a -> a.fireValueChangedEvent());
-		}));
-
+	public DoubleProperty rowSize2Property() {
+		return rowSize2;
 	}
-*/
 
 }

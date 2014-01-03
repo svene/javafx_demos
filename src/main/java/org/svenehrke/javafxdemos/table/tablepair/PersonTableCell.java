@@ -1,7 +1,8 @@
 package org.svenehrke.javafxdemos.table.tablepair;
 
-import javafx.collections.ListChangeListener;
-import javafx.scene.Node;
+import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
+import javafx.collections.ObservableMap;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TextArea;
@@ -9,113 +10,93 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.web.WebView;
-import netscape.javascript.JSException;
 
 class PersonTableCell extends TableCell<Person, String> {
 
-	private final Rectangle smallRect = new Rectangle(100, 30);
-	private final Rectangle bigRect = new Rectangle(100, 60);
-
 	private final TextField textField = new TextField();
 	private final TextArea textArea = new TextArea();
+	private final Rectangle rect = new Rectangle();
 
 	private final HBox hBox = new HBox();
-	private final WebView webview;
+	private final TableViewState tableViewState;
 
 	PersonTableCell(TableViewState tableViewState) {
-		smallRect.setFill(Color.GREEN);
-		bigRect.setFill(Color.RED);
+		this.tableViewState = tableViewState;
 
 		textArea.setWrapText(true);
-
-		hBox.getChildren().addAll(textField);
-
-		webview = new WebView();
-		hideScrollBarsOfWebview();
-		webview.setMouseTransparent(true);
-
-		webview.getEngine().getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> adjustHeight());
-
+		rect.setFill(Color.RED);
+		rect.setWidth(2);
+		rect.setHeight(2);
+		hBox.getChildren().addAll(rect, textField);
 
 		indexProperty().addListener((s,o,n) -> {
 			int idx = n.intValue();
 			if (idx < 0 || idx >= getTableView().getItems().size()) return;
-
-			System.out.printf("getIndex() = %s -> %s%n", o, n);
 			tableViewState.put(idx, getTableColumn().getId(), this);
-
 		});
-
 		tableRowProperty().addListener((s,o,n) -> {
+			ObservableMap<Object,Object> map = getTableRow().getProperties();
+			if (!map.containsKey(Constants.IDX_LISTENER)) {
+				map.put(Constants.IDX_LISTENER, Boolean.TRUE);
+				getTableRow().indexProperty().addListener((s2, o2, n2) -> {
+					System.out.printf("*** row: %s -> %s%n", o2, n2);
+					tableViewState.getRowSizeInfo(getIndex());
+				});
+			}
+			if (!map.containsKey(Constants.HEIGHT_LISTENER)) {
+				map.put(Constants.HEIGHT_LISTENER, Boolean.TRUE);
+				getTableRow().heightProperty().addListener((s2, o2, n2) -> {
+					if (Util.isDebugIndex(getIndex())) {
+						System.out.printf("HEIGHT_LISTENER: table: %s, row: %s height: %s -> %s%n", getTableView().getId(), getIndex(), o2, n2);
+					}
+					Platform.runLater(() -> {
+						RowSizeInfo rowSizeInfo = tableViewState.getRowSizeInfo(getIndex());
+						DoubleProperty sp = Constants.LEFT_TV_ID.equals(getTableView().getId()) ? rowSizeInfo.rowSize1Property() : rowSizeInfo.rowSize2Property();
+						sp.setValue(n2);
+					});
+				});
+			}
 
 		});
-
 	}
 
 	@Override
 	protected void updateItem(final String item, final boolean empty) {
 		super.updateItem(item, empty);
 
-		System.out.printf("PersonTableCell.updateItem: col: %s, idx: %s, item: %s (%s)%n", getTableColumn().getId(), getIndex(), item, (item == null ? "-" : item.length()));
-
 		if (item == null) return;
 		if (getIndex() == -1) return;
 		if (getTableRow() == null) return;
 
-		Person p = getTableView().getItems().get(getIndex());
-
-//		boolean longText = p.getRowItemInfo().getProperties().get(Person.ROW_HEIGHT).get();
-
-		boolean longText = p.getRowItemInfo().getProperties().get(Person.LONG_TEXT).get();
-		System.out.printf("  longText: %s%n", longText);
-
-/*
-		textField.setText(item);
-		textArea.setText(item);
-		Platform.runLater(() -> {
-			hBox.setPrefHeight(longText ? 60 : 30);
-			setGraphic(hBox);
-		});
-*/
-
-		webview.getEngine().loadContent(item);
-
-
+		textField.setText(getIndex() + " " + item);
+		setGraphic(hBox);
 		setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-	}
 
-	private void hideScrollBarsOfWebview() {
-		webview.getChildrenUnmodifiable().addListener(
-			(ListChangeListener<Node>) c -> webview.lookupAll(".scroll-bar").forEach((n) -> n.setVisible(false))
-		);
-	}
-
-	private void adjustHeight() {
-		if (getIndex() == -1) return;
-		// Adapt height of 'webview' to the height of the rendered HTML:
-		Object result = getHtmlHeight();
-		if (result instanceof Integer) {
-			Integer i = (Integer) result;
-
-			double height = (double) i + 20;
-			height = Math.max(60, height);
-			setPrefHeight(height);
+		if (getHeight() == 0.0) {
+			return;
 		}
+
+		RowSizeInfo rowSizeInfo = tableViewState.getRowSizeInfo(getIndex());
+		Double h2 = rowSizeInfo.rowSize1Property().getValue();
+		double d = rowSizeInfo.rowSize1Property().doubleValue() - getHeight();
+		if (Constants.COL_1_ID.equals(getTableColumn().getId()) && Util.isDebugIndex(getIndex())) {
+			System.out.printf(String.format("UPD : row=%d, col=%s%n", getIndex(), getTableColumn().getId()));
+			System.out.printf("     getHeight(): %s%n", getHeight());
+			System.out.printf("     col: %s, row: %s, h2: %s, d: %s, hBox.height: %s%n", getTableColumn().getId(), getIndex(), h2, d, hBox.getHeight() );
+
+		}
+		if (h2 != -1) {
+			Platform.runLater(() -> {
+				if (Constants.COL_1_ID.equals(getTableColumn().getId())) {
+					if (d != 0.0) {
+						hBox.setPrefHeight(hBox.getHeight() + d);
+					}
+				}
+				setGraphic(hBox);
+			});
+		}
+
 	}
 
-	private Object getHtmlHeight() {
-		try {
-			return getHtmlHeight_();
-		}
-		catch (JSException jse) {
-			jse.printStackTrace();
-			return null;
-		}
-	}
-	private Object getHtmlHeight_() {
-		return webview.getEngine().executeScript("document.getElementById('bodyDivId').offsetHeight");
-//		return webview.getEngine().executeScript("document.body.offsetHeight");
-	}
 
 }
