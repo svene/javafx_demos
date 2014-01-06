@@ -42,11 +42,11 @@ public class Person {
 	}
 
 	private String valueFrom(final int colIdx, final int rowIdx) {
-		if (colIdx == 3) {
+//		if (colIdx == 3) {
 			int textIdx = rowIdx % 3;
 			return LONG_TEXT_ARRAY[textIdx];
-		}
-		return LONG_TEXT_ARRAY[0];
+//		}
+//		return LONG_TEXT_ARRAY[0];
 	}
 
 	private static String[] LONG_TEXT_ARRAY = new String[]{

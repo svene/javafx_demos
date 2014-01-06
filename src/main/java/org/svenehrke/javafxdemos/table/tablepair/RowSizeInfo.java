@@ -32,7 +32,7 @@ public class RowSizeInfo {
 			Person person = tableViewState.getItems().get(rowIndex);
 			Fireable f = (Fireable) person.name1Property();
 			f.fireValueChangedEvent();
-			Platform.runLater(() -> rowSize1.setValue(-1));
+//			Platform.runLater(() -> rowSize1.setValue(-1));
 		});
 
 

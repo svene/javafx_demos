@@ -22,14 +22,15 @@ class ButtonTableCell extends TableCell<Person, String> {
 		});
 
 		tableRowProperty().addListener((s,o,n) -> {
+
 			ObservableMap<Object,Object> map = getTableRow().getProperties();
 			if (!map.containsKey(Constants.HEIGHT_LISTENER)) {
 				map.put(Constants.HEIGHT_LISTENER, Boolean.TRUE);
 				getTableRow().heightProperty().addListener((s2, o2, n2) -> {
-					if (getIndex() == 0 || getIndex() == 2) {
+					if (Util.isDebugIndex(getIndex())) {
 						System.out.printf("HEIGHT_LISTENER: table: %s, row: %s height: %s -> %s%n", getTableView().getId(), getIndex(), o2, n2);
 					}
-					if (n2.doubleValue() > 0) {
+					if (n2.doubleValue() > 0 && getIndex() > 0 && getIndex() < getTableView().getItems().size()) {
 						Platform.runLater(() -> {
 							RowSizeInfo rowSizeInfo = tableViewState.getRowSizeInfo(getIndex());
 							rowSizeInfo.rowSize1Property().setValue(n2); // other table's RowSizeInfo
