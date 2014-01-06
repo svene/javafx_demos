@@ -8,12 +8,8 @@ public class RowSizeInfo {
 
 	private final DoubleProperty rowSize1 = new SimpleDoubleProperty(0);
 	private final DoubleProperty rowSize2 = new SimpleDoubleProperty(0);
-//	private final DoubleProperty rowSize = new SimpleDoubleProperty(1);
-//	private final NumberBinding rowSize;
 
 	public RowSizeInfo(final TableViewState tableViewState, final int rowIndex) {
-
-//		rowSize = Bindings.max(rowSize1, rowSize2);
 
 		if (Util.isDebugIndex(rowIndex)) {
 			rowSize1.addListener((s, o, n) -> {
@@ -32,7 +28,6 @@ public class RowSizeInfo {
 			Person person = tableViewState.getItems().get(rowIndex);
 			Fireable f = (Fireable) person.name1Property();
 			f.fireValueChangedEvent();
-//			Platform.runLater(() -> rowSize1.setValue(-1));
 		});
 
 

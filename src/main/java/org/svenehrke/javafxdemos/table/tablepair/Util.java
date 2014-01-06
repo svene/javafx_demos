@@ -14,7 +14,8 @@ public class Util {
 	}
 
 	public static boolean isDebugIndex(int index) {
-		return ((index + 1)  % 3) == 0;
+//		return index == 0 || ((index + 1)  % 3) == 0;
+		return index < 6;
 	}
 
 }

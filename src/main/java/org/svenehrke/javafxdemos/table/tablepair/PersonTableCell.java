@@ -12,6 +12,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.svenehrke.javafxdemos.common.TableViews;
 
+import java.util.OptionalDouble;
+
 class PersonTableCell extends TableCell<Person, String> {
 
 	private final TextField textField = new TextField();
@@ -46,21 +48,21 @@ class PersonTableCell extends TableCell<Person, String> {
 					tableViewState.getRowSizeInfo(getIndex());
 				});
 			}
-/*
 			if (!map.containsKey(Constants.HEIGHT_LISTENER)) {
 				map.put(Constants.HEIGHT_LISTENER, Boolean.TRUE);
 				getTableRow().heightProperty().addListener((s2, o2, n2) -> {
 					if (Util.isDebugIndex(getIndex())) {
 						System.out.printf("HEIGHT_LISTENER: table: %s, row: %s height: %s -> %s%n", getTableView().getId(), getIndex(), o2, n2);
 					}
+/*
 					Platform.runLater(() -> {
 						RowSizeInfo rowSizeInfo = tableViewState.getRowSizeInfo(getIndex());
 						DoubleProperty sp = Constants.LEFT_TV_ID.equals(getTableView().getId()) ? rowSizeInfo.rowSize1Property() : rowSizeInfo.rowSize2Property();
 						sp.setValue(n2);
 					});
+*/
 				});
 			}
-*/
 
 		});
 	}
@@ -71,6 +73,9 @@ class PersonTableCell extends TableCell<Person, String> {
 
 		if (item == null) return;
 		if (getIndex() == -1) return;
+		if (getIndex() == 0) {
+			System.out.printf("UPD: row: 0, tableRow: %s, getHeight(): %s%n", getTableRow(), getHeight());
+		}
 		if (getTableRow() == null) return;
 
 		textField.setText(getIndex() + " " + item);
@@ -85,15 +90,29 @@ class PersonTableCell extends TableCell<Person, String> {
 		Double rowsize1 = rowSizeInfo.rowSize1Property().getValue();
 		double d = rowSizeInfo.rowSize1Property().doubleValue() - getHeight();
 		if (Constants.COL_1_ID.equals(getTableColumn().getId()) && Util.isDebugIndex(getIndex())) {
-			System.out.printf(String.format("UPD : row=%d, col=%s%n", getIndex(), getTableColumn().getId()));
-			System.out.printf("     getHeight(): %s%n", getHeight());
-			System.out.printf("     col: %s, row: %s, rowsize1: %s, d: %s, hBox.height: %s%n", getTableColumn().getId(), getIndex(), rowsize1, d, hBox.getHeight() );
-
+			System.out.printf(String.format("UPD : row=%d, col=%s, getHeight(): %s, rowsize1: %s, d: %s, hBox.height: %s%n", getIndex(), getTableColumn().getId(), getHeight(), rowsize1, d, hBox.getHeight() ) );
 		}
-/*
-		if (rowsize1 != -1) {
+
+		if (rowsize1 > 0) {
 			Platform.runLater(() -> {
 				if (Constants.COL_1_ID.equals(getTableColumn().getId())) {
+
+					double max = getTableRow().getChildrenUnmodifiable().stream().map(o -> (TableCell) o).mapToDouble(tc -> tc.prefHeight(-1)).max().getAsDouble();
+					System.out.printf("  max: %s, rowsize1: %s%n", max, rowsize1);
+					if (rowsize1 > max) {
+						double newHeight = getHeight() + d;
+						System.out.println("    left table: setPrefHeight to: " + newHeight);
+						setPrefHeight(newHeight);
+						rowSizeInfo.rowSize1Property().setValue(-1);
+					}
+					else {
+						System.out.println("    left table: setPrefHeight to: -1");
+						setPrefHeight(-1);
+					}
+					rowSizeInfo.rowSize1Property().setValue(-1);
+
+
+/*
 					if (Util.almostEqual(rowSizeInfo.rowSize1Property().doubleValue(), getHeight())) {
 						rowSizeInfo.rowSize1Property().setValue(-1);
 					}
@@ -107,11 +126,11 @@ class PersonTableCell extends TableCell<Person, String> {
 							Platform.runLater(() -> f.fireValueChangedEvent());
 						}
 					}
+*/
 				}
 				setGraphic(hBox);
 			});
 		}
-*/
 
 	}
 

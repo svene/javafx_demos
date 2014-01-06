@@ -83,6 +83,14 @@ public class TableViewPairDemo extends Application {
 			ScrollBar rightVScrollBar = Nodes.verticalScrollBarFrom(rightTV);
 
 			leftVScrollBar.valueProperty().bindBidirectional(rightVScrollBar.valueProperty());
+
+			Platform.runLater(() -> {
+				TableViews.getTableViewInfo(rightTV).getVirtualFlow().getFirstVisibleCellWithinViewPort().indexProperty().addListener((s2, o2, n2) -> {
+					System.out.printf("+++ Right Table: first visible row: %s -> %s%n", o2, n2);
+				});
+			});
+
+
 		});
 	}
 
