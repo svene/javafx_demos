@@ -90,6 +90,7 @@ class PersonTableCell extends TableCell<Person, String> {
 			System.out.printf("     col: %s, row: %s, rowsize1: %s, d: %s, hBox.height: %s%n", getTableColumn().getId(), getIndex(), rowsize1, d, hBox.getHeight() );
 
 		}
+/*
 		if (rowsize1 != -1) {
 			Platform.runLater(() -> {
 				if (Constants.COL_1_ID.equals(getTableColumn().getId())) {
@@ -110,6 +111,7 @@ class PersonTableCell extends TableCell<Person, String> {
 				setGraphic(hBox);
 			});
 		}
+*/
 
 	}
 

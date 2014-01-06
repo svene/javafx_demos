@@ -1,6 +1,7 @@
 package org.svenehrke.javafxdemos.table.tablepair;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -17,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.svenehrke.javafxdemos.common.Nodes;
 import org.svenehrke.javafxdemos.common.Styles;
+import org.svenehrke.javafxdemos.common.TableViews;
 
 public class TableViewPairDemo extends Application {
 
@@ -49,6 +51,8 @@ public class TableViewPairDemo extends Application {
 
 		bindTables(leftTV, rightTV);
 
+		alignRowHeights(leftTV, rightTV);
+
 		VBox buttonBox = new VBox();
 		buttonBox.setPadding(new Insets(10));
 		buttonBox.setSpacing(10);
@@ -79,6 +83,18 @@ public class TableViewPairDemo extends Application {
 			ScrollBar rightVScrollBar = Nodes.verticalScrollBarFrom(rightTV);
 
 			leftVScrollBar.valueProperty().bindBidirectional(rightVScrollBar.valueProperty());
+		});
+	}
+
+	private void alignRowHeights(final TableView<Person> leftTV, final TableView<Person> rightTV) {
+		bothTablesAvailableProperty.addListener((s,o,n) -> {
+			if (!n) return;
+/*
+			Platform.runLater(() -> {
+				TableViews.showTVInfo(leftTV, "LEFT");
+				TableViews.showTVInfo(rightTV, "RIGHT");
+			});
+*/
 		});
 	}
 
