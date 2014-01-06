@@ -1,5 +1,7 @@
 package org.svenehrke.javafxdemos.table.tablepair;
 
+import javafx.beans.property.Property;
+
 public class Util {
 	/**  from Node.almostZero(...) */
 	private static final double EPSILON_ABSOLUTE = 1.0e-5;
@@ -18,4 +20,8 @@ public class Util {
 		return index < 6;
 	}
 
+
+	public static Fireable asFireable(Property property) {
+		return (Fireable) property;
+	}
 }

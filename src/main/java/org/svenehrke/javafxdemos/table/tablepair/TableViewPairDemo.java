@@ -9,10 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -43,13 +40,13 @@ public class TableViewPairDemo extends Application {
 
 		final TableView<Person> leftTV = newTableView(items);
 		leftTV.setId(Constants.LEFT_TV_ID);
-		leftTV.getColumns().addAll(col11(tableViewState), col12(tableViewState), col13(tableViewState));
-//		leftTV.getColumns().addAll(col13(tableViewState), col11(tableViewState), col12(tableViewState));
+
+
+		leftTV.getColumns().addAll(name1Column(tableViewState), name2Column(tableViewState), heightHelper(name3Column(tableViewState)));
 
 		final TableView<Person> rightTV = newTableView(items);
 		rightTV.setId(Constants.RIGHT_TV_ID);
 		rightTV.getColumns().addAll(col21(tableViewState)/*, col22(tableViewState)*/);
-//		rightTV.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 		bindTables(leftTV, rightTV);
 
@@ -108,28 +105,33 @@ public class TableViewPairDemo extends Application {
 		});
 	}
 
-	private TableColumn<Person, String> col11(TableViewState tableViewState) {
+	private TableColumn<Person, String> heightHelper(TableColumn<Person, String> tc) {
+		tc.setMinWidth(0.0);
+		tc.setMaxWidth(0.0);
+		tc.impl_setWidth(0.0);
+		return tc;
+	}
+
+	private TableColumn<Person, String> name1Column(TableViewState tableViewState) {
 		final TableColumn<Person, String> tc = new TableColumn<>(Constants.COL_11_ID);
 		tc.setId(Constants.COL_11_ID);
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name1Property());
 		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;
 	}
-
-	private TableColumn<Person, String> col12(TableViewState tableViewState) {
+	private TableColumn<Person, String> name2Column(TableViewState tableViewState) {
 		final TableColumn<Person, String> tc = new TableColumn<>(Constants.COL_12_ID);
 		tc.setId(Constants.COL_12_ID);
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name2Property());
 		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;
 	}
-	private TableColumn<Person, String> col13(TableViewState tableViewState) {
+
+	private TableColumn<Person, String> name3Column(TableViewState tableViewState) {
 		final TableColumn<Person, String> tc = new TableColumn<>(Constants.COL_13_ID);
 		tc.setId(Constants.COL_13_ID);
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name3Property());
 		tc.setCellFactory(param -> new ButtonTableCell(tableViewState, true));
-		tc.impl_setWidth(0);
-		tc.setMaxWidth(1);
 		return tc;
 	}
 	private TableColumn<Person, String> col21(TableViewState tableViewState) {

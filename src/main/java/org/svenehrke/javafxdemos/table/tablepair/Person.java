@@ -8,6 +8,7 @@ public class Person {
 	private final BetterStringProperty name2 = new BetterStringProperty();
 	private final BetterStringProperty name3 = new BetterStringProperty();
 	private final BetterStringProperty name4 = new BetterStringProperty();
+	private double height = 0.0;
 
 	public Person(final int rowIdx) {
 
@@ -59,4 +60,11 @@ public class Person {
 		return "<html><body style='background-color: red'><div id='bodyDivId'>" + htmlSnippet + "</div></body></html>";
 	}
 
+	public double getHeight() {
+		return height;
+	}
+
+	public void setHeight(final double height) {
+		this.height = height;
+	}
 }
