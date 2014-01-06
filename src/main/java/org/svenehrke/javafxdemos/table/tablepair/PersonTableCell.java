@@ -1,7 +1,6 @@
 package org.svenehrke.javafxdemos.table.tablepair;
 
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
@@ -10,9 +9,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import org.svenehrke.javafxdemos.common.TableViews;
-
-import java.util.OptionalDouble;
 
 class PersonTableCell extends TableCell<Person, String> {
 
@@ -89,13 +85,13 @@ class PersonTableCell extends TableCell<Person, String> {
 		RowSizeInfo rowSizeInfo = tableViewState.getRowSizeInfo(getIndex());
 		Double rowsize1 = rowSizeInfo.rowSize1Property().getValue();
 		double d = rowSizeInfo.rowSize1Property().doubleValue() - getHeight();
-		if (Constants.COL_1_ID.equals(getTableColumn().getId()) && Util.isDebugIndex(getIndex())) {
+		if (Constants.COL_11_ID.equals(getTableColumn().getId()) && Util.isDebugIndex(getIndex())) {
 			System.out.printf(String.format("UPD : row=%d, col=%s, getHeight(): %s, rowsize1: %s, d: %s, hBox.height: %s%n", getIndex(), getTableColumn().getId(), getHeight(), rowsize1, d, hBox.getHeight() ) );
 		}
 
 		if (rowsize1 > 0) {
 			Platform.runLater(() -> {
-				if (Constants.COL_1_ID.equals(getTableColumn().getId())) {
+				if (Constants.COL_11_ID.equals(getTableColumn().getId())) {
 
 					double max = getTableRow().getChildrenUnmodifiable().stream().map(o -> (TableCell) o).mapToDouble(tc -> tc.prefHeight(-1)).max().getAsDouble();
 					System.out.printf("  max: %s, rowsize1: %s%n", max, rowsize1);

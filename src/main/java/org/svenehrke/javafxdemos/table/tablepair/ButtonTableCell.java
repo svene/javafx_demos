@@ -5,6 +5,7 @@ import javafx.collections.ObservableMap;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
+import javafx.scene.paint.Color;
 import javafx.util.Pair;
 import org.svenehrke.javafxdemos.common.TableViews;
 
@@ -12,8 +13,13 @@ class ButtonTableCell extends TableCell<Person, String> {
 
 	private final Button button;
 
-	ButtonTableCell(TableViewState tableViewState) {
+	ButtonTableCell(TableViewState tableViewState, final boolean transparent) {
 		button = new Button();
+		if (transparent) {
+			button.setVisible(false);
+			button.setMaxWidth(0);
+			setMaxWidth(0);
+		}
 
 
 		indexProperty().addListener((s,o,n) -> {
@@ -22,7 +28,6 @@ class ButtonTableCell extends TableCell<Person, String> {
 
 			tableViewState.put(idx, getTableColumn().getId(), this);
 
-			Pair<Integer, Integer> visibleRange = TableViews.getVisibleRange(getTableView());
 /*
 			System.out.printf("button col: idx: %s, rowrange: %d-%d%n", getIndex(), visibleRange.getKey(), visibleRange.getValue());
 			Platform.runLater(() -> {
@@ -75,12 +80,14 @@ class ButtonTableCell extends TableCell<Person, String> {
 					if (Util.isDebugIndex(getIndex())) {
 						System.out.printf("HEIGHT_LISTENER: table: %s, row: %s height: %s -> %s%n", getTableView().getId(), getIndex(), o2, n2);
 					}
+/*
 					if (n2.doubleValue() > 0 && getIndex() >= 0 && getIndex() < getTableView().getItems().size()) {
 						Platform.runLater(() -> {
 							RowSizeInfo rowSizeInfo = tableViewState.getRowSizeInfo(getIndex());
 							rowSizeInfo.rowSize1Property().setValue(n2); // set other table's RowSizeInfo
 						});
 					}
+*/
 				});
 			}
 
