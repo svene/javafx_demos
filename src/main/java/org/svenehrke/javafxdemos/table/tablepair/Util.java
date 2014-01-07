@@ -1,6 +1,7 @@
 package org.svenehrke.javafxdemos.table.tablepair;
 
 import javafx.beans.property.Property;
+import org.svenehrke.javafxdemos.common.Fireable;
 
 public class Util {
 	/**  from Node.almostZero(...) */

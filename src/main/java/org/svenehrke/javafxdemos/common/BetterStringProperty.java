@@ -1,6 +1,8 @@
-package org.svenehrke.javafxdemos.table.tablepair;
+package org.svenehrke.javafxdemos.common;
 
 import javafx.beans.property.SimpleStringProperty;
+import org.svenehrke.javafxdemos.common.Fireable;
+import org.svenehrke.javafxdemos.table.tablepair.SetWithNotificationAble;
 
 class BetterStringProperty extends SimpleStringProperty implements Fireable, SetWithNotificationAble {
 	public BetterStringProperty() {

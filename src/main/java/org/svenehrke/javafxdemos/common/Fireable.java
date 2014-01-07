@@ -1,4 +1,4 @@
-package org.svenehrke.javafxdemos.table.tablepair;
+package org.svenehrke.javafxdemos.common;
 
 public interface Fireable {
 	public void fireValueChangedEvent();
