@@ -1,17 +1,21 @@
 package org.svenehrke.javafxdemos.table.tablepair;
 
+import javafx.application.Platform;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
-import javafx.scene.control.TextField;
 
-class PersonTableCell extends TableCell<Person, String> {
+class ButtonTableCell extends TableCell<Person, String> {
 
-	private final TextField textField = new TextField();
+	private final Button button;
 
-	PersonTableCell(TableViewState tableViewState) {
+	ButtonTableCell(TableViewState tableViewState) {
+		button = new Button();
+
 		indexProperty().addListener((s,o,n) -> {
 			int idx = n.intValue();
 			if (idx < 0 || idx >= getTableView().getItems().size()) return;
+
 			tableViewState.put(idx, getTableColumn().getId(), this);
 		});
 	}
@@ -22,11 +26,17 @@ class PersonTableCell extends TableCell<Person, String> {
 
 		if (item == null) return;
 		if (getIndex() == -1) return;
+		if (getTableRow() == null) return;
 
-		textField.setText(getIndex() + " " + item);
-		setGraphic(textField);
+		int newHeight = Person.isLongText(item) ? 60 : 30;
+
+		Platform.runLater(() -> {
+			button.setText(getIndex() + " " + item);
+			button.setPrefHeight(newHeight);
+			setGraphic(button);
+		});
+
 		setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 	}
-
 
 }

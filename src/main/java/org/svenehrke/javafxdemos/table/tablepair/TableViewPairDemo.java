@@ -1,19 +1,28 @@
 package org.svenehrke.javafxdemos.table.tablepair;
 
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.svenehrke.javafxdemos.common.Nodes;
 import org.svenehrke.javafxdemos.common.Styles;
 
 public class TableViewPairDemo extends Application {
+
+
+	private BooleanProperty bothTablesAvailableProperty;
+	private StringProperty rowProperty = new SimpleStringProperty();
 
 
 	public static void main(String[] args) {
@@ -30,25 +39,41 @@ public class TableViewPairDemo extends Application {
 
 		ObservableList<Person> items = FXCollections.observableArrayList(people(100));
 
-		TableViewState tableViewState = new TableViewState();
+		TableViewState tableViewState = new TableViewState(items);
 
 		final TableView<Person> leftTV = newTableView(items);
-		leftTV.getColumns().addAll(col1(tableViewState), col2(tableViewState));
+		leftTV.setId(Constants.LEFT_TV_ID);
+
+
+		leftTV.getColumns().addAll(
+			name1Column(Constants.COL_L1_ID, tableViewState),
+			name2Column(Constants.COL_L2_ID, tableViewState),
+			heightHelperColumn(name3Column(Constants.COL_L3_ID, tableViewState))
+		);
 
 		final TableView<Person> rightTV = newTableView(items);
-		rightTV.getColumns().addAll(col3(tableViewState), col4(tableViewState));
+		rightTV.setId(Constants.RIGHT_TV_ID);
+		rightTV.getColumns().addAll(
+			name3Column(Constants.COL_R1_ID, tableViewState),
+			name4Column(Constants.COL_R2_ID, tableViewState)
+		);
+
+		bindTables(leftTV, rightTV);
 
 		VBox buttonBox = new VBox();
 		buttonBox.setPadding(new Insets(10));
 		buttonBox.setSpacing(10);
 
+		Node rowIndexWidget = rowIndexWidget(rowProperty);
+		rowProperty.set("1");
+
 		Button shortTextButton = new Button("short text");
-		shortTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue("short"));
+		shortTextButton.setOnAction((evt) -> items.get(Integer.valueOf(rowProperty.get())).name3Property().setValue(Person.LONG_TEXT_ARRAY[0]));
 
 		Button longTextButton = new Button("long text");
-		longTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue("some longer textsome longer text"));
+		longTextButton.setOnAction((evt) -> items.get(Integer.valueOf(rowProperty.get())).name3Property().setValue(Person.LONG_TEXT_ARRAY[2]));
 
-		buttonBox.getChildren().addAll(shortTextButton, longTextButton);
+		buttonBox.getChildren().addAll(rowIndexWidget, shortTextButton, longTextButton);
 
 
 		pane.getChildren().addAll(leftTV, rightTV, buttonBox);
@@ -59,31 +84,58 @@ public class TableViewPairDemo extends Application {
 		stage.show();
 	}
 
-	private TableColumn<Person, String> col1(TableViewState tableViewState) {
-		final TableColumn<Person, String> tc = new TableColumn<>("1");
-		tc.setId("1");
+	private Node rowIndexWidget(StringProperty rowProperty) {
+		VBox vBox = new VBox();
+		TextField tf = new TextField("");
+		tf.textProperty().bindBidirectional(rowProperty);
+		vBox.getChildren().addAll(new Label("row:"), tf);
+		return vBox;
+	}
+
+	private void bindTables(final TableView<Person> leftTV, final TableView<Person> rightTV) {
+		bothTablesAvailableProperty = new SimpleBooleanProperty();
+		bothTablesAvailableProperty.bind(Bindings.isNotNull(leftTV.skinProperty()).and(Bindings.isNotNull(rightTV.skinProperty())));
+		bothTablesAvailableProperty.addListener((s,o,n) -> {
+			if (!n) return;
+			ScrollBar leftVScrollBar = Nodes.verticalScrollBarFrom(leftTV);
+			ScrollBar rightVScrollBar = Nodes.verticalScrollBarFrom(rightTV);
+
+			leftVScrollBar.valueProperty().bindBidirectional(rightVScrollBar.valueProperty());
+		});
+	}
+
+	private TableColumn<Person, String> heightHelperColumn(TableColumn<Person, String> tc) {
+		tc.setMinWidth(0.0);
+		tc.setMaxWidth(0.0);
+		return tc;
+	}
+
+	private TableColumn<Person, String> name1Column(String id, TableViewState tableViewState) {
+		final TableColumn<Person, String> tc = new TableColumn<>(id);
+		tc.setId(id);
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name1Property());
 		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;
 	}
-
-	private TableColumn<Person, String> col2(TableViewState tableViewState) {
-		final TableColumn<Person, String> tc = new TableColumn<>("2");
-		tc.setId("2");
+	private TableColumn<Person, String> name2Column(String id, TableViewState tableViewState) {
+		final TableColumn<Person, String> tc = new TableColumn<>(id);
+		tc.setId(id);
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name2Property());
 		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;
 	}
-	private TableColumn<Person, String> col3(TableViewState tableViewState) {
-		final TableColumn<Person, String> tc = new TableColumn<>("3");
-		tc.setId("3");
+
+	private TableColumn<Person, String> name3Column(String id, TableViewState tableViewState) {
+		final TableColumn<Person, String> tc = new TableColumn<>(id);
+		tc.setId(id);
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name3Property());
-		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
+		tc.setCellFactory(param -> new ButtonTableCell(tableViewState));
 		return tc;
 	}
-	private TableColumn<Person, String> col4(TableViewState tableViewState) {
-		final TableColumn<Person, String> tc = new TableColumn<>("4");
-		tc.setId("4");
+
+	private TableColumn<Person, String> name4Column(String id, TableViewState tableViewState) {
+		final TableColumn<Person, String> tc = new TableColumn<>(id);
+		tc.setId(id);
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name4Property());
 		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;
