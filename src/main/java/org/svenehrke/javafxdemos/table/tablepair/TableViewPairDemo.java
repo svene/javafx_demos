@@ -1,13 +1,15 @@
 package org.svenehrke.javafxdemos.table.tablepair;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -15,12 +17,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.svenehrke.javafxdemos.common.Nodes;
 import org.svenehrke.javafxdemos.common.Styles;
-import org.svenehrke.javafxdemos.common.TableViews;
 
 public class TableViewPairDemo extends Application {
 
 
 	private BooleanProperty bothTablesAvailableProperty;
+	private StringProperty rowProperty = new SimpleStringProperty();
+
 
 	public static void main(String[] args) {
 		launch(args);
@@ -50,19 +53,20 @@ public class TableViewPairDemo extends Application {
 
 		bindTables(leftTV, rightTV);
 
-		alignRowHeights(leftTV, rightTV);
-
 		VBox buttonBox = new VBox();
 		buttonBox.setPadding(new Insets(10));
 		buttonBox.setSpacing(10);
 
+		Node rowIndexWidget = rowIndexWidget(rowProperty);
+		rowProperty.set("1");
+
 		Button shortTextButton = new Button("short text");
-		shortTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue("short"));
+		shortTextButton.setOnAction((evt) -> items.get(Integer.valueOf(rowProperty.get())).name3Property().setValue(Person.LONG_TEXT_ARRAY[0]));
 
 		Button longTextButton = new Button("long text");
-		longTextButton.setOnAction((evt) -> items.get(1).name3Property().setValue("some longer textsome longer text"));
+		longTextButton.setOnAction((evt) -> items.get(Integer.valueOf(rowProperty.get())).name3Property().setValue(Person.LONG_TEXT_ARRAY[2]));
 
-		buttonBox.getChildren().addAll(shortTextButton, longTextButton);
+		buttonBox.getChildren().addAll(rowIndexWidget, shortTextButton, longTextButton);
 
 
 		pane.getChildren().addAll(leftTV, rightTV, buttonBox);
@@ -71,6 +75,14 @@ public class TableViewPairDemo extends Application {
 		Styles.addStyleSheetTo(scene);
 		stage.setScene(scene);
 		stage.show();
+	}
+
+	private Node rowIndexWidget(StringProperty rowProperty) {
+		VBox vBox = new VBox();
+		TextField tf = new TextField("");
+		tf.textProperty().bindBidirectional(rowProperty);
+		vBox.getChildren().addAll(new Label("row:"), tf);
+		return vBox;
 	}
 
 	private void bindTables(final TableView<Person> leftTV, final TableView<Person> rightTV) {
@@ -82,26 +94,6 @@ public class TableViewPairDemo extends Application {
 			ScrollBar rightVScrollBar = Nodes.verticalScrollBarFrom(rightTV);
 
 			leftVScrollBar.valueProperty().bindBidirectional(rightVScrollBar.valueProperty());
-
-			Platform.runLater(() -> {
-				TableViews.getTableViewInfo(rightTV).getVirtualFlow().getFirstVisibleCellWithinViewPort().indexProperty().addListener((s2, o2, n2) -> {
-					System.out.printf("+++ Right Table: first visible row: %s -> %s%n", o2, n2);
-				});
-			});
-
-
-		});
-	}
-
-	private void alignRowHeights(final TableView<Person> leftTV, final TableView<Person> rightTV) {
-		bothTablesAvailableProperty.addListener((s,o,n) -> {
-			if (!n) return;
-/*
-			Platform.runLater(() -> {
-				TableViews.showTVInfo(leftTV, "LEFT");
-				TableViews.showTVInfo(rightTV, "RIGHT");
-			});
-*/
 		});
 	}
 

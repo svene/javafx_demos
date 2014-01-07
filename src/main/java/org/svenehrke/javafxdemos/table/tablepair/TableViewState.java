@@ -1,7 +1,5 @@
 package org.svenehrke.javafxdemos.table.tablepair;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableCell;
 

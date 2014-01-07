@@ -50,7 +50,7 @@ public class Person {
 //		return LONG_TEXT_ARRAY[0];
 	}
 
-	private static String[] LONG_TEXT_ARRAY = new String[]{
+	public static String[] LONG_TEXT_ARRAY = new String[]{
 		wrappedHtml("{0} Dies ist ein nicht so langer Text"),
 		wrappedHtml("{0} Dies ist ein mittellanger Text, der schon ein ziemlich blinder Blindtext ist, und nichts bedeutet. Damit er auch sicher einmal umgebrochen wird, müssen wir noch etwas labern"),
 		wrappedHtml("{0} Dies ist ein ganz, ganz, ganz langer Text, der schon ein ziemlich blinder Blindtext ist. Dieser Text hat keine inhaltliche Aussage. Dieser ist noch vieeeel länger, als der andere und wird deswegen sicher umgebrochen. Da das Fenster sehr breit ist, müssen wir noch einen viel längeren Text schreiben. Eigentlich wollte ich ja, dass er zweimal umgebrochen wird, schaun wir mal ob es reicht")
