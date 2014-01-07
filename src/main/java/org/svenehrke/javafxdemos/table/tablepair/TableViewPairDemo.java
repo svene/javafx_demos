@@ -45,11 +45,18 @@ public class TableViewPairDemo extends Application {
 		leftTV.setId(Constants.LEFT_TV_ID);
 
 
-		leftTV.getColumns().addAll(name1Column(tableViewState), name2Column(tableViewState), heightHelper(name3Column(tableViewState)));
+		leftTV.getColumns().addAll(
+			name1Column(Constants.COL_L1_ID, tableViewState),
+			name2Column(Constants.COL_L2_ID, tableViewState),
+			heightHelperColumn(name3Column(Constants.COL_L3_ID, tableViewState))
+		);
 
 		final TableView<Person> rightTV = newTableView(items);
 		rightTV.setId(Constants.RIGHT_TV_ID);
-		rightTV.getColumns().addAll(col21(tableViewState)/*, col22(tableViewState)*/);
+		rightTV.getColumns().addAll(
+			name3Column(Constants.COL_R1_ID, tableViewState),
+			name4Column(Constants.COL_R2_ID, tableViewState)
+		);
 
 		bindTables(leftTV, rightTV);
 
@@ -97,45 +104,38 @@ public class TableViewPairDemo extends Application {
 		});
 	}
 
-	private TableColumn<Person, String> heightHelper(TableColumn<Person, String> tc) {
+	private TableColumn<Person, String> heightHelperColumn(TableColumn<Person, String> tc) {
 		tc.setMinWidth(0.0);
 		tc.setMaxWidth(0.0);
-		tc.impl_setWidth(0.0);
 		return tc;
 	}
 
-	private TableColumn<Person, String> name1Column(TableViewState tableViewState) {
-		final TableColumn<Person, String> tc = new TableColumn<>(Constants.COL_11_ID);
-		tc.setId(Constants.COL_11_ID);
+	private TableColumn<Person, String> name1Column(String id, TableViewState tableViewState) {
+		final TableColumn<Person, String> tc = new TableColumn<>(id);
+		tc.setId(id);
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name1Property());
 		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;
 	}
-	private TableColumn<Person, String> name2Column(TableViewState tableViewState) {
-		final TableColumn<Person, String> tc = new TableColumn<>(Constants.COL_12_ID);
-		tc.setId(Constants.COL_12_ID);
+	private TableColumn<Person, String> name2Column(String id, TableViewState tableViewState) {
+		final TableColumn<Person, String> tc = new TableColumn<>(id);
+		tc.setId(id);
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name2Property());
 		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;
 	}
 
-	private TableColumn<Person, String> name3Column(TableViewState tableViewState) {
-		final TableColumn<Person, String> tc = new TableColumn<>(Constants.COL_13_ID);
-		tc.setId(Constants.COL_13_ID);
+	private TableColumn<Person, String> name3Column(String id, TableViewState tableViewState) {
+		final TableColumn<Person, String> tc = new TableColumn<>(id);
+		tc.setId(id);
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name3Property());
-		tc.setCellFactory(param -> new ButtonTableCell(tableViewState, true));
+		tc.setCellFactory(param -> new ButtonTableCell(tableViewState));
 		return tc;
 	}
-	private TableColumn<Person, String> col21(TableViewState tableViewState) {
-		final TableColumn<Person, String> tc = new TableColumn<>(Constants.COL_21_ID);
-		tc.setId(Constants.COL_21_ID);
-		tc.setCellValueFactory(rowItem -> rowItem.getValue().name3Property());
-		tc.setCellFactory(param -> new ButtonTableCell(tableViewState, false));
-		return tc;
-	}
-	private TableColumn<Person, String> col22(TableViewState tableViewState) {
-		final TableColumn<Person, String> tc = new TableColumn<>(Constants.COL_22_ID);
-		tc.setId(Constants.COL_22_ID);
+
+	private TableColumn<Person, String> name4Column(String id, TableViewState tableViewState) {
+		final TableColumn<Person, String> tc = new TableColumn<>(id);
+		tc.setId(id);
 		tc.setCellValueFactory(rowItem -> rowItem.getValue().name4Property());
 		tc.setCellFactory(param -> new PersonTableCell(tableViewState));
 		return tc;

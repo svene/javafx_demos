@@ -8,14 +8,13 @@ public class Person {
 	private final BetterStringProperty name2 = new BetterStringProperty();
 	private final BetterStringProperty name3 = new BetterStringProperty();
 	private final BetterStringProperty name4 = new BetterStringProperty();
-	private double height = 0.0;
 
 	public Person(final int rowIdx) {
 
-		name1.setValue(valueFrom(1, rowIdx));
-		name2.setValue(valueFrom(2, rowIdx));
-		name3.setValue(valueFrom(3, rowIdx));
-		name4.setValue(valueFrom(4, rowIdx));
+		name1.setValue(valueFrom(rowIdx));
+		name2.setValue(valueFrom(rowIdx));
+		name3.setValue(valueFrom(rowIdx));
+		name4.setValue(valueFrom(rowIdx));
 
 		name1Property().addListener((s,o,n) -> {
 			System.out.printf("name1 change: %s->%s%n", o, n);
@@ -42,12 +41,9 @@ public class Person {
 		return name4;
 	}
 
-	private String valueFrom(final int colIdx, final int rowIdx) {
-//		if (colIdx == 3) {
-			int textIdx = rowIdx % 3;
-			return LONG_TEXT_ARRAY[textIdx];
-//		}
-//		return LONG_TEXT_ARRAY[0];
+	private String valueFrom(final int rowIdx) {
+		int textIdx = rowIdx % 3;
+		return LONG_TEXT_ARRAY[textIdx];
 	}
 
 	public static String[] LONG_TEXT_ARRAY = new String[]{
@@ -60,11 +56,4 @@ public class Person {
 		return "<html><body style='background-color: red'><div id='bodyDivId'>" + htmlSnippet + "</div></body></html>";
 	}
 
-	public double getHeight() {
-		return height;
-	}
-
-	public void setHeight(final double height) {
-		this.height = height;
-	}
 }
