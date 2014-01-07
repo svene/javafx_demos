@@ -1,13 +1,14 @@
 package org.svenehrke.javafxdemos.table.tablepair;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Person {
 
-	private final BetterStringProperty name1 = new BetterStringProperty();
-	private final BetterStringProperty name2 = new BetterStringProperty();
-	private final BetterStringProperty name3 = new BetterStringProperty();
-	private final BetterStringProperty name4 = new BetterStringProperty();
+	private final StringProperty name1 = new SimpleStringProperty();
+	private final StringProperty name2 = new SimpleStringProperty();
+	private final StringProperty name3 = new SimpleStringProperty();
+	private final StringProperty name4 = new SimpleStringProperty();
 
 	public Person(final int rowIdx) {
 
