@@ -39,7 +39,7 @@ public class Main extends Application {
 			Pane pane = FXMLLoader.load(Main.class.getResource("/greet.fxml"));
 			Scene scene = new Scene(pane);
 			primaryStage.setScene(scene);
-			primaryStage.setTitle("FXML is Simple");
+			primaryStage.setTitle("Greet FXML");
 			primaryStage.show();
 		} catch (Exception ex) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);

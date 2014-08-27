@@ -10,7 +10,7 @@
          <children>
             <TextField fx:id="nameTextField" />
             <Button fx:id="greetingButton" mnemonicParsing="false" text="Greet" />
-            <Label fx:id="greetingLabel" text="Label" />
+            <Label fx:id="greetingLabel" />
          </children>
       </VBox>
    </children>
