@@ -21,13 +21,15 @@ public class PersonOverviewController extends AbstractPersonOverviewController {
 
 		showPersonDetails(null);
 
-		newButton.setOnAction(event -> applicationEventHandler.handleCommand(Api.CMD_NEW));
-		editButton.setOnAction(event -> applicationEventHandler.handleCommand(Api.CMD_EDIT));
-		deleteButton.setOnAction(event -> applicationEventHandler.handleCommand(Api.CMD_DELETE));
 	}
 
 	public void setApplicationEventHandler(IApplicationEventHandler applicationEventHandler) {
 		this.applicationEventHandler = applicationEventHandler;
+		newButton.setOnAction(event -> applicationEventHandler.handleCommand(Api.CMD_NEW));
+		editButton.setOnAction(event -> {
+			this.applicationEventHandler.handleCommand(Api.CMD_EDIT);
+		});
+		deleteButton.setOnAction(event -> applicationEventHandler.handleCommand(Api.CMD_DELETE));
 	}
 
 	public void setModel(Model model) {
@@ -46,7 +48,7 @@ public class PersonOverviewController extends AbstractPersonOverviewController {
 	 *
 	 * @param person the person or null
 	 */
-	private void showPersonDetails(Person person) {
+	public void showPersonDetails(Person person) {
 		if (person != null) {
 			// Fill the labels with info from the person object.
 			firstNameLabel.setText(person.firstName.getValue());

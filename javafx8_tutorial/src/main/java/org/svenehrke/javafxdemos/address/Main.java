@@ -1,14 +1,13 @@
 package org.svenehrke.javafxdemos.address;
 
 import javafx.application.Application;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.svenehrke.javafxdemos.address.model.Person;
-import org.svenehrke.javafxdemos.address.model.SampleData;
 
 import java.io.IOException;
 import java.net.URL;
@@ -18,6 +17,8 @@ import java.net.URL;
  * and not in the fxml.
  */
 public class Main extends Application {
+
+	private PersonOverviewController personOverviewController;
 
 	public static void main(String[] args) {
 		Application.launch(Main.class, args);
@@ -31,7 +32,6 @@ public class Main extends Application {
 	@Override
 	public void init() throws Exception {
 		model = new Model();
-		applicationEventHandler = new ApplicationEventHandlerImpl(model);
 	}
 
 	@Override
@@ -47,6 +47,8 @@ public class Main extends Application {
 		initRootLayout();
 		showPersonOverview();
 
+		applicationEventHandler = new ApplicationEventHandlerImpl(model, primaryStage, personOverviewController);
+		personOverviewController.setApplicationEventHandler(applicationEventHandler);
 	}
 
 	private void initRootLayout() {
@@ -72,9 +74,8 @@ public class Main extends Application {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		PersonOverviewController personOverviewController = loader.getController();
+		personOverviewController = loader.getController();
 		personOverviewController.setModel(model);
-		personOverviewController.setApplicationEventHandler(applicationEventHandler);
 		rootLayout.setCenter(personOverview);
 
 	}
