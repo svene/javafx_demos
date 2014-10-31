@@ -18,7 +18,7 @@ public class ApplicationEventHandlerImpl implements IApplicationEventHandler {
 				System.out.println("edit");
 				break;
 			case Api.CMD_DELETE:
-				System.out.println("delete");
+				model.getPersonData().remove(model.selectedModelIndex.intValue());
 				break;
 			default:
 				System.out.println("command '" + commandName + "' unknown");
