@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.model.Person;
 
 import java.io.IOException;
@@ -63,15 +64,26 @@ public class ApplicationEventHandlerImpl implements IApplicationEventHandler {
 		} else {
 			// Nothing selected.
 			System.out.println("nothing selected");
-//			Dialogs.create()
-//				.title("No Selection")
-//				.masthead("No Person Selected")
-//				.message("Please select a person in the table.")
-//				.showWarning();
+			Dialogs.create()
+				.title("No Selection")
+				.masthead("No Person Selected")
+				.message("Please select a person in the table.")
+				.showWarning();
 		}
 	}
 	private void handleDelete() {
-		model.getPersonData().remove(model.selectedModelIndex.intValue());
+		int selectedIndex = model.selectedModelIndex.intValue();
+		if (selectedIndex >= 0) {
+			model.getPersonData().remove(selectedIndex);
+		} else {
+			// Nothing selected.
+			Dialogs.create()
+				.title("No Selection")
+				.masthead("No Person Selected")
+				.message("Please select a person in the table.")
+				.showWarning();
+		}
+
 	}
 
 	/**
