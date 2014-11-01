@@ -16,8 +16,8 @@ public class PersonOverviewController extends AbstractPersonOverviewController {
 	@FXML
 	private void initialize() {
 		// Initialize the person table with the two columns.
-		firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstName);
-		lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastName);
+		firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
+		lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
 
 		showPersonDetails(null);
 
@@ -38,7 +38,12 @@ public class PersonOverviewController extends AbstractPersonOverviewController {
 		personTable.setItems(model.getPersonData());
 
 		personTable.getSelectionModel().selectedIndexProperty().addListener((s, o, n) -> model.selectedModelIndex.setValue(n));
-		model.selectedModelIndex.addListener((s,o,n) -> showPersonDetails(model.getPersonData().get(n.intValue())));
+		model.selectedModelIndex.addListener((s, o, n) -> {
+			int index = n.intValue();
+			if (index >= 0) {
+				showPersonDetails(model.getPersonData().get(index));
+			}
+		});
 	}
 
 
@@ -51,13 +56,13 @@ public class PersonOverviewController extends AbstractPersonOverviewController {
 	public void showPersonDetails(Person person) {
 		if (person != null) {
 			// Fill the labels with info from the person object.
-			firstNameLabel.setText(person.firstName.getValue());
-			lastNameLabel.setText(person.lastName.getValue());
-			streetLabel.setText(person.street.getValue());
-			postalCodeLabel.setText(Integer.toString(person.postalCode.getValue()));
-			cityLabel.setText(person.city.getValue());
+			firstNameLabel.setText(person.firstNameProperty().getValue());
+			lastNameLabel.setText(person.lastNameProperty().getValue());
+			streetLabel.setText(person.streetProperty().getValue());
+			postalCodeLabel.setText(Integer.toString(person.postalCodeProperty().getValue()));
+			cityLabel.setText(person.cityProperty().getValue());
 
-			birthdayLabel.setText(DateUtil.format(person.birthday.getValue()));
+			birthdayLabel.setText(DateUtil.format(person.birthdayProperty().getValue()));
 		} else {
 			// Person is null, remove all the text.
 			firstNameLabel.setText("");

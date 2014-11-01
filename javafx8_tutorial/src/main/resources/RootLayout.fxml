@@ -4,16 +4,16 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@DarkTheme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.svenehrke.javafxdemos.address.DummyController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@DarkTheme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.svenehrke.javafxdemos.address.RootLayoutController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="New" />
-                  <MenuItem mnemonicParsing="false" text="Open..." />
-                  <MenuItem mnemonicParsing="false" text="Save" />
-                  <MenuItem mnemonicParsing="false" text="Save As..." />
+              <MenuItem fx:id="miNew" mnemonicParsing="false" text="New" />
+                  <MenuItem fx:id="miOpen" mnemonicParsing="false" text="Open..." />
+                  <MenuItem fx:id="miSave" mnemonicParsing="false" text="Save" />
+                  <MenuItem fx:id="miSaveAs" mnemonicParsing="false" text="Save As..." />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">

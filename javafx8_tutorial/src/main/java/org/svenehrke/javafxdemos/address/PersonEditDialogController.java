@@ -1,7 +1,5 @@
 package org.svenehrke.javafxdemos.address;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -66,12 +64,12 @@ public class PersonEditDialogController {
 	public void setPerson(Person person) {
 		this.person = person;
 
-		firstNameField.setText(person.firstName.getValue());
-		lastNameField.setText(person.lastName.getValue());
-		streetField.setText(person.street.getValue());
-		postalCodeField.setText(Integer.toString(person.postalCode.getValue()));
-		cityField.setText(person.city.getValue());
-		birthdayField.setText(DateUtil.format(person.birthday.getValue()));
+		firstNameField.setText(person.firstNameProperty().getValue());
+		lastNameField.setText(person.lastNameProperty().getValue());
+		streetField.setText(person.streetProperty().getValue());
+		postalCodeField.setText(Integer.toString(person.postalCodeProperty().getValue()));
+		cityField.setText(person.cityProperty().getValue());
+		birthdayField.setText(DateUtil.format(person.birthdayProperty().getValue()));
 		birthdayField.setPromptText("dd.mm.yyyy");
 	}
 
@@ -90,12 +88,12 @@ public class PersonEditDialogController {
 	@FXML
 	private void handleOk() {
 		if (isInputValid()) {
-			person.firstName.setValue(firstNameField.getText());
-			person.lastName.setValue(lastNameField.getText());
-			person.street.setValue(streetField.getText());
-			person.postalCode.setValue(Integer.parseInt(postalCodeField.getText()));
-			person.city.setValue(cityField.getText());
-			person.birthday.setValue(DateUtil.parse(birthdayField.getText()));
+			person.firstNameProperty().setValue(firstNameField.getText());
+			person.lastNameProperty().setValue(lastNameField.getText());
+			person.streetProperty().setValue(streetField.getText());
+			person.postalCodeProperty().setValue(Integer.parseInt(postalCodeField.getText()));
+			person.cityProperty().setValue(cityField.getText());
+			person.birthdayProperty().setValue(DateUtil.parse(birthdayField.getText()));
 
 			okClicked = true;
 			dialogStage.close();

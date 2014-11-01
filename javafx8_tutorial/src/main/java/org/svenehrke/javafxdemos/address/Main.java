@@ -32,10 +32,10 @@ public class Main extends Application {
 		Application.launch(Main.class, args);
 	}
 
-	private Stage primaryStage;
+	Stage primaryStage;
 	private BorderPane rootLayout;
 	private IApplicationEventHandler applicationEventHandler;
-	private Model model;
+	Model model;
 
 	@Override
 	public void init() throws Exception {
@@ -69,6 +69,16 @@ public class Main extends Application {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+
+		// Give the controller access to the main app.
+		RootLayoutController controller = loader.getController();
+		controller.setMainApp(this);
+
+		// Try to load last opened person file.
+//		File file = getPersonFilePath();
+//		if (file != null) {
+//			loadPersonDataFromFile(file);
+//		}
 
 		Scene scene = new Scene(rootLayout);
 		primaryStage.setScene(scene);
@@ -141,6 +151,7 @@ public class Main extends Application {
 			Unmarshaller um = context.createUnmarshaller();
 
 			// Reading XML from the file and unmarshalling.
+			System.out.println("file.getAbsolutePath() = " + file.getAbsolutePath());
 			PersonListWrapper wrapper = (PersonListWrapper) um.unmarshal(file);
 
 			model.getPersonData().clear();
@@ -150,6 +161,7 @@ public class Main extends Application {
 			setPersonFilePath(file);
 
 		} catch (Exception e) { // catches ANY exception
+			e.printStackTrace();
 			Dialogs.create()
 				.title("Error")
 				.masthead("Could not load data from file:\n" + file.getPath())
@@ -179,6 +191,7 @@ public class Main extends Application {
 			// Save the file path to the registry.
 			setPersonFilePath(file);
 		} catch (Exception e) { // catches ANY exception
+			e.printStackTrace();
 			Dialogs.create().title("Error")
 				.masthead("Could not save data to file:\n" + file.getPath())
 				.showException(e);
