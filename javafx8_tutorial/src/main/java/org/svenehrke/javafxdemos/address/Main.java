@@ -198,5 +198,30 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Opens a dialog to show birthday statistics.
+	 */
+	public void showBirthdayStatistics() {
+		try {
+			// Load the fxml file and create a new stage for the popup.
+			URL resource = Main.class.getResource("/BirthdayStatistics.fxml");
+			final FXMLLoader loader = new FXMLLoader(resource, null);
+			AnchorPane page = loader.load();
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Birthday Statistics");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
 
+			// Set the persons into the controller.
+			BirthdayStatisticsController controller = loader.getController();
+			controller.setPersonData(model.getPersonData());
+
+			dialogStage.show();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

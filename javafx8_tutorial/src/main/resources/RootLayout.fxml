@@ -16,9 +16,9 @@
                   <MenuItem fx:id="miSaveAs" mnemonicParsing="false" text="Save As..." />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
+          <Menu mnemonicParsing="false" text="Statistics">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem fx:id="miShowStatistics" mnemonicParsing="false" text="Show Statistics" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

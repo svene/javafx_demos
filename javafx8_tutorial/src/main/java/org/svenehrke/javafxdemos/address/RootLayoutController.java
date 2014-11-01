@@ -29,6 +29,8 @@ public class RootLayoutController {
 	private MenuItem miSave;
 	@FXML
 	private MenuItem miSaveAs;
+	@FXML
+	private MenuItem miShowStatistics;
 
 	@FXML
 	private void initialize() {
@@ -36,6 +38,7 @@ public class RootLayoutController {
 		miOpen.setOnAction(event -> handleOpen());
 		miSave.setOnAction(event -> handleSave());
 		miSaveAs.setOnAction(event -> handleSaveAs());
+		miShowStatistics.setOnAction(event -> handleShowBirthdayStatistics());
 	}
 
 	/**
@@ -45,6 +48,10 @@ public class RootLayoutController {
 	 */
 	public void setMainApp(Main mainApp) {
 		this.mainApp = mainApp;
+	}
+
+	private void handleShowBirthdayStatistics() {
+		mainApp.showBirthdayStatistics();
 	}
 
 	/**
