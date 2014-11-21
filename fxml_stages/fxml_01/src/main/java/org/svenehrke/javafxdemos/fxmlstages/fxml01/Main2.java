@@ -9,10 +9,10 @@ import javafx.stage.Stage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Main extends Application {
+public class Main2 extends Application {
 
 	public static void main(String[] args) {
-		Application.launch(Main.class, args);
+		Application.launch(Main2.class, args);
 	}
 
 	@Override
@@ -26,13 +26,15 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {
-			Pane pane = FXMLLoader.load(Main.class.getResource("/greet.fxml"));
+			FXMLLoader loader = new FXMLLoader(Main2.class.getResource("/greet2.fxml"));
+			loader.setControllerFactory((Class<?> c) -> new GreetController2());
+			Pane pane = loader.load();
 			Scene scene = new Scene(pane);
 			primaryStage.setScene(scene);
-			primaryStage.setTitle("Greet FXML");
+			primaryStage.setTitle("Greet 2 FXML");
 			primaryStage.show();
 		} catch (Exception ex) {
-			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(Main2.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 }

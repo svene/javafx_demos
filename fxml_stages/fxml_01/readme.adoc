@@ -1,0 +1,72 @@
+= JavaFX fxml Files
+
+The examples in this project demonstrate several different ways to use fxml files.
+At the end it becomes clear why Adam Bien's mini framework http://afterburner.adam-bien.com/[afterburner.fx] makes sense in addition to fxml.
+
+== Example 1
+
+First Simple example. Note that `greet1.fxml` also defines the controller (can be entered in bottom left area of SceneBuilder window):
+
+[source,xml]
+.greet1.fxml
+----
+<Pane ... fx:controller="org.svenehrke.javafxdemos.fxmlstages.fxml01.GreetController">
+   <children>
+      ...
+   </children>
+</Pane>
+----
+
+_Main1.java_ loads it as follows:
+
+[source,java]
+.Main1.java
+----
+Pane pane = FXMLLoader.load(Main1.class.getResource("/greet1.fxml"));
+----
+
+== Example 2
+
+This example makes use of `FXMLLoader.setControllerFactory(...)`:
+
+[source,java]
+.Main2.java
+----
+FXMLLoader loader = new FXMLLoader(Main2.class.getResource("/greet2.fxml"));
+loader.setControllerFactory((Class<?> c) -> new GreetController2());
+----
+
+By default JavaFX instantiates the controller based upon the classname defined in the fxml file (see _Main1.java_).
+Using `setControllerFactory` the passed in callback is in charge to create an instance of the controller. This way the application
+has full control over how the controller is instantiated and even which controller is instantiated. This means you can for example apply
+dependency injection to the controller before it is handed back to JavaFX.
+
+At first I thought that when I use `setControllerFactory` I can omit the `fx:controller` attribute in my _fxml_ file. I thought it would not make to specify it in the fxml
+since the routine determines which object is used. Having it in both places is contradictory. But it turns out that you have to do it anyway. Otherwise
+the function won't be called. So this feels a bit strange. The good news is: as long as the class you specify in `fx:controller` exists everything is OK. You
+can even use `java.lang.String` as value if you want. All that happens is that the specified class is passed
+as input to your controller factory.
+
+Note that when your controller factory returns null it means that the default controller construction mechanism will be employed by the loader. If
+you have used `java.lang.String` as controller class the GUI will start anyway and will silently ignore the fact that it cannot use _String_ as a controller class.
+
+== Example 3
+
+This example makes use of the things we learned in Example 2. It will not only create and return a Controller using `FXMLLoader.setControllerFactory(...)`.
+In addition it will initilize the newly instantiated controller with certain values before it returns it to JavaFX. Therefore `GreetController3` has a
+new attribute `String prefix` so that the greeting _Hello_ which was hard coded so far can be configured. In our simple example this is done as follows:
+
+[source,java]
+.Main3.java
+----
+loader.setControllerFactory((Class<?> c) -> {
+  GreetController3 controller = new GreetController3();
+  controller.prefix = "Good morning"; // dependency injection simulation for demonstration purposes
+  return controller;
+});
+----
+
+So first the controller is created, then it's prefix is set to _Good morning_ and only then it is returned back to JavaFX.
+
+So now it becomes clear that at this point we could use a general dependency injection mechanism for the controller. And this is exactly what
+Adam Bien's mini framework http://afterburner.adam-bien.com/[afterburner.fx] is for.
