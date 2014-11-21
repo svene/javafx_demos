@@ -17,7 +17,7 @@ public class App extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		Map<Object, Object> customProperties = new HashMap<>();
-		customProperties.put("date", null);
+		customProperties.put("prefix", "Good morning");
 
 		Injector.setConfigurationSource(customProperties::get);
 
