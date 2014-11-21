@@ -52,7 +52,7 @@ you have used `java.lang.String` as controller class the GUI will start anyway a
 
 == Example 3
 
-This example makes use of the things we learned in Example 2. It will not only create and return a Controller using `FXMLLoader.setControllerFactory(...)`.
+This example makes use of the things we learned in Example 2. It will not only create and return a controller using `FXMLLoader.setControllerFactory(...)`.
 In addition it will initilize the newly instantiated controller with certain values before it returns it to JavaFX. Therefore `GreetController3` has a
 new attribute `String prefix` so that the greeting _Hello_ which was hard coded so far can be configured. In our simple example this is done as follows:
 
@@ -66,7 +66,7 @@ loader.setControllerFactory((Class<?> c) -> {
 });
 ----
 
-So first the controller is created, then it's prefix is set to _Good morning_ and only then it is returned back to JavaFX.
+So first the controller is created, then its prefix is set to _Good morning_ and only then it is returned back to JavaFX.
 
 So now it becomes clear that at this point we could use a general dependency injection mechanism for the controller. And this is exactly what
 Adam Bien's mini framework http://afterburner.adam-bien.com/[afterburner.fx] is for.
