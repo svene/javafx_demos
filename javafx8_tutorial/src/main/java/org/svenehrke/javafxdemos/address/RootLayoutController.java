@@ -1,11 +1,10 @@
 package org.svenehrke.javafxdemos.address;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import org.controlsfx.dialog.Dialogs;
+import org.svenehrke.javafxdemos.infra.Mate;
 
 import java.io.File;
 
@@ -20,6 +19,7 @@ public class RootLayoutController {
 
 	// Reference to the main application
 	private Main mainApp;
+	private Mate mate;
 
 	@FXML
 	private MenuItem miNew;
@@ -35,7 +35,7 @@ public class RootLayoutController {
 	@FXML
 	private void initialize() {
 		miNew.setOnAction(event -> handleNew());
-		miOpen.setOnAction(event -> handleOpen());
+		miOpen.setOnAction(event -> mate.handleCommand(Api.OPEN_FILE));
 		miSave.setOnAction(event -> handleSave());
 		miSaveAs.setOnAction(event -> handleSaveAs());
 		miShowStatistics.setOnAction(event -> handleShowBirthdayStatistics());
@@ -45,9 +45,11 @@ public class RootLayoutController {
 	 * Is called by the main application to give a reference back to itself.
 	 *
 	 * @param mainApp
+	 * @param mate
 	 */
-	public void setMainApp(Main mainApp) {
+	public void setMainApp(Main mainApp, Mate mate) {
 		this.mainApp = mainApp;
+		this.mate = mate;
 	}
 
 	private void handleShowBirthdayStatistics() {
@@ -61,26 +63,6 @@ public class RootLayoutController {
 	private void handleNew() {
 		mainApp.model.getPersonData().clear();
 		mainApp.setPersonFilePath(null);
-	}
-
-	/**
-	 * Opens a FileChooser to let the user select an address book to load.
-	 */
-	@FXML
-	private void handleOpen() {
-		FileChooser fileChooser = new FileChooser();
-
-		// Set extension filter
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
-			"XML files (*.xml)", "*.xml");
-		fileChooser.getExtensionFilters().add(extFilter);
-
-		// Show save file dialog
-		File file = fileChooser.showOpenDialog(mainApp.primaryStage);
-
-		if (file != null) {
-			mainApp.loadPersonDataFromFile(file);
-		}
 	}
 
 	/**

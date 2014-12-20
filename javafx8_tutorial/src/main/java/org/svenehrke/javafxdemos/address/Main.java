@@ -9,8 +9,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.Dialogs;
-import org.svenehrke.javafxdemos.address.model.Person;
 import org.svenehrke.javafxdemos.address.model.PersonListWrapper;
+import org.svenehrke.javafxdemos.infra.Mate;
+import org.svenehrke.javafxdemos.infra.OpenFileCommandHandler;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -36,10 +37,12 @@ public class Main extends Application {
 	private BorderPane rootLayout;
 	private IApplicationEventHandler applicationEventHandler;
 	Model model;
+	Mate mate;
 
 	@Override
 	public void init() throws Exception {
 		model = new Model();
+		mate = new Mate();
 	}
 
 	@Override
@@ -49,6 +52,9 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+
+		mate.addCommand(Api.OPEN_FILE, new OpenFileCommandHandler(mate, this, primaryStage));
+
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("AddressApp");
 
@@ -72,7 +78,7 @@ public class Main extends Application {
 
 		// Give the controller access to the main app.
 		RootLayoutController controller = loader.getController();
-		controller.setMainApp(this);
+		controller.setMainApp(this, mate);
 
 		// Try to load last opened person file.
 //		File file = getPersonFilePath();
