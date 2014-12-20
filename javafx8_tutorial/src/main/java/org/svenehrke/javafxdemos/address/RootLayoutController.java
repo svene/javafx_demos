@@ -5,6 +5,7 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.infra.Mate;
+import org.svenehrke.javafxdemos.infra.OpenFileCommandHandler;
 
 import java.io.File;
 
@@ -62,7 +63,7 @@ public class RootLayoutController {
 	@FXML
 	private void handleNew() {
 		mainApp.model.getPersonData().clear();
-		mainApp.setPersonFilePath(null);
+		OpenFileCommandHandler.setPersonFilePath(null, mainApp.primaryStage);
 	}
 
 	/**
