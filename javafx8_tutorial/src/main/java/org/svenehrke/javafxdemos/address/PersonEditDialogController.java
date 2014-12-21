@@ -47,13 +47,6 @@ public class PersonEditDialogController {
 	 */
 	@FXML
 	private void initialize() {
-		okButton.setOnAction(event -> handleOk());
-		cancelButton.setOnAction(event -> handleCancel());
-	}
-
-	public void postInitialize(Stage dialogStage) {
-
-		this.dialogStage = dialogStage;
 
 		firstNameField.setText(person.firstNameProperty().getValue());
 		lastNameField.setText(person.lastNameProperty().getValue());
@@ -62,6 +55,14 @@ public class PersonEditDialogController {
 		cityField.setText(person.cityProperty().getValue());
 		birthdayField.setText(DateUtil.format(person.birthdayProperty().getValue()));
 		birthdayField.setPromptText("dd.mm.yyyy");
+
+		okButton.setOnAction(event -> handleOk());
+		cancelButton.setOnAction(event -> handleCancel());
+	}
+
+	public void postInitialize(Stage dialogStage) {
+
+		this.dialogStage = dialogStage;
 	}
 
 	/**
