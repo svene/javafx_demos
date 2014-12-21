@@ -1,15 +1,10 @@
 package org.svenehrke.javafxdemos.address;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.Dialogs;
+import org.svenehrke.javafxdemos.address.commandhandler.NewPersonCommandHandler;
+import org.svenehrke.javafxdemos.address.commandhandler.PersonDialogs;
 import org.svenehrke.javafxdemos.address.model.Person;
-
-import java.io.IOException;
-import java.net.URL;
 
 public class ApplicationEventHandlerImpl implements IApplicationEventHandler {
 
@@ -17,10 +12,14 @@ public class ApplicationEventHandlerImpl implements IApplicationEventHandler {
 	private final Stage primaryStage;
 	private PersonOverviewController personOverviewController;
 
+	private final NewPersonCommandHandler newPersonCommandHandler;
+
 	public ApplicationEventHandlerImpl(Model model, Stage primaryStage, PersonOverviewController personOverviewController) {
 		this.model = model;
 		this.primaryStage = primaryStage;
 		this.personOverviewController = personOverviewController;
+
+		newPersonCommandHandler = new NewPersonCommandHandler(primaryStage, model);
 	}
 
 	public void setPersonOverviewController(PersonOverviewController personOverviewController) {
@@ -31,7 +30,7 @@ public class ApplicationEventHandlerImpl implements IApplicationEventHandler {
 	public void handleCommand(String commandName) {
 		switch (commandName) {
 			case Api.CMD_NEW:
-				handleNewPerson();
+				newPersonCommandHandler.run();
 				break;
 			case Api.CMD_EDIT:
 				handleEditPerson();
@@ -45,18 +44,10 @@ public class ApplicationEventHandlerImpl implements IApplicationEventHandler {
 		}
 	}
 
-	private void handleNewPerson() {
-		Person tempPerson = new Person();
-		boolean okClicked = showPersonEditDialog(tempPerson);
-		if (okClicked) {
-			model.getPersonData().add(tempPerson);
-		}
-	}
-
 	private void handleEditPerson() {
 		Person selectedPerson = model.getPersonData().get(model.selectedModelIndex.intValue());
 		if (selectedPerson != null) {
-			boolean okClicked = showPersonEditDialog(selectedPerson);
+			boolean okClicked = PersonDialogs.showPersonEditDialog(selectedPerson, primaryStage);
 			if (okClicked) {
 				personOverviewController.showPersonDetails(selectedPerson);
 			}
@@ -84,44 +75,6 @@ public class ApplicationEventHandlerImpl implements IApplicationEventHandler {
 				.showWarning();
 		}
 
-	}
-
-	/**
-	 * Opens a dialog to edit details for the specified person. If the user
-	 * clicks OK, the changes are saved into the provided person object and true
-	 * is returned.
-	 *
-	 * @param person the person object to be edited
-	 * @return true if the user clicked OK, false otherwise.
-	 */
-	public boolean showPersonEditDialog(Person person) {
-		try {
-			// Load the fxml file and create a new stage for the popup dialog.
-			URL resource = Main.class.getResource("/PersonEditDialog.fxml");
-			final FXMLLoader loader = new FXMLLoader(resource, null);
-			AnchorPane page = loader.load();
-
-			// Create the dialog Stage.
-			Stage dialogStage = new Stage();
-			dialogStage.setTitle("Edit Person");
-			dialogStage.initModality(Modality.WINDOW_MODAL);
-			dialogStage.initOwner(primaryStage);
-			Scene scene = new Scene(page);
-			dialogStage.setScene(scene);
-
-			// Set the person into the controller.
-			PersonEditDialogController controller = loader.getController();
-			controller.setDialogStage(dialogStage);
-			controller.setPerson(person);
-
-			// Show the dialog and wait until the user closes it
-			dialogStage.showAndWait();
-
-			return controller.isOkClicked();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
 	}
 
 
