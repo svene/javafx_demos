@@ -16,8 +16,7 @@ public class PersonOverviewController extends AbstractPersonOverviewController {
 	private EditPersonCommandHandler editPersonCommandHandler;
 	private DeletePersonCommandHandler deletePersonCommandHandler;
 
-
-	public void postConstruct(Mate mate) {
+	public PersonOverviewController(Mate mate) {
 		this.mate = mate;
 		newPersonCommandHandler = new NewPersonCommandHandler(mate.getPrimaryStage(), mate.getModel());
 		editPersonCommandHandler = new EditPersonCommandHandler(mate.getPrimaryStage(), mate.getModel(), this::populateFromPerson);
@@ -41,7 +40,7 @@ public class PersonOverviewController extends AbstractPersonOverviewController {
 		populateFromPerson(null);
 	}
 
-	public void initData() {
+	public void postInitialize() {
 
 		personTable.setItems(mate.getModel().getPersonData());
 

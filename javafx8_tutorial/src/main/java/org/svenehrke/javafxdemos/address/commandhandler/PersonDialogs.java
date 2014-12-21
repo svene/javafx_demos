@@ -27,6 +27,10 @@ public class PersonDialogs {
 			// Load the fxml file and create a new stage for the popup dialog.
 			URL resource = Main.class.getResource("/PersonEditDialog.fxml");
 			final FXMLLoader loader = new FXMLLoader(resource, null);
+			loader.setControllerFactory((Class<?> c) -> {
+				PersonEditDialogController controller = new PersonEditDialogController(person);
+				return controller;
+			});
 			AnchorPane page = loader.load();
 
 			// Create the dialog Stage.
@@ -39,8 +43,7 @@ public class PersonDialogs {
 
 			// Set the person into the controller.
 			PersonEditDialogController controller = loader.getController();
-			controller.setDialogStage(dialogStage);
-			controller.setPerson(person);
+			controller.postInitialize(dialogStage);
 
 			// Show the dialog and wait until the user closes it
 			dialogStage.showAndWait();
