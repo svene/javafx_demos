@@ -41,6 +41,16 @@ public class PersonEditDialogController {
 		this.person = person;
 	}
 
+	/**
+	 * Initializes the controller class. This method is automatically called
+	 * after the fxml file has been loaded.
+	 */
+	@FXML
+	private void initialize() {
+		okButton.setOnAction(event -> handleOk());
+		cancelButton.setOnAction(event -> handleCancel());
+	}
+
 	public void postInitialize(Stage dialogStage) {
 
 		this.dialogStage = dialogStage;
@@ -52,16 +62,6 @@ public class PersonEditDialogController {
 		cityField.setText(person.cityProperty().getValue());
 		birthdayField.setText(DateUtil.format(person.birthdayProperty().getValue()));
 		birthdayField.setPromptText("dd.mm.yyyy");
-	}
-
-	/**
-	 * Initializes the controller class. This method is automatically called
-	 * after the fxml file has been loaded.
-	 */
-	@FXML
-	private void initialize() {
-		okButton.setOnAction(event -> handleOk());
-		cancelButton.setOnAction(event -> handleCancel());
 	}
 
 	/**
