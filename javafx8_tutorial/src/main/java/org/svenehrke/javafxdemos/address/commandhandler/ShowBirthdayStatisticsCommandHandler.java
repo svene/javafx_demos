@@ -1,4 +1,4 @@
-package org.svenehrke.javafxdemos.infra;
+package org.svenehrke.javafxdemos.address.commandhandler;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

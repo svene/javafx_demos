@@ -1,4 +1,4 @@
-package org.svenehrke.javafxdemos.infra;
+package org.svenehrke.javafxdemos.address.commandhandler;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -6,6 +6,7 @@ import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.Main;
 import org.svenehrke.javafxdemos.address.Model;
 import org.svenehrke.javafxdemos.address.model.PersonListWrapper;
+import org.svenehrke.javafxdemos.infra.Mate;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;

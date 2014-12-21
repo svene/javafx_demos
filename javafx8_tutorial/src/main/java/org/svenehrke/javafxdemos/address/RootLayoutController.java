@@ -14,8 +14,6 @@ import org.svenehrke.javafxdemos.infra.Mate;
  */
 public class RootLayoutController {
 
-	// Reference to the main application
-	private Main mainApp;
 	private Mate mate;
 
 	@FXML
@@ -41,11 +39,9 @@ public class RootLayoutController {
 	/**
 	 * Is called by the main application to give a reference back to itself.
 	 *
-	 * @param mainApp
 	 * @param mate
 	 */
-	public void setMainApp(Main mainApp, Mate mate) {
-		this.mainApp = mainApp;
+	public void setMainApp(Mate mate) {
 		this.mate = mate;
 	}
 

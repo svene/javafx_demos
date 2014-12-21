@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.svenehrke.javafxdemos.address.commandhandler.*;
 import org.svenehrke.javafxdemos.infra.*;
 
 import java.io.IOException;
@@ -77,7 +78,7 @@ public class Main extends Application {
 
 		// Give the controller access to the main app.
 		RootLayoutController controller = loader.getController();
-		controller.setMainApp(this, mate);
+		controller.setMainApp(mate);
 
 		// Try to load last opened person file.
 //		File file = getPersonFilePath();
