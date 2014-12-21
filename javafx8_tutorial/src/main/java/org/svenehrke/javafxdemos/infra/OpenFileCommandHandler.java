@@ -49,6 +49,23 @@ public class OpenFileCommandHandler implements Runnable {
 		}
 	}
 
+	/**
+	 * Returns the person file preference, i.e. the file that was last opened.
+	 * The preference is read from the OS specific registry. If no such
+	 * preference can be found, null is returned.
+	 *
+	 * @return
+	 */
+	public static File getPersonFilePath() {
+		Preferences prefs = Preferences.userNodeForPackage(Main.class);
+		String filePath = prefs.get("filePath", null);
+		if (filePath != null) {
+			return new File(filePath);
+		} else {
+			return null;
+		}
+	}
+
 	@Override
 	public void run() {
 		FileChooser fileChooser = new FileChooser();
