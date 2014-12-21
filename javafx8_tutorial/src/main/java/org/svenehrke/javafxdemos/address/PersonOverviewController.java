@@ -20,7 +20,7 @@ public class PersonOverviewController extends AbstractPersonOverviewController {
 	public void postConstruct(Mate mate) {
 		this.mate = mate;
 		newPersonCommandHandler = new NewPersonCommandHandler(mate.getPrimaryStage(), mate.getModel());
-		editPersonCommandHandler = new EditPersonCommandHandler(mate.getPrimaryStage(), mate.getModel(), this);
+		editPersonCommandHandler = new EditPersonCommandHandler(mate.getPrimaryStage(), mate.getModel(), this::populateFromPerson);
 		deletePersonCommandHandler = new DeletePersonCommandHandler(mate.getModel());
 	}
 
