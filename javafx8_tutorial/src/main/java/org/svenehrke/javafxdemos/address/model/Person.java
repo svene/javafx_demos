@@ -29,6 +29,15 @@ public class Person {
 		this.birthday = new SimpleObjectProperty<LocalDate>(LocalDate.of(1999, 2, 21));
 	}
 
+	public void populateFromPerson(Person other) {
+		this.firstName.setValue(other.firstName.getValue());
+		this.lastName.setValue(other.lastName.getValue());
+		this.street.setValue(other.street.getValue());
+		this.postalCode.setValue(other.postalCode.getValue());
+		this.city.setValue(other.city.getValue());
+		this.birthday.setValue(other.birthday.getValue());
+	}
+
 	@XmlAttribute
 	public String getFirstName() {
 		return firstName.get();
