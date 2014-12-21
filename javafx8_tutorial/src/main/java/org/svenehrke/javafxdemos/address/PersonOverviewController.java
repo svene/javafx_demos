@@ -1,13 +1,22 @@
 package org.svenehrke.javafxdemos.address;
 
 import javafx.fxml.FXML;
+import org.svenehrke.javafxdemos.address.commandhandler.NewPersonCommandHandler;
 import org.svenehrke.javafxdemos.address.model.Person;
 import org.svenehrke.javafxdemos.address.util.DateUtil;
+import org.svenehrke.javafxdemos.infra.Mate;
 
 public class PersonOverviewController extends AbstractPersonOverviewController {
 
 	private IApplicationEventHandler applicationEventHandler;
-	private Model model;
+	private Mate mate;
+
+	private NewPersonCommandHandler newPersonCommandHandler;
+
+
+	public void setMate(Mate mate) {
+		this.mate = mate;
+	}
 
 	/**
 	 * Initializes the controller class. This method is automatically called
@@ -19,7 +28,9 @@ public class PersonOverviewController extends AbstractPersonOverviewController {
 		firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
 		lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
 
-		showPersonDetails(null);
+		newPersonCommandHandler = new NewPersonCommandHandler(mate.getPrimaryStage(), mate.getModel());
+
+		populateFromPerson(null);
 
 	}
 
@@ -32,16 +43,15 @@ public class PersonOverviewController extends AbstractPersonOverviewController {
 		deleteButton.setOnAction(event -> applicationEventHandler.handleCommand(Api.CMD_DELETE));
 	}
 
-	public void setModel(Model model) {
+	public void initData() {
 
-		this.model = model;
-		personTable.setItems(model.getPersonData());
+		personTable.setItems(mate.getModel().getPersonData());
 
-		personTable.getSelectionModel().selectedIndexProperty().addListener((s, o, n) -> model.selectedModelIndex.setValue(n));
-		model.selectedModelIndex.addListener((s, o, n) -> {
+		personTable.getSelectionModel().selectedIndexProperty().addListener((s, o, n) -> mate.getModel().selectedModelIndex.setValue(n));
+		mate.getModel().selectedModelIndex.addListener((s, o, n) -> {
 			int index = n.intValue();
 			if (index >= 0) {
-				showPersonDetails(model.getPersonData().get(index));
+				populateFromPerson(mate.getModel().getPersonData().get(index));
 			}
 		});
 	}
@@ -53,7 +63,7 @@ public class PersonOverviewController extends AbstractPersonOverviewController {
 	 *
 	 * @param person the person or null
 	 */
-	public void showPersonDetails(Person person) {
+	public void populateFromPerson(Person person) {
 		if (person != null) {
 			// Fill the labels with info from the person object.
 			firstNameLabel.setText(person.firstNameProperty().getValue());

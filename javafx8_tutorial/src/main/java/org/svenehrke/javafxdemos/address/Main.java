@@ -65,6 +65,9 @@ public class Main extends Application {
 		mate.addCommand(Api.SAVE, new SaveCommandHandler(primaryStage, model));
 		mate.addCommand(Api.SAVE_AS, new SaveAsCommandHandler(primaryStage, model));
 		mate.addCommand(Api.STATISTICS, new ShowBirthdayStatisticsCommandHandler(primaryStage, model));
+
+		mate.setModel(model);
+		mate.setPrimaryStage(primaryStage);
 	}
 
 	private void initRootLayout() {
@@ -94,6 +97,11 @@ public class Main extends Application {
 	private void showPersonOverview() {
 		URL resource = Main.class.getResource("/PersonOverview.fxml");
 		final FXMLLoader loader = new FXMLLoader(resource, null);
+		loader.setControllerFactory((Class<?> c) -> {
+			PersonOverviewController controller = new PersonOverviewController();
+			controller.setMate(mate);
+			return controller;
+		});
 		AnchorPane personOverview;
 		try {
 			personOverview = loader.load();
@@ -101,7 +109,7 @@ public class Main extends Application {
 			throw new RuntimeException(e);
 		}
 		personOverviewController = loader.getController();
-		personOverviewController.setModel(model);
+		personOverviewController.initData();
 		rootLayout.setCenter(personOverview);
 
 	}
