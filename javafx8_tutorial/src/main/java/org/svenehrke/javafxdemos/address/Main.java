@@ -27,7 +27,6 @@ public class Main extends Application {
 
 	Stage primaryStage;
 	private BorderPane rootLayout;
-	private IApplicationEventHandler applicationEventHandler;
 	Model model;
 	Mate mate;
 
@@ -54,9 +53,6 @@ public class Main extends Application {
 
 		initRootLayout();
 		showPersonOverview();
-
-		applicationEventHandler = new ApplicationEventHandlerImpl(model, primaryStage, personOverviewController);
-		personOverviewController.setApplicationEventHandler(applicationEventHandler);
 	}
 
 	private void registerCommands(Stage primaryStage) {
@@ -99,7 +95,7 @@ public class Main extends Application {
 		final FXMLLoader loader = new FXMLLoader(resource, null);
 		loader.setControllerFactory((Class<?> c) -> {
 			PersonOverviewController controller = new PersonOverviewController();
-			controller.setMate(mate);
+			controller.postConstruct(mate);
 			return controller;
 		});
 		AnchorPane personOverview;

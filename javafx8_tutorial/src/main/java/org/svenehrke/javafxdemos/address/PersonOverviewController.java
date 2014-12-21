@@ -1,6 +1,7 @@
 package org.svenehrke.javafxdemos.address;
 
 import javafx.fxml.FXML;
+import org.svenehrke.javafxdemos.address.commandhandler.DeletePersonCommandHandler;
 import org.svenehrke.javafxdemos.address.commandhandler.EditPersonCommandHandler;
 import org.svenehrke.javafxdemos.address.commandhandler.NewPersonCommandHandler;
 import org.svenehrke.javafxdemos.address.model.Person;
@@ -13,12 +14,14 @@ public class PersonOverviewController extends AbstractPersonOverviewController {
 
 	private NewPersonCommandHandler newPersonCommandHandler;
 	private EditPersonCommandHandler editPersonCommandHandler;
+	private DeletePersonCommandHandler deletePersonCommandHandler;
 
 
-	public void setMate(Mate mate) {
+	public void postConstruct(Mate mate) {
 		this.mate = mate;
 		newPersonCommandHandler = new NewPersonCommandHandler(mate.getPrimaryStage(), mate.getModel());
 		editPersonCommandHandler = new EditPersonCommandHandler(mate.getPrimaryStage(), mate.getModel(), this);
+		deletePersonCommandHandler = new DeletePersonCommandHandler(mate.getModel());
 	}
 
 	/**
@@ -31,13 +34,11 @@ public class PersonOverviewController extends AbstractPersonOverviewController {
 		firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
 		lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
 
-		populateFromPerson(null);
-	}
-
-	public void setApplicationEventHandler(IApplicationEventHandler applicationEventHandler) {
 		newButton.setOnAction(event -> newPersonCommandHandler.run());
 		editButton.setOnAction(event -> editPersonCommandHandler.run());
-		deleteButton.setOnAction(event -> applicationEventHandler.handleCommand(Api.CMD_DELETE));
+		deleteButton.setOnAction(event -> deletePersonCommandHandler.run());
+
+		populateFromPerson(null);
 	}
 
 	public void initData() {
