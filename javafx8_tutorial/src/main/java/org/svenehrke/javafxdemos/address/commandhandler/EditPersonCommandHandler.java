@@ -28,7 +28,7 @@ public class EditPersonCommandHandler implements Runnable {
 		if (selectedPerson != null) {
 			boolean okClicked = PersonDialogs.showPersonEditDialog(selectedPerson, primaryStage1);
 			if (okClicked) {
-				personOverviewController1.populateFromPerson(selectedPerson);
+				personOverviewController1.populateFromPerson(selectedPerson);//todo: remove dependency
 			}
 
 		} else {

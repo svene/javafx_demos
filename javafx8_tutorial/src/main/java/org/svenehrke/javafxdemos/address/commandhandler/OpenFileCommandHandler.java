@@ -18,12 +18,10 @@ import java.util.prefs.Preferences;
  */
 public class OpenFileCommandHandler implements Runnable {
 
-	private final Mate mate;
 	private final Stage primaryStage;
 	private final Model model;
 
-	public OpenFileCommandHandler(Mate mate, Stage primaryStage, Model model) {
-		this.mate = mate;
+	public OpenFileCommandHandler(Stage primaryStage, Model model) {
 		this.primaryStage = primaryStage;
 		this.model = model;
 	}

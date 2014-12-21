@@ -56,7 +56,7 @@ public class Main extends Application {
 	}
 
 	private void registerCommands(Stage primaryStage) {
-		mate.addCommand(Api.OPEN_FILE, new OpenFileCommandHandler(mate, primaryStage, model));
+		mate.addCommand(Api.OPEN_FILE, new OpenFileCommandHandler(primaryStage, model));
 		mate.addCommand(Api.NEW_ADDRESS_BOOK, new NewAddressbookCommandHandler(primaryStage, model));
 		mate.addCommand(Api.SAVE, new SaveCommandHandler(primaryStage, model));
 		mate.addCommand(Api.SAVE_AS, new SaveAsCommandHandler(primaryStage, model));
