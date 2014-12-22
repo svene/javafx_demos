@@ -1,13 +1,12 @@
 package org.svenehrke.javafxdemos.address;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import org.svenehrke.javafxdemos.address.model.Person;
 import org.svenehrke.javafxdemos.address.model.SampleData;
 import org.svenehrke.javafxdemos.infra.ImpulseListeners;
+
+import java.util.function.Function;
 
 public class Model {
 
@@ -33,35 +32,24 @@ public class Model {
 		);
 
 		// Update item in 'sampleData' to which 'currentPerson' corresponds to when 'currentPerson' changes (e.g. when it is edited):
-		currentPerson.firstNameProperty().addListener((s,o,n) -> {
-			int idx = selectedModelIndex.get();
-			getPersonData().get(idx).firstNameProperty().setValue(n);
-		});
-		currentPerson.lastNameProperty().addListener((s,o,n) -> {
-			int idx = selectedModelIndex.get();
-			getPersonData().get(idx).lastNameProperty().setValue(n);
-		});
-		currentPerson.streetProperty().addListener((s,o,n) -> {
-			int idx = selectedModelIndex.get();
-			getPersonData().get(idx).streetProperty().setValue(n);
-		});
-		currentPerson.postalCodeProperty().addListener((s,o,n) -> {
-			int idx = selectedModelIndex.get();
-			getPersonData().get(idx).postalCodeProperty().setValue(n);
-		});
-		currentPerson.cityProperty().addListener((s,o,n) -> {
-			int idx = selectedModelIndex.get();
-			getPersonData().get(idx).cityProperty().setValue(n);
-		});
-		currentPerson.birthdayProperty().addListener((s,o,n) -> {
-			int idx = selectedModelIndex.get();
-			getPersonData().get(idx).birthdayProperty().setValue(n);
-		});
+		copyPropertyOnChange(currentPerson, Person::firstNameProperty);
+		copyPropertyOnChange(currentPerson, Person::lastNameProperty);
+		copyPropertyOnChange(currentPerson, Person::streetProperty);
+		copyPropertyOnChange(currentPerson, Person::postalCodeProperty);
+		copyPropertyOnChange(currentPerson, Person::cityProperty);
+		copyPropertyOnChange(currentPerson, Person::birthdayProperty);
 
 		ImpulseListeners.bindImpulseListener(editOkButtonClicked, () -> {
 			currentPerson.populateFromPerson(workPerson);
 		});
 
+	}
+
+	private <T> void copyPropertyOnChange(Person sourcePerson, Function<Person, Property<T>> pf) {
+		pf.apply(sourcePerson).addListener((s, o, n) -> {
+			int idx = selectedModelIndex.get();
+			pf.apply(getPersonData().get(idx)).setValue(n);
+		});
 	}
 
 	public ObservableList<Person> getPersonData() {

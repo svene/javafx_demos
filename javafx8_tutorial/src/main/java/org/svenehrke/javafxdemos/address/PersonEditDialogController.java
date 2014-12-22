@@ -47,7 +47,7 @@ public class PersonEditDialogController {
 	 */
 	@FXML
 	private void initialize() {
-
+		// todo: use binding
 		firstNameField.setText(person.firstNameProperty().getValue());
 		lastNameField.setText(person.lastNameProperty().getValue());
 		streetField.setText(person.streetProperty().getValue());
