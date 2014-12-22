@@ -1,11 +1,15 @@
 package org.svenehrke.javafxdemos.address;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.svenehrke.javafxdemos.address.model.Person;
+import org.svenehrke.javafxdemos.address.util.LocalDateStringConverter;
+import org.svenehrke.javafxdemos.address.util.SimpleNumberStringConverter;
 
 import java.io.IOException;
 import java.net.URL;
@@ -18,7 +22,7 @@ public class PersonDialogs {
 			URL resource = Main.class.getResource("/PersonEditDialog.fxml");
 			final FXMLLoader loader = new FXMLLoader(resource, null);
 			loader.setControllerFactory((Class<?> c) -> {
-				PersonEditDialogController controller = new PersonEditDialogController(model1);
+				PersonEditDialogController controller = new PersonEditDialogController();
 				return controller;
 			});
 			AnchorPane page = loader.load();
@@ -33,7 +37,7 @@ public class PersonDialogs {
 
 			// Set the person into the controller.
 			PersonEditDialogController controller = loader.getController();
-			bindController(controller, dialogStage, okButtonClickedProperty); // todo: blog about this pattern: bindController (binding ...) not inside controller but outside of it. Similar to binding of PMs to widgets: not in view but outside
+			bindController(controller, dialogStage, okButtonClickedProperty, model1.workPerson); // todo: blog about this pattern: bindController (binding ...) not inside controller but outside of it. Similar to binding of PMs to widgets: not in view but outside
 
 			// Show the dialog and wait until the user closes it
 			dialogStage.showAndWait();
@@ -42,7 +46,17 @@ public class PersonDialogs {
 		}
 	}
 
-	private static void bindController(PersonEditDialogController controller, Stage dialogStage, BooleanProperty okButtonClickedProperty) {
+	private static void bindController(PersonEditDialogController controller, Stage dialogStage, BooleanProperty okButtonClickedProperty, Person workPerson) {
+
+		// Bind widgets and workPerson:
+		controller.firstNameField.textProperty().bindBidirectional(workPerson.firstNameProperty());
+		controller.lastNameField.textProperty().bindBidirectional(workPerson.lastNameProperty());
+		controller.streetField.textProperty().bindBidirectional(workPerson.streetProperty());
+		Bindings.bindBidirectional(controller.postalCodeField.textProperty(), workPerson.postalCodeProperty(), new SimpleNumberStringConverter());
+		controller.cityField.textProperty().bindBidirectional(workPerson.cityProperty());
+		Bindings.bindBidirectional(controller.birthdayField.textProperty(), workPerson.birthdayProperty(), new LocalDateStringConverter());
+
+		// Bind buttons to actions:
 		controller.okButton.setOnAction(event -> {
 			if (controller.isInputValid()) {
 				okButtonClickedProperty.setValue(true);

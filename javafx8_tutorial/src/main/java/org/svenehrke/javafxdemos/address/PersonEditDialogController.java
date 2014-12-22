@@ -33,26 +33,6 @@ public class PersonEditDialogController {
 	@FXML
 	Button cancelButton;
 
-	private Model model;
-
-	public PersonEditDialogController(Model model) {
-		this.model = model;
-	}
-
-	/**
-	 * Initializes the controller class. This method is automatically called
-	 * after the fxml file has been loaded.
-	 */
-	@FXML
-	private void initialize() {
-		firstNameField.textProperty().bindBidirectional(model.workPerson.firstNameProperty());
-		lastNameField.textProperty().bindBidirectional(model.workPerson.lastNameProperty());
-		streetField.textProperty().bindBidirectional(model.workPerson.streetProperty());
-		Bindings.bindBidirectional(postalCodeField.textProperty(), model.workPerson.postalCodeProperty(), new SimpleNumberStringConverter());
-		cityField.textProperty().bindBidirectional(model.workPerson.cityProperty());
-		Bindings.bindBidirectional(birthdayField.textProperty(), model.workPerson.birthdayProperty(), new LocalDateStringConverter());
-	}
-
 	/**
 	 * Validates the user input in the text fields.
 	 *
