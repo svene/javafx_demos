@@ -1,4 +1,4 @@
-package org.svenehrke.javafxdemos.address.commandhandler;
+package org.svenehrke.javafxdemos.address;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXMLLoader;
@@ -6,9 +6,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.svenehrke.javafxdemos.address.Main;
-import org.svenehrke.javafxdemos.address.Model;
-import org.svenehrke.javafxdemos.address.PersonEditDialogController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -36,13 +33,24 @@ public class PersonDialogs {
 
 			// Set the person into the controller.
 			PersonEditDialogController controller = loader.getController();
-			controller.postInitialize(dialogStage);
+			bindController(controller, dialogStage, okButtonClickedProperty); // todo: blog about this pattern: bindController (binding ...) not inside controller but outside of it. Similar to binding of PMs to widgets: not in view but outside
 
 			// Show the dialog and wait until the user closes it
 			dialogStage.showAndWait();
-			okButtonClickedProperty.setValue(controller.isOkClicked());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+
+	private static void bindController(PersonEditDialogController controller, Stage dialogStage, BooleanProperty okButtonClickedProperty) {
+		controller.okButton.setOnAction(event -> {
+			if (controller.isInputValid()) {
+				okButtonClickedProperty.setValue(true);
+				dialogStage.close();
+			}
+		});
+
+		controller.cancelButton.setOnAction( event -> dialogStage.close() );
+	}
+
 }

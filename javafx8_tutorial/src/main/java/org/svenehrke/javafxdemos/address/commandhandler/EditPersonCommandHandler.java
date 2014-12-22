@@ -3,6 +3,7 @@ package org.svenehrke.javafxdemos.address.commandhandler;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.Model;
+import org.svenehrke.javafxdemos.address.PersonDialogs;
 
 /**
  * Opens a dialog to edit details for the specified person. If the user

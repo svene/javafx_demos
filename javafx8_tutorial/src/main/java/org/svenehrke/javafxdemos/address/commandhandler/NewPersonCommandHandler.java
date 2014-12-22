@@ -2,6 +2,7 @@ package org.svenehrke.javafxdemos.address.commandhandler;
 
 import javafx.stage.Stage;
 import org.svenehrke.javafxdemos.address.Model;
+import org.svenehrke.javafxdemos.address.PersonDialogs;
 
 public class NewPersonCommandHandler implements Runnable {
 

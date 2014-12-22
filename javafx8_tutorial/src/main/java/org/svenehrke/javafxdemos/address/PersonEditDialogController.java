@@ -1,11 +1,12 @@
 package org.svenehrke.javafxdemos.address;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import org.svenehrke.javafxdemos.address.model.Person;
 import org.svenehrke.javafxdemos.address.util.DateUtil;
+import org.svenehrke.javafxdemos.address.util.LocalDateStringConverter;
+import org.svenehrke.javafxdemos.address.util.SimpleNumberStringConverter;
 
 /**
  * Dialog to edit details of a person.
@@ -15,26 +16,22 @@ import org.svenehrke.javafxdemos.address.util.DateUtil;
 public class PersonEditDialogController {
 
 	@FXML
-	private TextField firstNameField;
+	TextField firstNameField;
 	@FXML
-	private TextField lastNameField;
+	TextField lastNameField;
 	@FXML
-	private TextField streetField;
+	TextField streetField;
 	@FXML
-	private TextField postalCodeField;
+	TextField postalCodeField;
 	@FXML
-	private TextField cityField;
+	TextField cityField;
 	@FXML
-	private TextField birthdayField;
+	TextField birthdayField;
 
 	@FXML
-	private Button okButton;
+	Button okButton;
 	@FXML
-	private Button cancelButton;
-
-
-	private Stage dialogStage;
-	private boolean okClicked = false;
+	Button cancelButton;
 
 	private Model model;
 
@@ -48,59 +45,12 @@ public class PersonEditDialogController {
 	 */
 	@FXML
 	private void initialize() {
-		// todo: use binding
-		Person person = model.workPerson;
-		firstNameField.setText(person.firstNameProperty().getValue());
-		lastNameField.setText(person.lastNameProperty().getValue());
-		streetField.setText(person.streetProperty().getValue());
-		postalCodeField.setText(Integer.toString(person.postalCodeProperty().getValue()));
-		cityField.setText(person.cityProperty().getValue());
-		birthdayField.setText(DateUtil.format(person.birthdayProperty().getValue()));
-		birthdayField.setPromptText("dd.mm.yyyy");
-
-		okButton.setOnAction(event -> handleOk());
-		cancelButton.setOnAction(event -> handleCancel());
-	}
-
-	public void postInitialize(Stage dialogStage) {
-
-		this.dialogStage = dialogStage;
-	}
-
-	/**
-	 * Returns true if the user clicked OK, false otherwise.
-	 *
-	 * @return
-	 */
-	public boolean isOkClicked() {
-		return okClicked;
-	}
-
-	/**
-	 * Called when the user clicks ok.
-	 */
-	@FXML
-	private void handleOk() {
-		if (isInputValid()) {
-			Person person = model.workPerson;
-			person.firstNameProperty().setValue(firstNameField.getText());
-			person.lastNameProperty().setValue(lastNameField.getText());
-			person.streetProperty().setValue(streetField.getText());
-			person.postalCodeProperty().setValue(Integer.parseInt(postalCodeField.getText()));
-			person.cityProperty().setValue(cityField.getText());
-			person.birthdayProperty().setValue(DateUtil.parse(birthdayField.getText()));
-
-			okClicked = true;
-			dialogStage.close();
-		}
-	}
-
-	/**
-	 * Called when the user clicks cancel.
-	 */
-	@FXML
-	private void handleCancel() {
-		dialogStage.close();
+		firstNameField.textProperty().bindBidirectional(model.workPerson.firstNameProperty());
+		lastNameField.textProperty().bindBidirectional(model.workPerson.lastNameProperty());
+		streetField.textProperty().bindBidirectional(model.workPerson.streetProperty());
+		Bindings.bindBidirectional(postalCodeField.textProperty(), model.workPerson.postalCodeProperty(), new SimpleNumberStringConverter());
+		cityField.textProperty().bindBidirectional(model.workPerson.cityProperty());
+		Bindings.bindBidirectional(birthdayField.textProperty(), model.workPerson.birthdayProperty(), new LocalDateStringConverter());
 	}
 
 	/**
@@ -108,7 +58,7 @@ public class PersonEditDialogController {
 	 *
 	 * @return true if the input is valid
 	 */
-	private boolean isInputValid() {
+	boolean isInputValid() { // todo: move this validation logic outside of GUI into separate validator
 		String errorMessage = "";
 
 		if (firstNameField.getText() == null || firstNameField.getText().length() == 0) {
@@ -152,4 +102,5 @@ public class PersonEditDialogController {
 			return false;
 		}
 	}
+
 }
