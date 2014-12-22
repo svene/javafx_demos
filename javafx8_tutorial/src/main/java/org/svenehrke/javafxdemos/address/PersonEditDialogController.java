@@ -34,11 +34,12 @@ public class PersonEditDialogController {
 
 
 	private Stage dialogStage;
-	private Person person;
 	private boolean okClicked = false;
 
-	public PersonEditDialogController(Person person) {
-		this.person = person;
+	private Model model;
+
+	public PersonEditDialogController(Model model) {
+		this.model = model;
 	}
 
 	/**
@@ -48,6 +49,7 @@ public class PersonEditDialogController {
 	@FXML
 	private void initialize() {
 		// todo: use binding
+		Person person = model.workPerson;
 		firstNameField.setText(person.firstNameProperty().getValue());
 		lastNameField.setText(person.lastNameProperty().getValue());
 		streetField.setText(person.streetProperty().getValue());
@@ -80,6 +82,7 @@ public class PersonEditDialogController {
 	@FXML
 	private void handleOk() {
 		if (isInputValid()) {
+			Person person = model.workPerson;
 			person.firstNameProperty().setValue(firstNameField.getText());
 			person.lastNameProperty().setValue(lastNameField.getText());
 			person.streetProperty().setValue(streetField.getText());

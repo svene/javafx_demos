@@ -4,6 +4,11 @@ import javafx.stage.Stage;
 import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.Model;
 
+/**
+ * Opens a dialog to edit details for the specified person. If the user
+ * clicks OK, the changes are saved into the provided person object and true
+ * is returned.
+ */
 public class EditPersonCommandHandler implements Runnable {
 
 	private final Stage primaryStage;
@@ -22,8 +27,7 @@ public class EditPersonCommandHandler implements Runnable {
 	private static void handleEditPerson(Stage primaryStage1, Model model1) {
 		if (model1.currentPerson != null) {
 			model1.getWorkPerson().populateFromPerson(model1.currentPerson);
-			boolean okClicked = PersonDialogs.showPersonEditDialog(model1.getWorkPerson(), primaryStage1);
-			model1.editOkButtonClicked.setValue(okClicked);
+			PersonDialogs.showPersonDialog(model1, model1.editOkButtonClicked, primaryStage1);
 		} else {
 			// Nothing selected.
 			System.out.println("nothing selected");

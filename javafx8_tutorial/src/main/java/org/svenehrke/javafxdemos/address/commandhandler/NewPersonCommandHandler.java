@@ -2,7 +2,6 @@ package org.svenehrke.javafxdemos.address.commandhandler;
 
 import javafx.stage.Stage;
 import org.svenehrke.javafxdemos.address.Model;
-import org.svenehrke.javafxdemos.address.model.Person;
 
 public class NewPersonCommandHandler implements Runnable {
 
@@ -20,11 +19,8 @@ public class NewPersonCommandHandler implements Runnable {
 	}
 
 	private static void handleNewPerson(Model model1, Stage primaryStage1) {
-		Person tempPerson = new Person();
-		boolean okClicked = PersonDialogs.showPersonEditDialog(tempPerson, primaryStage1);
-		if (okClicked) {
-			model1.getPersonData().add(tempPerson);
-		}
+		model1.workPerson.populateFromPerson(model1.emptyPerson);
+		PersonDialogs.showPersonDialog(model1, model1.newOkButtonClicked, primaryStage1);
 	}
 
 }

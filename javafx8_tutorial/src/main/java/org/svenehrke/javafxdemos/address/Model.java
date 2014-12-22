@@ -16,7 +16,9 @@ public class Model {
 
 	public final Person currentPerson = newEmptyPerson();
 	public final Person workPerson = newEmptyPerson();
+	public final Person emptyPerson = newEmptyPerson();
 	public final BooleanProperty editOkButtonClicked = new SimpleBooleanProperty();
+	public final BooleanProperty newOkButtonClicked = new SimpleBooleanProperty();
 
 	public Model() {
 		sampleData = new SampleData();
@@ -41,6 +43,10 @@ public class Model {
 
 		ImpulseListeners.bindImpulseListener(editOkButtonClicked, () -> {
 			currentPerson.populateFromPerson(workPerson);
+		});
+		ImpulseListeners.bindImpulseListener(newOkButtonClicked, () -> {
+			getPersonData().add(workPerson);
+			selectedModelIndex.setValue(getPersonData().size() - 1);
 		});
 
 	}

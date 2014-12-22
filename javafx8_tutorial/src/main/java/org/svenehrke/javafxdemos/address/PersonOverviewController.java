@@ -44,6 +44,12 @@ public class PersonOverviewController extends AbstractPersonOverviewController {
 		postalCodeLabel.textProperty().bind(Bindings.convert(cp.postalCodeProperty()));
 		cityLabel.textProperty().bind(cp.cityProperty());
 		birthdayLabel.textProperty().bind(Bindings.convert(cp.birthdayProperty()));
+
+		// When model.selectedModelIndex changes: change selected row of table:
+		mate.getModel().selectedModelIndex.addListener((s,o,n) -> {
+			personTable.getSelectionModel().select(mate.getModel().selectedModelIndex.intValue());
+		});
+
 	}
 
 	public void postInitialize() {
