@@ -21,7 +21,8 @@ public class NewPersonCommandHandler implements Runnable {
 
 	private static void handleNewPerson(Model model1, Stage primaryStage1) {
 		model1.workPerson.populateFromPerson(model1.emptyPerson);
-		PersonDialogs.showPersonDialog(model1, model1.newOkButtonClicked, primaryStage1);
+		model1.editModeProperty.setValue(Model.EditMode.NEW);
+		PersonDialogs.showPersonDialog(model1, primaryStage1);
 	}
 
 }

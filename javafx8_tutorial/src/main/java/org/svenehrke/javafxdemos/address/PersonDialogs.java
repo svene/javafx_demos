@@ -1,7 +1,6 @@
 package org.svenehrke.javafxdemos.address;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -16,7 +15,7 @@ import java.net.URL;
 
 public class PersonDialogs {
 
-	public static void showPersonDialog(Model model1, BooleanProperty okButtonClickedProperty, Stage primaryStage1) {
+	public static void showPersonDialog(Model model1, Stage primaryStage1) {
 		try {
 			// Load the fxml file and create a new stage for the popup dialog.
 			URL resource = Main.class.getResource("/PersonEditDialog.fxml");
@@ -37,7 +36,7 @@ public class PersonDialogs {
 
 			// Set the person into the controller.
 			PersonEditDialogController controller = loader.getController();
-			bindController(controller, dialogStage, okButtonClickedProperty, model1.workPerson); // todo: blog about this pattern: bindController (binding ...) not inside controller but outside of it. Similar to binding of PMs to widgets: not in view but outside
+			bindController(controller, dialogStage, model1, model1.workPerson); // todo: blog about this pattern: bindController (binding ...) not inside controller but outside of it. Similar to binding of PMs to widgets: not in view but outside
 
 			// Show the dialog and wait until the user closes it
 			dialogStage.showAndWait();
@@ -46,7 +45,7 @@ public class PersonDialogs {
 		}
 	}
 
-	private static void bindController(PersonEditDialogController controller, Stage dialogStage, BooleanProperty okButtonClickedProperty, Person workPerson) {
+	private static void bindController(PersonEditDialogController controller, Stage dialogStage, Model model1, Person workPerson) {
 
 		// Bind widgets and workPerson:
 		controller.firstNameField.textProperty().bindBidirectional(workPerson.firstNameProperty());
@@ -59,7 +58,7 @@ public class PersonDialogs {
 		// Bind buttons to actions:
 		controller.okButton.setOnAction(event -> {
 			if (controller.isInputValid()) {
-				okButtonClickedProperty.setValue(true);
+				model1.okButtonClicked.setValue(true);
 				dialogStage.close();
 			}
 		});

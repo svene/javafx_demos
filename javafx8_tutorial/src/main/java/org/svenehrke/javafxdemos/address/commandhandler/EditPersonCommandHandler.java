@@ -28,7 +28,8 @@ public class EditPersonCommandHandler implements Runnable {
 	private static void handleEditPerson(Stage primaryStage1, Model model1) {
 		if (model1.currentPerson != null) {
 			model1.getWorkPerson().populateFromPerson(model1.currentPerson);
-			PersonDialogs.showPersonDialog(model1, model1.editOkButtonClicked, primaryStage1);
+			model1.editModeProperty.setValue(Model.EditMode.EDIT);
+			PersonDialogs.showPersonDialog(model1, primaryStage1);
 		} else {
 			// Nothing selected.
 			System.out.println("nothing selected");

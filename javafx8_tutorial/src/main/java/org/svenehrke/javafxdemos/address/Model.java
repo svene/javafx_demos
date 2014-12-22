@@ -1,5 +1,6 @@
 package org.svenehrke.javafxdemos.address;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import org.svenehrke.javafxdemos.address.model.Person;
@@ -9,6 +10,9 @@ import org.svenehrke.javafxdemos.infra.ImpulseListeners;
 import java.util.function.Function;
 
 public class Model {
+	public static enum EditMode {
+		NEW, EDIT, UNDEFINED
+	}
 
 	private SampleData sampleData;
 
@@ -17,8 +21,10 @@ public class Model {
 	public final Person currentPerson = newEmptyPerson();
 	public final Person workPerson = newEmptyPerson();
 	public final Person emptyPerson = newEmptyPerson();
-	public final BooleanProperty editOkButtonClicked = new SimpleBooleanProperty();
-	public final BooleanProperty newOkButtonClicked = new SimpleBooleanProperty();
+	public final BooleanProperty okButtonClicked = new SimpleBooleanProperty();
+	private final BooleanProperty editOkButtonClicked = new SimpleBooleanProperty();
+	private final BooleanProperty newOkButtonClicked = new SimpleBooleanProperty();
+	public final ObjectProperty<EditMode> editModeProperty = new SimpleObjectProperty<>(EditMode.UNDEFINED);
 
 	public Model() {
 		sampleData = new SampleData();
@@ -41,14 +47,17 @@ public class Model {
 		copyPropertyOnChange(currentPerson, Person::cityProperty);
 		copyPropertyOnChange(currentPerson, Person::birthdayProperty);
 
-		ImpulseListeners.bindImpulseListener(editOkButtonClicked, () -> {
+		ImpulseListeners.bindImpulseResetter(okButtonClicked); // triggers impulse: 'OK button clicked'
+		editOkButtonClicked.bind(okButtonClicked.and(Bindings.equal(editModeProperty, EditMode.EDIT))); // OK button for mode EDIT triggered (derived from okButtonClicked)
+		newOkButtonClicked.bind(okButtonClicked.and(Bindings.equal(editModeProperty, EditMode.NEW))); // OK button for mode NEW triggered (derived from okButtonClicked)
+
+		ImpulseListeners.addImpulseListener(editOkButtonClicked, () -> {
 			currentPerson.populateFromPerson(workPerson);
 		});
-		ImpulseListeners.bindImpulseListener(newOkButtonClicked, () -> {
-			getPersonData().add(workPerson);
+		ImpulseListeners.addImpulseListener(newOkButtonClicked, () -> {
+			getPersonData().add(new Person().populateFromPerson(workPerson));
 			selectedModelIndex.setValue(getPersonData().size() - 1);
 		});
-
 	}
 
 	private <T> void copyPropertyOnChange(Person sourcePerson, Function<Person, Property<T>> pf) {
