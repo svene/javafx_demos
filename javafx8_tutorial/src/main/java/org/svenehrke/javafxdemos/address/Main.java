@@ -94,7 +94,7 @@ public class Main extends Application {
 		URL resource = Main.class.getResource("/PersonDetails.fxml");
 		final FXMLLoader loader = new FXMLLoader(resource, null);
 		loader.setControllerFactory((Class<?> c) -> {
-			PersonDetailsView controller = new PersonDetailsView(mate);
+			PersonDetailsView controller = new PersonDetailsView();
 			return controller;
 		});
 		AnchorPane personOverview;
@@ -104,7 +104,7 @@ public class Main extends Application {
 			throw new RuntimeException(e);
 		}
 		personDetailsView = loader.getController();
-		personDetailsView.postInitialize();
+		PersonDetailsViewBinder.bindController(personDetailsView, mate);
 		rootLayout.setCenter(personOverview);
 
 	}
