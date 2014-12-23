@@ -32,7 +32,6 @@ public class Model {
 		// Update 'currentPerson', e.g. when table selection changes:
 		selectedModelIndex.addListener((s, o, n) -> {
 				if (n.intValue() >= 0) {
-					System.out.println("populated");
 					Person person = getPersonData().get(n.intValue());
 					currentPerson.populateFromPerson(person);
 				}

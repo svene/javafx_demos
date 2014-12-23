@@ -2,13 +2,47 @@ package org.svenehrke.javafxdemos.address;
 
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import org.svenehrke.javafxdemos.address.commandhandler.DeletePersonCommandHandler;
 import org.svenehrke.javafxdemos.address.commandhandler.EditPersonCommandHandler;
 import org.svenehrke.javafxdemos.address.commandhandler.NewPersonCommandHandler;
 import org.svenehrke.javafxdemos.address.model.Person;
 import org.svenehrke.javafxdemos.infra.Mate;
 
-public class PersonOverviewController extends AbstractPersonOverviewController {
+public class PersonOverviewController {
+
+	@FXML
+	TableView<Person> personTable;
+
+	@FXML
+	TableColumn<Person, String> firstNameColumn;
+	@FXML
+	TableColumn<Person, String> lastNameColumn;
+
+	@FXML
+	Label firstNameLabel;
+	@FXML
+	Label lastNameLabel;
+	@FXML
+	Label streetLabel;
+	@FXML
+	Label postalCodeLabel;
+	@FXML
+	Label cityLabel;
+	@FXML
+	Label birthdayLabel;
+
+	@FXML
+	Button newButton;
+
+	@FXML
+	Button editButton;
+
+	@FXML
+	Button deleteButton;
 
 	private Mate mate;
 
