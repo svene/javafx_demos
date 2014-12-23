@@ -11,7 +11,7 @@ public class Person {
 	private StringProperty firstName;
 	private StringProperty lastName;
 	private StringProperty street;
-	private IntegerProperty postalCode;
+	private StringProperty postalCode;
 	private StringProperty city;
 	private ObjectProperty<LocalDate> birthday;
 
@@ -24,7 +24,7 @@ public class Person {
 
 		// Some initial dummy data, just for convenient testing.
 		this.street = new SimpleStringProperty("some street");
-		this.postalCode = new SimpleIntegerProperty(1234);
+		this.postalCode = new SimpleStringProperty("1234");
 		this.city = new SimpleStringProperty("some city");
 		this.birthday = new SimpleObjectProperty<LocalDate>(LocalDate.of(1999, 2, 21));
 	}
@@ -80,14 +80,14 @@ public class Person {
 
 	@XmlAttribute
 	public int getPostalCode() {
-		return postalCode.get();
+		return Integer.parseInt(postalCode.get());
 	}
 
 	public void setPostalCode(int postalCode) {
-		this.postalCode.set(postalCode);
+		this.postalCode.set(String.valueOf(postalCode));
 	}
 
-	public IntegerProperty postalCodeProperty() {
+	public StringProperty postalCodeProperty() {
 		return postalCode;
 	}
 
