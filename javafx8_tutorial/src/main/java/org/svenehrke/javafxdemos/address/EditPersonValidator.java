@@ -14,11 +14,13 @@ public class EditPersonValidator {
 	}
 
 	/**
-	 * Validates the user input
-	 *
-	 * @return true if the person is valid
+	 * Validates user input
 	 */
-	boolean isInputValid(Person person) {
+	void validate() {
+		validate(model.workPerson);
+	}
+
+	private void validate(Person person) {
 		String errorMessage = "";
 
 		if (person.getFirstName() == null || person.getFirstName().length() == 0) {
@@ -55,11 +57,6 @@ public class EditPersonValidator {
 		}
 
 		model.validationMessage.setValue(errorMessage);
-		if (errorMessage.length() == 0) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 }

@@ -60,6 +60,11 @@ public class Model {
 			getPersonData().add(new Person().populateFromPerson(workPerson));
 			selectedModelIndex.setValue(getPersonData().size() - 1);
 		});
+
+		workPerson.allProperties().forEach(sp -> {
+			sp.addListener((s,o,n) -> new EditPersonValidator(this).validate());
+		});
+
 		workPersonValid.bind(Bindings.equal(validationMessage, ""));
 		validationMessage.addListener((s,o,n) -> {
 			if ( validationMessage.getValue().isEmpty() ) return;

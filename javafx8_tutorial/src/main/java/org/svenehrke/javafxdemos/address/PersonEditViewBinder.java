@@ -17,11 +17,12 @@ public class PersonEditViewBinder {
 
 		// Bind buttons to actions:
 		view.okButton.setOnAction(event -> {
-			if (new EditPersonValidator(model).isInputValid(model.workPerson)) {
-				model.okButtonClicked.setValue(true);
-				dialogStage.close();
-			}
+			model.okButtonClicked.setValue(true);
+			dialogStage.close();
 		});
+
+		// Enable okButton when workPerson is valid:
+		view.okButton.disableProperty().bind(model.workPersonValid.not());
 
 		view.cancelButton.setOnAction( event -> dialogStage.close() );
 	}

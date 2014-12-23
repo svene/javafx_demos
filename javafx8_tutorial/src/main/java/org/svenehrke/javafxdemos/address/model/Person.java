@@ -6,6 +6,8 @@ import org.svenehrke.javafxdemos.address.util.DateUtil;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 public class Person {
 
@@ -38,6 +40,10 @@ public class Person {
 		this.city.setValue(other.city.getValue());
 		this.birthday.setValue(other.birthday.getValue());
 		return this;
+	}
+
+	public List<StringProperty> allProperties() {
+		return Arrays.asList(firstName, lastName, street, postalCode, city, birthday);
 	}
 
 	@XmlAttribute
