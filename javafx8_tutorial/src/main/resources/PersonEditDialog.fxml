@@ -4,7 +4,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="280.0" prefWidth="380.0" styleClass="background" stylesheets="@DarkTheme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.svenehrke.javafxdemos.address.PersonEditDialogController">
+<AnchorPane prefHeight="280.0" prefWidth="380.0" styleClass="background" stylesheets="@DarkTheme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.svenehrke.javafxdemos.address.PersonEditDialogView">
 	<children>
 		<GridPane layoutX="-16.0" layoutY="31.0" prefHeight="200.0" prefWidth="360.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
 			<columnConstraints>

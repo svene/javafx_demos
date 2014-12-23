@@ -17,7 +17,7 @@ public class PersonDialogs {
 			URL resource = Main.class.getResource("/PersonEditDialog.fxml");
 			final FXMLLoader loader = new FXMLLoader(resource, null);
 			loader.setControllerFactory((Class<?> c) -> { // todo: remove usage of ControllerFactory ?
-				PersonEditDialogController controller = new PersonEditDialogController();
+				PersonEditDialogView controller = new PersonEditDialogView();
 				return controller;
 			});
 			AnchorPane page = loader.load();
@@ -31,8 +31,8 @@ public class PersonDialogs {
 			dialogStage.setScene(scene);
 
 			// Set the person into the controller.
-			PersonEditDialogController controller = loader.getController();
-			PersonEditDialogBinder.bindController(controller, dialogStage, model1, model1.workPerson); // todo: blog about this pattern: bindController (binding ...) not inside controller but outside of it. Similar to binding of PMs to widgets: not in view but outside
+			PersonEditDialogView controller = loader.getController();
+			PersonEditViewBinder.bindController(controller, dialogStage, model1, model1.workPerson); // todo: blog about this pattern: bindController (binding ...) not inside controller but outside of it. Similar to binding of PMs to widgets: not in view but outside
 
 			// Show the dialog and wait until the user closes it
 			dialogStage.showAndWait();

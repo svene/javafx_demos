@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
  *
  * @author Marco Jakob
  */
-public class PersonEditDialogController {
+public class PersonEditDialogView {
 
 	@FXML
 	TextField firstNameField;
