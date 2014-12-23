@@ -45,11 +45,11 @@ public class PersonDetailsViewBinder {
 	 * clicks OK, the changes are saved into the provided person object and true
 	 * is returned.
 	 */
-	private static void handleEditPerson(Stage primaryStage1, Model model1) {
-		if (model1.currentPerson != null) {
-			model1.getWorkPerson().populateFromPerson(model1.currentPerson);
-			model1.editModeProperty.setValue(Model.EditMode.EDIT);
-			PersonDialogs.showPersonDialog(model1, primaryStage1);
+	private static void handleEditPerson(Stage primaryStage1, Model model) {
+		if (model.currentPerson != null) {
+			model.getWorkPerson().populateFromPerson(model.currentPerson);
+			model.editModeProperty.setValue(Model.EditMode.EDIT);
+			PersonDialogs.showPersonDialog(model, primaryStage1);
 		} else {
 			// Nothing selected.
 			System.out.println("nothing selected");
@@ -61,10 +61,10 @@ public class PersonDetailsViewBinder {
 		}
 	}
 
-	private static void handleDelete(Model model1) {
-		int selectedIndex = model1.selectedModelIndex.intValue();
+	private static void handleDelete(Model model) {
+		int selectedIndex = model.selectedModelIndex.intValue();
 		if (selectedIndex >= 0) {
-			model1.getPersonData().remove(selectedIndex);
+			model.getPersonData().remove(selectedIndex);
 		} else {
 			// Nothing selected.
 			Dialogs.create()

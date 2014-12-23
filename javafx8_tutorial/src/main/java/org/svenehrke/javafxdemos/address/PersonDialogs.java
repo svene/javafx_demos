@@ -11,7 +11,7 @@ import java.net.URL;
 
 public class PersonDialogs {
 
-	public static void showPersonDialog(Model model1, Stage primaryStage1) {
+	public static void showPersonDialog(Model model, Stage primaryStage) {
 		try {
 			// Load the fxml file and create a new stage for the popup dialog.
 			URL resource = Main.class.getResource("/PersonEditDialog.fxml");
@@ -26,13 +26,13 @@ public class PersonDialogs {
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Edit Person");
 			dialogStage.initModality(Modality.WINDOW_MODAL);
-			dialogStage.initOwner(primaryStage1);
+			dialogStage.initOwner(primaryStage);
 			Scene scene = new Scene(page);
 			dialogStage.setScene(scene);
 
 			// Set the person into the controller.
 			PersonEditDialogView controller = loader.getController();
-			PersonEditViewBinder.bindController(controller, dialogStage, model1, model1.workPerson); // todo: blog about this pattern: bindView (binding ...) not inside controller but outside of it. Similar to binding of PMs to widgets: not in view but outside
+			PersonEditViewBinder.bindController(controller, dialogStage, model, model.workPerson); // todo: blog about this pattern: bindView (binding ...) not inside controller but outside of it. Similar to binding of PMs to widgets: not in view but outside
 
 			// Show the dialog and wait until the user closes it
 			dialogStage.showAndWait();

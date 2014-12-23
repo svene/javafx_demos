@@ -118,10 +118,10 @@ public class RootLayoutViewBinder {
 
 	/**
 	 * Opens a dialog to show birthday statistics.
-	 * @param primaryStage1
-	 * @param model1
+	 * @param primaryStage
+	 * @param model
 	 */
-	public void showBirthdayStatistics(Stage primaryStage1, Model model1) {
+	public void showBirthdayStatistics(Stage primaryStage, Model model) {
 		try {
 			// Load the fxml file and create a new stage for the popup.
 			URL resource = Main.class.getResource("/BirthdayStatistics.fxml");
@@ -130,13 +130,13 @@ public class RootLayoutViewBinder {
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Birthday Statistics");
 			dialogStage.initModality(Modality.WINDOW_MODAL);
-			dialogStage.initOwner(primaryStage1);
+			dialogStage.initOwner(primaryStage);
 			Scene scene = new Scene(page);
 			dialogStage.setScene(scene);
 
 			// Set the persons into the view.
 			BirthdayStatisticsView view = loader.getController();
-			view.setPersonData(model1.getPersonData());
+			view.setPersonData(model.getPersonData());
 
 			dialogStage.show();
 

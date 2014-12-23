@@ -8,7 +8,7 @@ import org.svenehrke.javafxdemos.address.util.SimpleNumberStringConverter;
 
 public class PersonEditViewBinder {
 
-	public static void bindController(PersonEditDialogView view, Stage dialogStage, Model model1, Person workPerson) {
+	public static void bindController(PersonEditDialogView view, Stage dialogStage, Model model, Person workPerson) {
 
 		// Bind widgets and workPerson:
 		view.firstNameField.textProperty().bindBidirectional(workPerson.firstNameProperty());
@@ -21,7 +21,7 @@ public class PersonEditViewBinder {
 		// Bind buttons to actions:
 		view.okButton.setOnAction(event -> {
 			if (new EditPersonValidator().isInputValid(view.asPersonPO())) {
-				model1.okButtonClicked.setValue(true);
+				model.okButtonClicked.setValue(true);
 				dialogStage.close();
 			}
 		});
