@@ -12,7 +12,7 @@ import org.svenehrke.javafxdemos.address.commandhandler.NewPersonCommandHandler;
 import org.svenehrke.javafxdemos.address.model.Person;
 import org.svenehrke.javafxdemos.infra.Mate;
 
-public class PersonOverviewController {
+public class PersonDetailsView {
 
 	@FXML
 	TableView<Person> personTable;
@@ -50,7 +50,7 @@ public class PersonOverviewController {
 	private EditPersonCommandHandler editPersonCommandHandler;
 	private DeletePersonCommandHandler deletePersonCommandHandler;
 
-	public PersonOverviewController(Mate mate) {
+	public PersonDetailsView(Mate mate) {
 		this.mate = mate;
 		newPersonCommandHandler = new NewPersonCommandHandler(mate.getPrimaryStage(), mate.getModel());
 		editPersonCommandHandler = new EditPersonCommandHandler(mate.getPrimaryStage(), mate.getModel());

@@ -19,7 +19,7 @@ import java.net.URL;
  */
 public class Main extends Application {
 
-	private PersonOverviewController personOverviewController;
+	private PersonDetailsView personDetailsView;
 
 	public static void main(String[] args) {
 		Application.launch(Main.class, args);
@@ -94,7 +94,7 @@ public class Main extends Application {
 		URL resource = Main.class.getResource("/PersonOverview.fxml");
 		final FXMLLoader loader = new FXMLLoader(resource, null);
 		loader.setControllerFactory((Class<?> c) -> {
-			PersonOverviewController controller = new PersonOverviewController(mate);
+			PersonDetailsView controller = new PersonDetailsView(mate);
 			return controller;
 		});
 		AnchorPane personOverview;
@@ -103,8 +103,8 @@ public class Main extends Application {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		personOverviewController = loader.getController();
-		personOverviewController.postInitialize();
+		personDetailsView = loader.getController();
+		personDetailsView.postInitialize();
 		rootLayout.setCenter(personOverview);
 
 	}
