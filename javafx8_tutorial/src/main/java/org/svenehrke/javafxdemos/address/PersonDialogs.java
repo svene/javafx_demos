@@ -57,7 +57,7 @@ public class PersonDialogs {
 
 		// Bind buttons to actions:
 		controller.okButton.setOnAction(event -> {
-			if (controller.isInputValid()) {
+			if (new EditPersonValidator().isInputValid(controller.asPersonPO())) {
 				model1.okButtonClicked.setValue(true);
 				dialogStage.close();
 			}

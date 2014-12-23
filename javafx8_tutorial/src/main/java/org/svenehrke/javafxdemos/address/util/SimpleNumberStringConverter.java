@@ -10,6 +10,10 @@ public class SimpleNumberStringConverter extends StringConverter<Number> {
 
 	@Override
 	public Number fromString(String string) {
-		return Integer.parseInt(string);
+		try {
+			return Integer.parseInt(string);
+		} catch (NumberFormatException e) {
+			return null;
+		}
 	}
 }

@@ -33,54 +33,16 @@ public class PersonEditDialogController {
 	@FXML
 	Button cancelButton;
 
-	/**
-	 * Validates the user input in the text fields.
-	 *
-	 * @return true if the input is valid
-	 */
-	boolean isInputValid() { // todo: move this validation logic outside of GUI into separate validator
-		String errorMessage = "";
+	public PersonPO asPersonPO() {
+		PersonPO result = new PersonPO();
+		result.firstName = firstNameField.getText();
+		result.lastName = lastNameField.getText();
+		result.street = streetField.getText();
+		result.postalCode = postalCodeField.getText();
+		result.city = cityField.getText();
+		result.birthday = birthdayField.getText();
 
-		if (firstNameField.getText() == null || firstNameField.getText().length() == 0) {
-			errorMessage += "No valid first name!\n";
-		}
-		if (lastNameField.getText() == null || lastNameField.getText().length() == 0) {
-			errorMessage += "No valid last name!\n";
-		}
-		if (streetField.getText() == null || streetField.getText().length() == 0) {
-			errorMessage += "No valid street!\n";
-		}
-
-		if (postalCodeField.getText() == null || postalCodeField.getText().length() == 0) {
-			errorMessage += "No valid postal code!\n";
-		} else {
-			// try to parse the postal code into an int.
-			try {
-				Integer.parseInt(postalCodeField.getText());
-			} catch (NumberFormatException e) {
-				errorMessage += "No valid postal code (must be an integer)!\n";
-			}
-		}
-
-		if (cityField.getText() == null || cityField.getText().length() == 0) {
-			errorMessage += "No valid city!\n";
-		}
-
-		if (birthdayField.getText() == null || birthdayField.getText().length() == 0) {
-			errorMessage += "No valid birthday!\n";
-		} else {
-			if (!DateUtil.validDate(birthdayField.getText())) {
-				errorMessage += "No valid birthday. Use the format dd.mm.yyyy!\n";
-			}
-		}
-
-		if (errorMessage.length() == 0) {
-			return true;
-		} else {
-			// Show the error message.
-			System.out.println("ERROR: " + errorMessage);
-			return false;
-		}
+		return result;
 	}
 
 }
