@@ -32,9 +32,7 @@ public class PersonDetailsViewBinder {
 
 		view.personTable.setItems(mate.getModel().getPersonData());
 		view.personTable.getSelectionModel().selectedIndexProperty().addListener((s, o, n) -> mate.getModel().selectedModelIndex.setValue(n));
-
 	}
-
 
 	private static void handleNewPerson(Stage primaryStage1, Model model1) {
 		model1.workPerson.populateFromPerson(model1.emptyPerson);
