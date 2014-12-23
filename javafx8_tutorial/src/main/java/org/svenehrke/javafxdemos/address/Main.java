@@ -91,7 +91,7 @@ public class Main extends Application {
 	}
 
 	private void showPersonOverview() {
-		URL resource = Main.class.getResource("/PersonOverview.fxml");
+		URL resource = Main.class.getResource("/PersonDetails.fxml");
 		final FXMLLoader loader = new FXMLLoader(resource, null);
 		loader.setControllerFactory((Class<?> c) -> {
 			PersonDetailsView controller = new PersonDetailsView(mate);
