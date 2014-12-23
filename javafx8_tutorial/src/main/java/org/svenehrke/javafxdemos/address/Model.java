@@ -67,7 +67,7 @@ public class Model {
 		});
 	}
 
-	private <T> void copyPropertyOnChange(Person sourcePerson, Function<Person, Property<T>> pf) {
+	private void copyPropertyOnChange(Person sourcePerson, Function<Person, StringProperty> pf) {
 		pf.apply(sourcePerson).addListener((s, o, n) -> {
 			int idx = selectedModelIndex.get();
 			pf.apply(getPersonData().get(idx)).setValue(n);
