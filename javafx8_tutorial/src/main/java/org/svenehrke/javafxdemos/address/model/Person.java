@@ -2,6 +2,7 @@
 package org.svenehrke.javafxdemos.address.model;
 
 import javafx.beans.property.*;
+import org.svenehrke.javafxdemos.address.util.DateUtil;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ public class Person {
 	private StringProperty street;
 	private StringProperty postalCode;
 	private StringProperty city;
-	private ObjectProperty<LocalDate> birthday;
+	private StringProperty birthday;
 
 	public Person() {
 		this(null, null);
@@ -26,7 +27,7 @@ public class Person {
 		this.street = new SimpleStringProperty("some street");
 		this.postalCode = new SimpleStringProperty("1234");
 		this.city = new SimpleStringProperty("some city");
-		this.birthday = new SimpleObjectProperty<LocalDate>(LocalDate.of(1999, 2, 21));
+		this.birthday = new SimpleStringProperty("1999-02-21");
 	}
 
 	public Person populateFromPerson(Person other) {
@@ -106,14 +107,14 @@ public class Person {
 
 	@XmlAttribute
 	public LocalDate getBirthday() {
-		return birthday.get();
+		return DateUtil.parse(birthday.get());
 	}
 
 	public void setBirthday(LocalDate birthday) {
-		this.birthday.set(birthday);
+		this.birthday.set(DateUtil.format(birthday));
 	}
 
-	public ObjectProperty<LocalDate> birthdayProperty() {
+	public StringProperty birthdayProperty() {
 		return birthday;
 	}
 
