@@ -1,5 +1,6 @@
 package org.svenehrke.javafxdemos.address;
 
+import org.svenehrke.javafxdemos.address.model.Person;
 import org.svenehrke.javafxdemos.address.util.DateUtil;
 
 // todo: instead of returning true/false use simple model properties for validation message and validation result(true/false) -> GUI can react to it as if it were normal handling
@@ -15,40 +16,40 @@ public class EditPersonValidator {
 	/**
 	 * Validates the user input
 	 *
-	 * @return true if the personPO is valid
+	 * @return true if the person is valid
 	 */
-	boolean isInputValid(PersonPO personPO) {
+	boolean isInputValid(Person person) {
 		String errorMessage = "";
 
-		if (personPO.firstName == null || personPO.firstName.length() == 0) {
+		if (person.getFirstName() == null || person.getFirstName().length() == 0) {
 			errorMessage += "No valid first name!\n";
 		}
-		if (personPO.lastName == null || personPO.lastName.length() == 0) {
+		if (person.getLastName() == null || person.getLastName().length() == 0) {
 			errorMessage += "No valid last name!\n";
 		}
-		if (personPO.street == null || personPO.street.length() == 0) {
+		if (person.getStreet() == null || person.getStreet().length() == 0) {
 			errorMessage += "No valid street!\n";
 		}
 
-		if (personPO.postalCode == null || personPO.postalCode.length() == 0) {
+		if (person.postalCodeProperty().get() == null || person.postalCodeProperty().get().length() == 0) {
 			errorMessage += "No valid postal code!\n";
 		} else {
 			// try to parse the postal code into an int.
 			try {
-				Integer.parseInt(personPO.postalCode);
+				Integer.parseInt(person.postalCodeProperty().get());
 			} catch (NumberFormatException e) {
 				errorMessage += "No valid postal code (must be an integer)!\n";
 			}
 		}
 
-		if (personPO.city == null || personPO.city.length() == 0) {
+		if (person.getCity() == null || person.getCity().length() == 0) {
 			errorMessage += "No valid city!\n";
 		}
 
-		if (personPO.birthday == null || personPO.birthday.length() == 0) {
+		if (person.birthdayProperty().get() == null || person.birthdayProperty().get().length() == 0) {
 			errorMessage += "No valid birthday!\n";
 		} else {
-			if (!DateUtil.validDate(personPO.birthday)) {
+			if (!DateUtil.validDate(person.birthdayProperty().get())) {
 				errorMessage += "No valid birthday. Use the format dd.mm.yyyy!\n";
 			}
 		}

@@ -28,17 +28,4 @@ public class PersonEditDialogView {
 	Button okButton;
 	@FXML
 	Button cancelButton;
-
-	public PersonPO asPersonPO() {
-		PersonPO result = new PersonPO();
-		result.firstName = firstNameField.getText();
-		result.lastName = lastNameField.getText();
-		result.street = streetField.getText();
-		result.postalCode = postalCodeField.getText();
-		result.city = cityField.getText();
-		result.birthday = birthdayField.getText();
-
-		return result;
-	}
-
 }
