@@ -20,7 +20,7 @@ public class PersonEditViewBinder {
 
 		// Bind buttons to actions:
 		view.okButton.setOnAction(event -> {
-			if (new EditPersonValidator().isInputValid(view.asPersonPO())) {
+			if (new EditPersonValidator(model).isInputValid(view.asPersonPO())) {
 				model.okButtonClicked.setValue(true);
 				dialogStage.close();
 			}

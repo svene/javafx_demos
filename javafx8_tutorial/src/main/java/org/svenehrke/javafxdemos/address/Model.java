@@ -26,6 +26,9 @@ public class Model {
 	private final BooleanProperty newOkButtonClicked = new SimpleBooleanProperty();
 	public final ObjectProperty<EditMode> editModeProperty = new SimpleObjectProperty<>(EditMode.UNDEFINED);
 
+	public final BooleanProperty workPersonValid = new SimpleBooleanProperty();
+	public final StringProperty validationMessage = new SimpleStringProperty();
+
 	public Model() {
 		sampleData = new SampleData();
 
@@ -56,6 +59,11 @@ public class Model {
 		ImpulseListeners.addImpulseListener(newOkButtonClicked, () -> {
 			getPersonData().add(new Person().populateFromPerson(workPerson));
 			selectedModelIndex.setValue(getPersonData().size() - 1);
+		});
+		workPersonValid.bind(Bindings.equal(validationMessage, ""));
+		validationMessage.addListener((s,o,n) -> {
+			if ( validationMessage.getValue().isEmpty() ) return;
+			System.out.println("error: " + n);
 		});
 	}
 

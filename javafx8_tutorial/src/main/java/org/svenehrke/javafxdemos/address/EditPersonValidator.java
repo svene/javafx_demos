@@ -5,6 +5,13 @@ import org.svenehrke.javafxdemos.address.util.DateUtil;
 // todo: instead of returning true/false use simple model properties for validation message and validation result(true/false) -> GUI can react to it as if it were normal handling
 public class EditPersonValidator {
 
+	private final Model model;
+
+	public EditPersonValidator(Model model) {
+
+		this.model = model;
+	}
+
 	/**
 	 * Validates the user input
 	 *
@@ -46,11 +53,10 @@ public class EditPersonValidator {
 			}
 		}
 
+		model.validationMessage.setValue(errorMessage);
 		if (errorMessage.length() == 0) {
 			return true;
 		} else {
-			// Show the error message.
-			System.out.println("ERROR: " + errorMessage);
 			return false;
 		}
 	}
