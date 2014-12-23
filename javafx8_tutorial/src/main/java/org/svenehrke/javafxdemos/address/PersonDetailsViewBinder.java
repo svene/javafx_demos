@@ -8,7 +8,7 @@ import org.svenehrke.javafxdemos.infra.Mate;
 
 public class PersonDetailsViewBinder {
 
-	public static void bindController(PersonDetailsView view, Mate mate) {
+	public static void bindView(PersonDetailsView view, Mate mate) {
 		// Initialize the person table with the two columns.
 		view.firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
 		view.lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
@@ -34,10 +34,10 @@ public class PersonDetailsViewBinder {
 		view.personTable.getSelectionModel().selectedIndexProperty().addListener((s, o, n) -> mate.getModel().selectedModelIndex.setValue(n));
 	}
 
-	private static void handleNewPerson(Stage primaryStage1, Model model1) {
-		model1.workPerson.populateFromPerson(model1.emptyPerson);
-		model1.editModeProperty.setValue(Model.EditMode.NEW);
-		PersonDialogs.showPersonDialog(model1, primaryStage1);
+	private static void handleNewPerson(Stage primaryStage, Model model) {
+		model.workPerson.populateFromPerson(model.emptyPerson);
+		model.editModeProperty.setValue(Model.EditMode.NEW);
+		PersonDialogs.showPersonDialog(model, primaryStage);
 	}
 
 	/**

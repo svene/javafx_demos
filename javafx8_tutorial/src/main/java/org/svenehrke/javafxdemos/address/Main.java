@@ -7,7 +7,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.svenehrke.javafxdemos.address.commandhandler.*;
 import org.svenehrke.javafxdemos.infra.*;
 
 import java.io.IOException;
@@ -44,7 +43,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		registerCommands(primaryStage);
+		initMate(primaryStage);
 
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("AddressApp");
@@ -55,12 +54,7 @@ public class Main extends Application {
 		showPersonOverview();
 	}
 
-	private void registerCommands(Stage primaryStage) {
-		mate.addCommand(Api.OPEN_FILE, new OpenFileCommandHandler(primaryStage, model));
-		mate.addCommand(Api.NEW_ADDRESS_BOOK, new NewAddressbookCommandHandler(primaryStage, model));
-		mate.addCommand(Api.SAVE, new SaveCommandHandler(primaryStage, model));
-		mate.addCommand(Api.SAVE_AS, new SaveAsCommandHandler(primaryStage, model));
-		mate.addCommand(Api.STATISTICS, new ShowBirthdayStatisticsCommandHandler(primaryStage, model));
+	private void initMate(Stage primaryStage) {
 
 		mate.setModel(model);
 		mate.setPrimaryStage(primaryStage);
@@ -75,9 +69,9 @@ public class Main extends Application {
 			throw new RuntimeException(e);
 		}
 
-		// Give the controller access to the main app.
-		RootLayoutView controller = loader.getController();
-		controller.setMainApp(mate);
+		// Give the view access to the main app.
+		RootLayoutView view = loader.getController();
+		new RootLayoutViewBinder().bindView(view, mate);
 
 		// Try to load last opened person file.
 //		File file = getPersonFilePath();
@@ -104,7 +98,7 @@ public class Main extends Application {
 			throw new RuntimeException(e);
 		}
 		personDetailsView = loader.getController();
-		PersonDetailsViewBinder.bindController(personDetailsView, mate);
+		PersonDetailsViewBinder.bindView(personDetailsView, mate);
 		rootLayout.setCenter(personOverview);
 
 	}

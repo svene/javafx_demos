@@ -18,7 +18,7 @@ import org.svenehrke.javafxdemos.address.model.Person;
  *
  * @author Marco Jakob
  */
-public class BirthdayStatisticsController {
+public class BirthdayStatisticsView {
 
 	@FXML
 	private BarChart<String, Integer> barChart;

@@ -32,7 +32,7 @@ public class PersonDialogs {
 
 			// Set the person into the controller.
 			PersonEditDialogView controller = loader.getController();
-			PersonEditViewBinder.bindController(controller, dialogStage, model1, model1.workPerson); // todo: blog about this pattern: bindController (binding ...) not inside controller but outside of it. Similar to binding of PMs to widgets: not in view but outside
+			PersonEditViewBinder.bindController(controller, dialogStage, model1, model1.workPerson); // todo: blog about this pattern: bindView (binding ...) not inside controller but outside of it. Similar to binding of PMs to widgets: not in view but outside
 
 			// Show the dialog and wait until the user closes it
 			dialogStage.showAndWait();
