@@ -2,6 +2,7 @@ package org.svenehrke.javafxdemos.address;
 
 import org.svenehrke.javafxdemos.address.util.DateUtil;
 
+// todo: instead of returning true/false use simple model properties for validation message and validation result(true/false) -> GUI can react to it as if it were normal handling
 public class EditPersonValidator {
 
 	/**
