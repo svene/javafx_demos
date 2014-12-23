@@ -12,7 +12,7 @@ import org.svenehrke.javafxdemos.infra.Mate;
  *
  * @author Marco Jakob
  */
-public class RootLayoutController {
+public class RootLayoutView {
 
 	private Mate mate;
 

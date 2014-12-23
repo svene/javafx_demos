@@ -76,7 +76,7 @@ public class Main extends Application {
 		}
 
 		// Give the controller access to the main app.
-		RootLayoutController controller = loader.getController();
+		RootLayoutView controller = loader.getController();
 		controller.setMainApp(mate);
 
 		// Try to load last opened person file.
