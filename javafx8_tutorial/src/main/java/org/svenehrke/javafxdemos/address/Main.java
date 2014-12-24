@@ -87,10 +87,6 @@ public class Main extends Application {
 	private void showPersonOverview() {
 		URL resource = Main.class.getResource("/PersonDetails.fxml");
 		final FXMLLoader loader = new FXMLLoader(resource, null);
-		loader.setControllerFactory((Class<?> c) -> {
-			PersonDetailsView controller = new PersonDetailsView();
-			return controller;
-		});
 		AnchorPane personOverview;
 		try {
 			personOverview = loader.load();

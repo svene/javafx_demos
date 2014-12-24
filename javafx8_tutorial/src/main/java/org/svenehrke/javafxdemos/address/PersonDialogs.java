@@ -16,10 +16,6 @@ public class PersonDialogs {
 			// Load the fxml file and create a new stage for the popup dialog.
 			URL resource = Main.class.getResource("/PersonEditDialog.fxml");
 			final FXMLLoader loader = new FXMLLoader(resource, null);
-			loader.setControllerFactory((Class<?> c) -> { // todo: remove usage of ControllerFactory ?
-				PersonEditDialogView controller = new PersonEditDialogView();
-				return controller;
-			});
 			AnchorPane page = loader.load();
 
 			// Create the dialog Stage.
