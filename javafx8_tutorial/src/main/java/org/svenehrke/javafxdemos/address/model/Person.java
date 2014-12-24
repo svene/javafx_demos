@@ -29,7 +29,7 @@ public class Person {
 		this.street = new SimpleStringProperty("some street");
 		this.postalCode = new SimpleStringProperty("1234");
 		this.city = new SimpleStringProperty("some city");
-		this.birthday = new SimpleStringProperty("1999-02-21");
+		this.birthday = new SimpleStringProperty("21.02.1999");
 	}
 
 	public Person populateFromPerson(Person other) {

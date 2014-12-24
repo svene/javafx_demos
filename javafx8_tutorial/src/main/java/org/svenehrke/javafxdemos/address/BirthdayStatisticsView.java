@@ -19,7 +19,6 @@ import org.svenehrke.javafxdemos.address.model.Person;
  * @author Marco Jakob
  */
 public class BirthdayStatisticsView {
-	// todo: throws exception when opened
 
 	@FXML
 	private BarChart<String, Integer> barChart;
