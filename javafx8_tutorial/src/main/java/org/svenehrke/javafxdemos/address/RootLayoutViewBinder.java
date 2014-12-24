@@ -2,19 +2,17 @@ package org.svenehrke.javafxdemos.address;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.model.PersonListWrapper;
+import org.svenehrke.javafxdemos.infra.FXMLLoader2;
 import org.svenehrke.javafxdemos.infra.Mate;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 
 public class RootLayoutViewBinder {
 
@@ -122,27 +120,20 @@ public class RootLayoutViewBinder {
 	 * @param model
 	 */
 	public void showBirthdayStatistics(Stage primaryStage, Model model) {
-		try {
-			// Load the fxml file and create a new stage for the popup.
-			URL resource = Main.class.getResource("/BirthdayStatistics.fxml");
-			final FXMLLoader loader = new FXMLLoader(resource, null);
-			AnchorPane page = loader.load();
-			Stage dialogStage = new Stage();
-			dialogStage.setTitle("Birthday Statistics");
-			dialogStage.initModality(Modality.WINDOW_MODAL);
-			dialogStage.initOwner(primaryStage);
-			Scene scene = new Scene(page);
-			dialogStage.setScene(scene);
+		final FXMLLoader loader = FXMLLoader2.loadFXML("/BirthdayStatistics.fxml");
+		Stage dialogStage = new Stage();
+		dialogStage.setTitle("Birthday Statistics");
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		dialogStage.initOwner(primaryStage);
+		Scene scene = new Scene(loader.getRoot());
+		dialogStage.setScene(scene);
 
-			// Set the persons into the view.
-			BirthdayStatisticsView view = loader.getController();
-			view.setPersonData(model.getPeople());
+		// Set the persons into the view.
+		BirthdayStatisticsView view = loader.getController();
+		view.setPersonData(model.getPeople());
 
-			dialogStage.show();
+		dialogStage.show();
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
