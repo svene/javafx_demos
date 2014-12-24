@@ -1,6 +1,5 @@
 package org.svenehrke.javafxdemos.address;
 
-import javafx.stage.Stage;
 import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.model.PersonListWrapper;
 
@@ -16,9 +15,8 @@ public class AddressFileHelper {
 	 * be replaced.
 	 *
 	 * @param file
-	 * @param primaryStage
 	 */
-	public void loadPersonDataFromFile(File file, Model model, Stage primaryStage) {
+	public void loadPersonDataFromFile(File file, Model model) {
 		try {
 			JAXBContext context = JAXBContext.newInstance(PersonListWrapper.class);
 			Unmarshaller um = context.createUnmarshaller();
@@ -31,7 +29,7 @@ public class AddressFileHelper {
 			model.getPeople().addAll(wrapper.getPersons());
 
 			// Save the file path to the registry.
-			setPersonFilePath(file, primaryStage);
+			setPersonFilePath(file, model);
 
 		} catch (Exception e) { // catches ANY exception
 			e.printStackTrace();
@@ -45,22 +43,21 @@ public class AddressFileHelper {
 	/**
 	 * Sets the file path of the currently loaded file. The path is persisted in
 	 * the OS specific registry.
-	 *
-	 * @param file the file or null to remove the path
-	 * @param primaryStage1
+	 *  @param file the file or null to remove the path
+	 * @param model
 	 */
-	public void setPersonFilePath(File file, Stage primaryStage1) {
+	public void setPersonFilePath(File file, Model model) {
 		Preferences prefs = Preferences.userNodeForPackage(Main.class);
 		if (file != null) {
 			prefs.put("filePath", file.getPath());
 
 			// Update the stage title.
-			primaryStage1.setTitle("AddressApp - " + file.getName());
+			model.applicationTitle.setValue("AddressApp - " + file.getName());
 		} else {
 			prefs.remove("filePath");
 
 			// Update the stage title.
-			primaryStage1.setTitle("AddressApp");
+			model.applicationTitle.setValue("AddressApp");
 		}
 	}
 

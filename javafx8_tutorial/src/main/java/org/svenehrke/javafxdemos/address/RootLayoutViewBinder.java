@@ -18,43 +18,43 @@ public class RootLayoutViewBinder {
 
 	AddressFileHelper addressFileHelper = new AddressFileHelper();
 
-	public void bindView(RootLayoutView view, Model model, Stage primaryStage) {
+	public void bindView(RootLayoutView view, Model model) {
 
-		view.miNew.setOnAction(event -> handleNewAddressBookRequest(model, primaryStage));
-		view.miOpen.setOnAction(event -> handleOpenFileRequest(model, primaryStage));
-		view.miSave.setOnAction(event -> handleSaveRequest(model, primaryStage) );
-		view.miSaveAs.setOnAction(event -> handleSaveAs(primaryStage, model) );
-		view.miShowStatistics.setOnAction(event -> showBirthdayStatistics(primaryStage, model));
+		view.miNew.setOnAction(event -> handleNewAddressBookRequest(model));
+		view.miOpen.setOnAction(event -> handleOpenFileRequest(model));
+		view.miSave.setOnAction(event -> handleSaveRequest(model) );
+		view.miSaveAs.setOnAction(event -> handleSaveAs(model) );
+		view.miShowStatistics.setOnAction(event -> showBirthdayStatistics(model));
 	}
 
-	private void handleNewAddressBookRequest(Model model, Stage primaryStage) {
+	private void handleNewAddressBookRequest(Model model) {
 		model.getPeople().clear();
-		addressFileHelper.setPersonFilePath(null, primaryStage);
+		addressFileHelper.setPersonFilePath(null, model);
 	}
 
 	/**
 	 * Opens a FileChooser to let the user select an address book to load.
 	 */
-	private void handleOpenFileRequest(Model model, Stage primaryStage) {
+	private void handleOpenFileRequest(Model model) {
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml"));
 
 		// Show save file dialog
-		File file = fileChooser.showOpenDialog(primaryStage);
+		File file = fileChooser.showOpenDialog(model.getPrimaryStage());
 
 		if (file != null) {
-			addressFileHelper.loadPersonDataFromFile(file, model, primaryStage);
+			addressFileHelper.loadPersonDataFromFile(file, model);
 		}
 	}
 
-	private void handleSaveRequest(Model model, Stage primaryStage) {
+	private void handleSaveRequest(Model model) {
 		File personFile = addressFileHelper.getPersonFilePath();
 		if (personFile != null) {
-			savePersonDataToFile(personFile, primaryStage, model);
+			savePersonDataToFile(personFile, model);
 		} else {
-			handleSaveAs(primaryStage, model);
+			handleSaveAs(model);
 		}
 	}
 
@@ -62,10 +62,9 @@ public class RootLayoutViewBinder {
 	 * Saves the current person data to the specified file.
 	 *
 	 * @param file
-	 * @param primaryStage
 	 * @param model
 	 */
-	private void savePersonDataToFile(File file, Stage primaryStage, Model model) {
+	private void savePersonDataToFile(File file, Model model) {
 		try {
 			JAXBContext context = JAXBContext
 				.newInstance(PersonListWrapper.class);
@@ -80,7 +79,7 @@ public class RootLayoutViewBinder {
 			m.marshal(wrapper, file);
 
 			// Save the file path to the registry.
-			new AddressFileHelper().setPersonFilePath(file, primaryStage);
+			new AddressFileHelper().setPersonFilePath(file, model);
 		} catch (Exception e) { // catches ANY exception
 			e.printStackTrace();
 			Dialogs.create().title("Error")
@@ -91,10 +90,9 @@ public class RootLayoutViewBinder {
 
 	/**
 	 * Opens a FileChooser to let the user select a file to save to.
-	 * @param primaryStage
 	 * @param model
 	 */
-	private void handleSaveAs(Stage primaryStage, Model model) {
+	private void handleSaveAs(Model model) {
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter
@@ -103,28 +101,27 @@ public class RootLayoutViewBinder {
 		fileChooser.getExtensionFilters().add(extFilter);
 
 		// Show save file dialog
-		File file = fileChooser.showSaveDialog(primaryStage);
+		File file = fileChooser.showSaveDialog(model.getPrimaryStage());
 
 		if (file != null) {
 			// Make sure it has the correct extension
 			if (!file.getPath().endsWith(".xml")) {
 				file = new File(file.getPath() + ".xml");
 			}
-			savePersonDataToFile(file, primaryStage, model);
+			savePersonDataToFile(file, model);
 		}
 	}
 
 	/**
 	 * Opens a dialog to show birthday statistics.
-	 * @param primaryStage
 	 * @param model
 	 */
-	public void showBirthdayStatistics(Stage primaryStage, Model model) {
+	public void showBirthdayStatistics(Model model) {
 		final ViewAndRoot<BirthdayStatisticsView, Pane> cr = FXMLLoader2.loadFXML("/BirthdayStatistics.fxml");
 		Stage dialogStage = new Stage();
 		dialogStage.setTitle("Birthday Statistics");
 		dialogStage.initModality(Modality.WINDOW_MODAL);
-		dialogStage.initOwner(primaryStage);
+		dialogStage.initOwner(model.getPrimaryStage());
 		Scene scene = new Scene(cr.getRoot());
 		dialogStage.setScene(scene);
 

@@ -7,13 +7,13 @@ import org.svenehrke.javafxdemos.address.model.Person;
 
 public class PersonDetailsViewBinder {
 
-	public static void bindView(PersonDetailsView view, Model model, Stage primaryStage) {
+	public static void bindView(PersonDetailsView view, Model model) {
 		// Initialize the person table with the two columns.
 		view.firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
 		view.lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
 
-		view.newButton.setOnAction(event -> handleNewPerson(primaryStage, model));
-		view.editButton.setOnAction(event -> handleEditPerson(primaryStage, model) );
+		view.newButton.setOnAction(event -> handleNewPerson(model));
+		view.editButton.setOnAction(event -> handleEditPerson(model.getPrimaryStage(), model) );
 		view.deleteButton.setOnAction(event -> handleDelete(model) );
 
 		Person cp = model.currentPerson;
@@ -33,10 +33,10 @@ public class PersonDetailsViewBinder {
 		view.personTable.getSelectionModel().selectedIndexProperty().addListener((s, o, n) -> model.selectedModelIndex.setValue(n));
 	}
 
-	private static void handleNewPerson(Stage primaryStage, Model model) {
+	private static void handleNewPerson(Model model) {
 		model.workPerson.populateFromPerson(model.emptyPerson);
 		model.editModeProperty.setValue(Model.EditMode.NEW);
-		PersonDialogs.showPersonDialog(model, primaryStage);
+		PersonDialogs.showPersonDialog(model);
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class PersonDetailsViewBinder {
 		if (model.currentPerson != null) {
 			model.getWorkPerson().populateFromPerson(model.currentPerson);
 			model.editModeProperty.setValue(Model.EditMode.EDIT);
-			PersonDialogs.showPersonDialog(model, primaryStage1);
+			PersonDialogs.showPersonDialog(model);
 		} else {
 			// Nothing selected.
 			System.out.println("nothing selected");

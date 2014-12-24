@@ -1,19 +1,18 @@
 package org.svenehrke.javafxdemos.address;
 
 import javafx.stage.Stage;
-import org.svenehrke.javafxdemos.address.model.Person;
 
 public class PersonEditViewBinder {
 
-	public static void bindController(PersonEditDialogView view, Stage dialogStage, Model model, Person workPerson) {
+	public static void bindView(PersonEditDialogView view, Stage dialogStage, Model model) {
 
 		// Bind widgets and workPerson:
-		view.firstNameField.textProperty().bindBidirectional(workPerson.firstNameProperty());
-		view.lastNameField.textProperty().bindBidirectional(workPerson.lastNameProperty());
-		view.streetField.textProperty().bindBidirectional(workPerson.streetProperty());
-		view.postalCodeField.textProperty().bindBidirectional(workPerson.postalCodeProperty());
-		view.cityField.textProperty().bindBidirectional(workPerson.cityProperty());
-		view.birthdayField.textProperty().bindBidirectional(workPerson.birthdayProperty());
+		view.firstNameField.textProperty().bindBidirectional(model.workPerson.firstNameProperty());
+		view.lastNameField.textProperty().bindBidirectional(model.workPerson.lastNameProperty());
+		view.streetField.textProperty().bindBidirectional(model.workPerson.streetProperty());
+		view.postalCodeField.textProperty().bindBidirectional(model.workPerson.postalCodeProperty());
+		view.cityField.textProperty().bindBidirectional(model.workPerson.cityProperty());
+		view.birthdayField.textProperty().bindBidirectional(model.workPerson.birthdayProperty());
 
 		// Bind buttons to actions:
 		view.okButton.setOnAction(event -> {

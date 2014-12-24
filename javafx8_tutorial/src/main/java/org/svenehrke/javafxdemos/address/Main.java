@@ -21,14 +21,11 @@ public class Main extends Application {
 		Application.launch(Main.class, args);
 	}
 
-	Stage primaryStage;
 	private BorderPane rootLayout;
 	Model model;
 
 	@Override
 	public void init() throws Exception {
-		model = new Model();
-		model.getPeople().addAll(SampleData.getPeople());
 	}
 
 	@Override
@@ -39,10 +36,11 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		this.primaryStage = primaryStage;
-		this.primaryStage.setTitle("AddressApp");
+		model = new Model(primaryStage);
+		model.getPeople().addAll(SampleData.getPeople());
+		model.getPrimaryStage().setTitle("AddressApp");
 
-		this.primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/Address_Book.png")));
+		model.getPrimaryStage().getIcons().add(new Image(this.getClass().getResourceAsStream("/Address_Book.png")));
 
 		initRootLayout();
 		showPersonOverview();
@@ -54,17 +52,19 @@ public class Main extends Application {
 		final ViewAndRoot<RootLayoutView, BorderPane> cr = FXMLLoader2.loadFXML("/RootLayout.fxml");
 		RootLayoutView view = cr.getView();
 		rootLayout = cr.getRoot();
-		new RootLayoutViewBinder().bindView(view, model, primaryStage);
+
+		new RootLayoutViewBinder().bindView(view, model);
+		model.getPrimaryStage().titleProperty().bind(model.applicationTitle);
 
 		Scene scene = new Scene(rootLayout);
-		primaryStage.setScene(scene);
-		primaryStage.show();
+		model.getPrimaryStage().setScene(scene);
+		model.getPrimaryStage().show();
 	}
 
 	private void showPersonOverview() {
 		final ViewAndRoot<PersonDetailsView, Pane> cr = FXMLLoader2.loadFXML("/PersonDetails.fxml");
 		personDetailsView = cr.getView();
-		PersonDetailsViewBinder.bindView(personDetailsView, model, primaryStage);
+		PersonDetailsViewBinder.bindView(personDetailsView, model);
 		rootLayout.setCenter(cr.getRoot());
 	}
 
