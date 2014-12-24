@@ -1,6 +1,9 @@
 package org.svenehrke.javafxdemos.address;
 
+import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 import org.controlsfx.dialog.Dialogs;
+import org.svenehrke.javafxdemos.address.model.Person;
 import org.svenehrke.javafxdemos.address.model.PersonListWrapper;
 
 import javax.xml.bind.JAXBContext;
@@ -14,9 +17,11 @@ public class AddressFileHelper {
 	 * Loads person data from the specified file. The current person data will
 	 * be replaced.
 	 *
+	 * @param people
+	 * @param applicationTitle
 	 * @param file
 	 */
-	public void loadPersonDataFromFile(File file, Model model) {
+	public void loadPersonDataFromFile(File file, ObservableList<Person> people, StringProperty applicationTitle) {
 		try {
 			JAXBContext context = JAXBContext.newInstance(PersonListWrapper.class);
 			Unmarshaller um = context.createUnmarshaller();
@@ -25,11 +30,11 @@ public class AddressFileHelper {
 			System.out.println("file.getAbsolutePath() = " + file.getAbsolutePath());
 			PersonListWrapper wrapper = (PersonListWrapper) um.unmarshal(file);
 
-			model.getPeople().clear();
-			model.getPeople().addAll(wrapper.getPersons());
+			people.clear();
+			people.addAll(wrapper.getPersons());
 
 			// Save the file path to the registry.
-			setPersonFilePath(file, model);
+			setPersonFilePath(file, applicationTitle);
 
 		} catch (Exception e) { // catches ANY exception
 			e.printStackTrace();
@@ -44,20 +49,20 @@ public class AddressFileHelper {
 	 * Sets the file path of the currently loaded file. The path is persisted in
 	 * the OS specific registry.
 	 *  @param file the file or null to remove the path
-	 * @param model
+	 * @param applicationTitle
 	 */
-	public void setPersonFilePath(File file, Model model) {
+	public void setPersonFilePath(File file, StringProperty applicationTitle) {
 		Preferences prefs = Preferences.userNodeForPackage(Main.class);
 		if (file != null) {
 			prefs.put("filePath", file.getPath());
 
 			// Update the stage title.
-			model.applicationTitle.setValue("AddressApp - " + file.getName());
+			applicationTitle.setValue("AddressApp - " + file.getName());
 		} else {
 			prefs.remove("filePath");
 
 			// Update the stage title.
-			model.applicationTitle.setValue("AddressApp");
+			applicationTitle.setValue("AddressApp");
 		}
 	}
 

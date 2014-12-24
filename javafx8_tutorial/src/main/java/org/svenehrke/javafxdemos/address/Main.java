@@ -15,14 +15,9 @@ import org.svenehrke.javafxdemos.infra.*;
  */
 public class Main extends Application {
 
-	private PersonDetailsView personDetailsView;
-
 	public static void main(String[] args) {
 		Application.launch(Main.class, args);
 	}
-
-	private BorderPane rootLayout;
-	Model model;
 
 	@Override
 	public void init() throws Exception {
@@ -36,22 +31,21 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		model = new Model(primaryStage);
+		Model model = new Model(primaryStage);
 		model.getPeople().addAll(SampleData.getPeople());
 		model.getPrimaryStage().setTitle("AddressApp");
 
 		model.getPrimaryStage().getIcons().add(new Image(this.getClass().getResourceAsStream("/Address_Book.png")));
 
-		initRootLayout();
-		showPersonOverview();
+		initRootLayout(model);
 	}
 
-	private void initRootLayout() {
+	private void initRootLayout(Model model) {
 
 		// Give the view access to the main app.
 		final ViewAndRoot<RootLayoutView, BorderPane> cr = FXMLLoader2.loadFXML("/RootLayout.fxml");
 		RootLayoutView view = cr.getView();
-		rootLayout = cr.getRoot();
+		BorderPane rootLayout = cr.getRoot();
 
 		new RootLayoutViewBinder().bindView(view, model);
 		model.getPrimaryStage().titleProperty().bind(model.applicationTitle);
@@ -59,11 +53,13 @@ public class Main extends Application {
 		Scene scene = new Scene(rootLayout);
 		model.getPrimaryStage().setScene(scene);
 		model.getPrimaryStage().show();
+
+		showPersonOverview(rootLayout, model);
 	}
 
-	private void showPersonOverview() {
+	private void showPersonOverview(BorderPane rootLayout, Model model) {
 		final ViewAndRoot<PersonDetailsView, Pane> cr = FXMLLoader2.loadFXML("/PersonDetails.fxml");
-		personDetailsView = cr.getView();
+		PersonDetailsView personDetailsView = cr.getView();
 		PersonDetailsViewBinder.bindView(personDetailsView, model);
 		rootLayout.setCenter(cr.getRoot());
 	}

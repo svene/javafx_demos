@@ -1,11 +1,14 @@
 package org.svenehrke.javafxdemos.address;
 
+import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.Dialogs;
+import org.svenehrke.javafxdemos.address.model.Person;
 import org.svenehrke.javafxdemos.address.model.PersonListWrapper;
 import org.svenehrke.javafxdemos.infra.ViewAndRoot;
 import org.svenehrke.javafxdemos.infra.FXMLLoader2;
@@ -29,7 +32,7 @@ public class RootLayoutViewBinder {
 
 	private void handleNewAddressBookRequest(Model model) {
 		model.getPeople().clear();
-		addressFileHelper.setPersonFilePath(null, model);
+		addressFileHelper.setPersonFilePath(null, model.applicationTitle);
 	}
 
 	/**
@@ -45,14 +48,14 @@ public class RootLayoutViewBinder {
 		File file = fileChooser.showOpenDialog(model.getPrimaryStage());
 
 		if (file != null) {
-			addressFileHelper.loadPersonDataFromFile(file, model);
+			addressFileHelper.loadPersonDataFromFile(file, model.getPeople(), model.applicationTitle);
 		}
 	}
 
 	private void handleSaveRequest(Model model) {
 		File personFile = addressFileHelper.getPersonFilePath();
 		if (personFile != null) {
-			savePersonDataToFile(personFile, model);
+			savePersonDataToFile(personFile, model.getPeople(), model.applicationTitle);
 		} else {
 			handleSaveAs(model);
 		}
@@ -62,9 +65,10 @@ public class RootLayoutViewBinder {
 	 * Saves the current person data to the specified file.
 	 *
 	 * @param file
-	 * @param model
+	 * @param people
+	 * @param applicationTitle
 	 */
-	private void savePersonDataToFile(File file, Model model) {
+	private void savePersonDataToFile(File file, ObservableList<Person> people, StringProperty applicationTitle) {
 		try {
 			JAXBContext context = JAXBContext
 				.newInstance(PersonListWrapper.class);
@@ -73,13 +77,13 @@ public class RootLayoutViewBinder {
 
 			// Wrapping our person data.
 			PersonListWrapper wrapper = new PersonListWrapper();
-			wrapper.setPersons(model.getPeople());
+			wrapper.setPersons(people);
 
 			// Marshalling and saving XML to the file.
 			m.marshal(wrapper, file);
 
 			// Save the file path to the registry.
-			new AddressFileHelper().setPersonFilePath(file, model);
+			new AddressFileHelper().setPersonFilePath(file, applicationTitle);
 		} catch (Exception e) { // catches ANY exception
 			e.printStackTrace();
 			Dialogs.create().title("Error")
@@ -108,7 +112,7 @@ public class RootLayoutViewBinder {
 			if (!file.getPath().endsWith(".xml")) {
 				file = new File(file.getPath() + ".xml");
 			}
-			savePersonDataToFile(file, model);
+			savePersonDataToFile(file, model.getPeople(), model.applicationTitle);
 		}
 	}
 

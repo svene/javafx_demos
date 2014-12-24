@@ -1,7 +1,6 @@
 package org.svenehrke.javafxdemos.address;
 
 import javafx.beans.binding.Bindings;
-import javafx.stage.Stage;
 import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.model.Person;
 
@@ -13,7 +12,7 @@ public class PersonDetailsViewBinder {
 		view.lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
 
 		view.newButton.setOnAction(event -> handleNewPerson(model));
-		view.editButton.setOnAction(event -> handleEditPerson(model.getPrimaryStage(), model) );
+		view.editButton.setOnAction(event -> handleEditPerson(model) );
 		view.deleteButton.setOnAction(event -> handleDelete(model) );
 
 		Person cp = model.currentPerson;
@@ -44,7 +43,7 @@ public class PersonDetailsViewBinder {
 	 * clicks OK, the changes are saved into the provided person object and true
 	 * is returned.
 	 */
-	private static void handleEditPerson(Stage primaryStage1, Model model) {
+	private static void handleEditPerson(Model model) {
 		if (model.currentPerson != null) {
 			model.getWorkPerson().populateFromPerson(model.currentPerson);
 			model.editModeProperty.setValue(Model.EditMode.EDIT);
