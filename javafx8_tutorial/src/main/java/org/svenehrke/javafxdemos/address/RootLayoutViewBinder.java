@@ -1,12 +1,13 @@
 package org.svenehrke.javafxdemos.address;
 
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.model.PersonListWrapper;
+import org.svenehrke.javafxdemos.infra.ViewAndRoot;
 import org.svenehrke.javafxdemos.infra.FXMLLoader2;
 import org.svenehrke.javafxdemos.infra.Mate;
 
@@ -120,16 +121,16 @@ public class RootLayoutViewBinder {
 	 * @param model
 	 */
 	public void showBirthdayStatistics(Stage primaryStage, Model model) {
-		final FXMLLoader loader = FXMLLoader2.loadFXML("/BirthdayStatistics.fxml");
+		final ViewAndRoot<BirthdayStatisticsView, Pane> cr = FXMLLoader2.loadFXML("/BirthdayStatistics.fxml");
 		Stage dialogStage = new Stage();
 		dialogStage.setTitle("Birthday Statistics");
 		dialogStage.initModality(Modality.WINDOW_MODAL);
 		dialogStage.initOwner(primaryStage);
-		Scene scene = new Scene(loader.getRoot());
+		Scene scene = new Scene(cr.getRoot());
 		dialogStage.setScene(scene);
 
 		// Set the persons into the view.
-		BirthdayStatisticsView view = loader.getController();
+		BirthdayStatisticsView view = cr.getView();
 		view.setPersonData(model.getPeople());
 
 		dialogStage.show();

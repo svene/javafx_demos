@@ -1,10 +1,10 @@
 package org.svenehrke.javafxdemos.address;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.svenehrke.javafxdemos.address.model.SampleData;
 import org.svenehrke.javafxdemos.infra.*;
@@ -61,9 +61,9 @@ public class Main extends Application {
 	private void initRootLayout() {
 
 		// Give the view access to the main app.
-		final FXMLLoader loader = FXMLLoader2.loadFXML("/RootLayout.fxml");
-		RootLayoutView view = loader.getController();
-		rootLayout = loader.getRoot();
+		final ViewAndRoot<RootLayoutView, BorderPane> cr = FXMLLoader2.loadFXML("/RootLayout.fxml");
+		RootLayoutView view = cr.getView();
+		rootLayout = cr.getRoot();
 		new RootLayoutViewBinder().bindView(view, mate);
 
 		Scene scene = new Scene(rootLayout);
@@ -72,10 +72,10 @@ public class Main extends Application {
 	}
 
 	private void showPersonOverview() {
-		FXMLLoader loader = FXMLLoader2.loadFXML("/PersonDetails.fxml");
-		personDetailsView = loader.getController();
+		final ViewAndRoot<PersonDetailsView, Pane> cr = FXMLLoader2.loadFXML("/PersonDetails.fxml");
+		personDetailsView = cr.getView();
 		PersonDetailsViewBinder.bindView(personDetailsView, mate);
-		rootLayout.setCenter(loader.getRoot());
+		rootLayout.setCenter(cr.getRoot());
 	}
 
 }
