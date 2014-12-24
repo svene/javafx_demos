@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.svenehrke.javafxdemos.infra.*;
@@ -61,23 +60,12 @@ public class Main extends Application {
 	}
 
 	private void initRootLayout() {
-		URL resource = Main.class.getResource("/RootLayout.fxml");
-		final FXMLLoader loader = new FXMLLoader(resource, null);
-		try {
-			rootLayout = loader.load();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
 
 		// Give the view access to the main app.
+		final FXMLLoader loader = FXMLLoader2.loadFXML("/RootLayout.fxml");
 		RootLayoutView view = loader.getController();
+		rootLayout = loader.getRoot();
 		new RootLayoutViewBinder().bindView(view, mate);
-
-		// Try to load last opened person file.
-//		File file = getPersonFilePath();
-//		if (file != null) {
-//			loadPersonDataFromFile(file);
-//		}
 
 		Scene scene = new Scene(rootLayout);
 		primaryStage.setScene(scene);
@@ -85,18 +73,10 @@ public class Main extends Application {
 	}
 
 	private void showPersonOverview() {
-		URL resource = Main.class.getResource("/PersonDetails.fxml");
-		final FXMLLoader loader = new FXMLLoader(resource, null);
-		AnchorPane personOverview;
-		try {
-			personOverview = loader.load();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		FXMLLoader loader = FXMLLoader2.loadFXML("/PersonDetails.fxml");
 		personDetailsView = loader.getController();
 		PersonDetailsViewBinder.bindView(personDetailsView, mate);
-		rootLayout.setCenter(personOverview);
-
+		rootLayout.setCenter(loader.getRoot());
 	}
 
 }

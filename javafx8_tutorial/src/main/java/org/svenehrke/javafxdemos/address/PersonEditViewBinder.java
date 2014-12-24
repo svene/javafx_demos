@@ -5,6 +5,8 @@ import org.svenehrke.javafxdemos.address.model.Person;
 
 public class PersonEditViewBinder {
 
+	// todo: date format incorrect
+
 	public static void bindController(PersonEditDialogView view, Stage dialogStage, Model model, Person workPerson) {
 
 		// Bind widgets and workPerson:
