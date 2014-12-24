@@ -2,18 +2,21 @@
 package org.svenehrke.javafxdemos.address.model;
 
 import javafx.beans.property.*;
+import org.svenehrke.javafxdemos.address.util.DateUtil;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 public class Person {
 
 	private StringProperty firstName;
 	private StringProperty lastName;
 	private StringProperty street;
-	private IntegerProperty postalCode;
+	private StringProperty postalCode;
 	private StringProperty city;
-	private ObjectProperty<LocalDate> birthday;
+	private StringProperty birthday;
 
 	public Person() {
 		this(null, null);
@@ -24,9 +27,23 @@ public class Person {
 
 		// Some initial dummy data, just for convenient testing.
 		this.street = new SimpleStringProperty("some street");
-		this.postalCode = new SimpleIntegerProperty(1234);
+		this.postalCode = new SimpleStringProperty("1234");
 		this.city = new SimpleStringProperty("some city");
-		this.birthday = new SimpleObjectProperty<LocalDate>(LocalDate.of(1999, 2, 21));
+		this.birthday = new SimpleStringProperty("21.02.1999");
+	}
+
+	public Person populateFromPerson(Person other) {
+		this.firstName.setValue(other.firstName.getValue());
+		this.lastName.setValue(other.lastName.getValue());
+		this.street.setValue(other.street.getValue());
+		this.postalCode.setValue(other.postalCode.getValue());
+		this.city.setValue(other.city.getValue());
+		this.birthday.setValue(other.birthday.getValue());
+		return this;
+	}
+
+	public List<StringProperty> allProperties() {
+		return Arrays.asList(firstName, lastName, street, postalCode, city, birthday);
 	}
 
 	@XmlAttribute
@@ -70,14 +87,14 @@ public class Person {
 
 	@XmlAttribute
 	public int getPostalCode() {
-		return postalCode.get();
+		return Integer.parseInt(postalCode.get());
 	}
 
 	public void setPostalCode(int postalCode) {
-		this.postalCode.set(postalCode);
+		this.postalCode.set(String.valueOf(postalCode));
 	}
 
-	public IntegerProperty postalCodeProperty() {
+	public StringProperty postalCodeProperty() {
 		return postalCode;
 	}
 
@@ -96,14 +113,14 @@ public class Person {
 
 	@XmlAttribute
 	public LocalDate getBirthday() {
-		return birthday.get();
+		return DateUtil.parse(birthday.get());
 	}
 
 	public void setBirthday(LocalDate birthday) {
-		this.birthday.set(birthday);
+		this.birthday.set(DateUtil.format(birthday));
 	}
 
-	public ObjectProperty<LocalDate> birthdayProperty() {
+	public StringProperty birthdayProperty() {
 		return birthday;
 	}
 

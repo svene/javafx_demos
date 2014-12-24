@@ -7,7 +7,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.svenehrke.javafxdemos.address.model.Person;
 
-public class AbstractPersonOverviewController {
+public class PersonDetailsView {
 
 	@FXML
 	TableView<Person> personTable;
@@ -38,5 +38,4 @@ public class AbstractPersonOverviewController {
 
 	@FXML
 	Button deleteButton;
-
 }
