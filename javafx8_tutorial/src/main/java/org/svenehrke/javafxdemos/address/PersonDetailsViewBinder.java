@@ -4,20 +4,19 @@ import javafx.beans.binding.Bindings;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.model.Person;
-import org.svenehrke.javafxdemos.infra.Mate;
 
 public class PersonDetailsViewBinder {
 
-	public static void bindView(PersonDetailsView view, Mate mate) {
+	public static void bindView(PersonDetailsView view, Model model, Stage primaryStage) {
 		// Initialize the person table with the two columns.
 		view.firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
 		view.lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
 
-		view.newButton.setOnAction(event -> handleNewPerson(mate.getPrimaryStage(), mate.getModel()));
-		view.editButton.setOnAction(event -> handleEditPerson(mate.getPrimaryStage(), mate.getModel()) );
-		view.deleteButton.setOnAction(event -> handleDelete(mate.getModel()) );
+		view.newButton.setOnAction(event -> handleNewPerson(primaryStage, model));
+		view.editButton.setOnAction(event -> handleEditPerson(primaryStage, model) );
+		view.deleteButton.setOnAction(event -> handleDelete(model) );
 
-		Person cp = mate.getModel().currentPerson;
+		Person cp = model.currentPerson;
 		view.firstNameLabel.textProperty().bind(cp.firstNameProperty());
 		view.lastNameLabel.textProperty().bind(cp.lastNameProperty());
 		view.streetLabel.textProperty().bind(cp.streetProperty());
@@ -26,12 +25,12 @@ public class PersonDetailsViewBinder {
 		view.birthdayLabel.textProperty().bind(Bindings.convert(cp.birthdayProperty()));
 
 		// When model.selectedModelIndex changes: change selected row of table:
-		mate.getModel().selectedModelIndex.addListener((s,o,n) -> {
-			view.personTable.getSelectionModel().select(mate.getModel().selectedModelIndex.intValue());
+		model.selectedModelIndex.addListener((s,o,n) -> {
+			view.personTable.getSelectionModel().select(model.selectedModelIndex.intValue());
 		});
 
-		view.personTable.setItems(mate.getModel().getPeople());
-		view.personTable.getSelectionModel().selectedIndexProperty().addListener((s, o, n) -> mate.getModel().selectedModelIndex.setValue(n));
+		view.personTable.setItems(model.getPeople());
+		view.personTable.getSelectionModel().selectedIndexProperty().addListener((s, o, n) -> model.selectedModelIndex.setValue(n));
 	}
 
 	private static void handleNewPerson(Stage primaryStage, Model model) {

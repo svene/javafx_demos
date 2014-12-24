@@ -9,7 +9,6 @@ import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.model.PersonListWrapper;
 import org.svenehrke.javafxdemos.infra.ViewAndRoot;
 import org.svenehrke.javafxdemos.infra.FXMLLoader2;
-import org.svenehrke.javafxdemos.infra.Mate;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -19,43 +18,43 @@ public class RootLayoutViewBinder {
 
 	AddressFileHelper addressFileHelper = new AddressFileHelper();
 
-	public void bindView(RootLayoutView view, Mate mate) {
+	public void bindView(RootLayoutView view, Model model, Stage primaryStage) {
 
-		view.miNew.setOnAction(event -> handleNewAddressBookRequest(mate));
-		view.miOpen.setOnAction(event -> handleOpenFileRequest(mate));
-		view.miSave.setOnAction(event -> handleSaveRequest(mate) );
-		view.miSaveAs.setOnAction(event -> handleSaveAs(mate.getPrimaryStage(), mate.getModel()) );
-		view.miShowStatistics.setOnAction(event -> showBirthdayStatistics(mate.getPrimaryStage(), mate.getModel() ));
+		view.miNew.setOnAction(event -> handleNewAddressBookRequest(model, primaryStage));
+		view.miOpen.setOnAction(event -> handleOpenFileRequest(model, primaryStage));
+		view.miSave.setOnAction(event -> handleSaveRequest(model, primaryStage) );
+		view.miSaveAs.setOnAction(event -> handleSaveAs(primaryStage, model) );
+		view.miShowStatistics.setOnAction(event -> showBirthdayStatistics(primaryStage, model));
 	}
 
-	private void handleNewAddressBookRequest(Mate mate) {
-		mate.getModel().getPeople().clear();
-		addressFileHelper.setPersonFilePath(null, mate.getPrimaryStage());
+	private void handleNewAddressBookRequest(Model model, Stage primaryStage) {
+		model.getPeople().clear();
+		addressFileHelper.setPersonFilePath(null, primaryStage);
 	}
 
 	/**
 	 * Opens a FileChooser to let the user select an address book to load.
 	 */
-	private void handleOpenFileRequest(Mate mate) {
+	private void handleOpenFileRequest(Model model, Stage primaryStage) {
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml"));
 
 		// Show save file dialog
-		File file = fileChooser.showOpenDialog(mate.getPrimaryStage());
+		File file = fileChooser.showOpenDialog(primaryStage);
 
 		if (file != null) {
-			addressFileHelper.loadPersonDataFromFile(file, mate.getModel(), mate.getPrimaryStage());
+			addressFileHelper.loadPersonDataFromFile(file, model, primaryStage);
 		}
 	}
 
-	private void handleSaveRequest(Mate mate) {
+	private void handleSaveRequest(Model model, Stage primaryStage) {
 		File personFile = addressFileHelper.getPersonFilePath();
 		if (personFile != null) {
-			savePersonDataToFile(personFile, mate.getPrimaryStage(), mate.getModel());
+			savePersonDataToFile(personFile, primaryStage, model);
 		} else {
-			handleSaveAs(mate.getPrimaryStage(), mate.getModel());
+			handleSaveAs(primaryStage, model);
 		}
 	}
 

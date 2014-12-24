@@ -24,13 +24,11 @@ public class Main extends Application {
 	Stage primaryStage;
 	private BorderPane rootLayout;
 	Model model;
-	Mate mate;
 
 	@Override
 	public void init() throws Exception {
 		model = new Model();
 		model.getPeople().addAll(SampleData.getPeople());
-		mate = new Mate();
 	}
 
 	@Override
@@ -41,8 +39,6 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		initMate(primaryStage);
-
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("AddressApp");
 
@@ -52,19 +48,13 @@ public class Main extends Application {
 		showPersonOverview();
 	}
 
-	private void initMate(Stage primaryStage) {
-
-		mate.setModel(model);
-		mate.setPrimaryStage(primaryStage);
-	}
-
 	private void initRootLayout() {
 
 		// Give the view access to the main app.
 		final ViewAndRoot<RootLayoutView, BorderPane> cr = FXMLLoader2.loadFXML("/RootLayout.fxml");
 		RootLayoutView view = cr.getView();
 		rootLayout = cr.getRoot();
-		new RootLayoutViewBinder().bindView(view, mate);
+		new RootLayoutViewBinder().bindView(view, model, primaryStage);
 
 		Scene scene = new Scene(rootLayout);
 		primaryStage.setScene(scene);
@@ -74,7 +64,7 @@ public class Main extends Application {
 	private void showPersonOverview() {
 		final ViewAndRoot<PersonDetailsView, Pane> cr = FXMLLoader2.loadFXML("/PersonDetails.fxml");
 		personDetailsView = cr.getView();
-		PersonDetailsViewBinder.bindView(personDetailsView, mate);
+		PersonDetailsViewBinder.bindView(personDetailsView, model, primaryStage);
 		rootLayout.setCenter(cr.getRoot());
 	}
 

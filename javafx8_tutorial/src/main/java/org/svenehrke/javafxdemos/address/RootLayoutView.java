@@ -2,8 +2,6 @@ package org.svenehrke.javafxdemos.address;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
-import org.controlsfx.dialog.Dialogs;
-import org.svenehrke.javafxdemos.infra.Mate;
 
 /**
  * The controller for the root layout. The root layout provides the basic
