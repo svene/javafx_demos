@@ -6,10 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.svenehrke.javafxdemos.address.model.SampleData;
 import org.svenehrke.javafxdemos.infra.*;
-
-import java.io.IOException;
-import java.net.URL;
 
 /**
  * Like 'Main' but the pane is loaded explicitly which allows to configure the controller (GreetController2 in this example) in the code
@@ -31,6 +29,7 @@ public class Main extends Application {
 	@Override
 	public void init() throws Exception {
 		model = new Model();
+		model.getPeople().addAll(SampleData.getPeople());
 		mate = new Mate();
 	}
 

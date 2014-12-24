@@ -27,8 +27,8 @@ public class AddressFileHelper {
 			System.out.println("file.getAbsolutePath() = " + file.getAbsolutePath());
 			PersonListWrapper wrapper = (PersonListWrapper) um.unmarshal(file);
 
-			model.getPersonData().clear();
-			model.getPersonData().addAll(wrapper.getPersons());
+			model.getPeople().clear();
+			model.getPeople().addAll(wrapper.getPersons());
 
 			// Save the file path to the registry.
 			setPersonFilePath(file, primaryStage);
@@ -74,10 +74,6 @@ public class AddressFileHelper {
 	public File getPersonFilePath() {
 		Preferences prefs = Preferences.userNodeForPackage(Main.class);
 		String filePath = prefs.get("filePath", null);
-		if (filePath != null) {
-			return new File(filePath);
-		} else {
-			return null;
-		}
+		return filePath == null ? null : new File(filePath);
 	}
 }

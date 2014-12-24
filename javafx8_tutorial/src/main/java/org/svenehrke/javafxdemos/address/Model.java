@@ -2,6 +2,7 @@ package org.svenehrke.javafxdemos.address;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.svenehrke.javafxdemos.address.model.Person;
 import org.svenehrke.javafxdemos.address.model.SampleData;
@@ -14,7 +15,7 @@ public class Model {
 		NEW, EDIT, UNDEFINED
 	}
 
-	private SampleData sampleData;
+	private ObservableList<Person> people = FXCollections.observableArrayList();
 
 	public IntegerProperty selectedModelIndex = new SimpleIntegerProperty(-1);
 
@@ -30,12 +31,11 @@ public class Model {
 	public final StringProperty validationMessage = new SimpleStringProperty();
 
 	public Model() {
-		sampleData = new SampleData();
 
 		// Update 'currentPerson', e.g. when table selection changes:
 		selectedModelIndex.addListener((s, o, n) -> {
 				if (n.intValue() >= 0) {
-					Person person = getPersonData().get(n.intValue());
+					Person person = getPeople().get(n.intValue());
 					currentPerson.populateFromPerson(person);
 				}
 			}
@@ -57,8 +57,8 @@ public class Model {
 			currentPerson.populateFromPerson(workPerson);
 		});
 		ImpulseListeners.addImpulseListener(newOkButtonClicked, () -> {
-			getPersonData().add(new Person().populateFromPerson(workPerson));
-			selectedModelIndex.setValue(getPersonData().size() - 1);
+			getPeople().add(new Person().populateFromPerson(workPerson));
+			selectedModelIndex.setValue(getPeople().size() - 1);
 		});
 
 		workPerson.allProperties().forEach(sp -> {
@@ -75,12 +75,12 @@ public class Model {
 	private void copyPropertyOnChange(Person sourcePerson, Function<Person, StringProperty> pf) {
 		pf.apply(sourcePerson).addListener((s, o, n) -> {
 			int idx = selectedModelIndex.get();
-			pf.apply(getPersonData().get(idx)).setValue(n);
+			pf.apply(getPeople().get(idx)).setValue(n);
 		});
 	}
 
-	public ObservableList<Person> getPersonData() {
-		return sampleData.getPersonData();
+	public ObservableList<Person> getPeople() {
+		return people;
 	}
 
 	public Person getCurrentPerson() {

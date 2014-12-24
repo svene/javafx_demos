@@ -30,7 +30,7 @@ public class PersonDetailsViewBinder {
 			view.personTable.getSelectionModel().select(mate.getModel().selectedModelIndex.intValue());
 		});
 
-		view.personTable.setItems(mate.getModel().getPersonData());
+		view.personTable.setItems(mate.getModel().getPeople());
 		view.personTable.getSelectionModel().selectedIndexProperty().addListener((s, o, n) -> mate.getModel().selectedModelIndex.setValue(n));
 	}
 
@@ -64,7 +64,7 @@ public class PersonDetailsViewBinder {
 	private static void handleDelete(Model model) {
 		int selectedIndex = model.selectedModelIndex.intValue();
 		if (selectedIndex >= 0) {
-			model.getPersonData().remove(selectedIndex);
+			model.getPeople().remove(selectedIndex);
 		} else {
 			// Nothing selected.
 			Dialogs.create()

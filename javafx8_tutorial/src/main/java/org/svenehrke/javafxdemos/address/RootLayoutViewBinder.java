@@ -30,7 +30,7 @@ public class RootLayoutViewBinder {
 	}
 
 	private void handleNewAddressBookRequest(Mate mate) {
-		mate.getModel().getPersonData().clear();
+		mate.getModel().getPeople().clear();
 		addressFileHelper.setPersonFilePath(null, mate.getPrimaryStage());
 	}
 
@@ -76,7 +76,7 @@ public class RootLayoutViewBinder {
 
 			// Wrapping our person data.
 			PersonListWrapper wrapper = new PersonListWrapper();
-			wrapper.setPersons(model.getPersonData());
+			wrapper.setPersons(model.getPeople());
 
 			// Marshalling and saving XML to the file.
 			m.marshal(wrapper, file);
@@ -136,7 +136,7 @@ public class RootLayoutViewBinder {
 
 			// Set the persons into the view.
 			BirthdayStatisticsView view = loader.getController();
-			view.setPersonData(model.getPersonData());
+			view.setPersonData(model.getPeople());
 
 			dialogStage.show();
 

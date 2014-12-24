@@ -5,22 +5,19 @@ import javafx.collections.ObservableList;
 
 public class SampleData {
 
-	private ObservableList<Person> personData = FXCollections.observableArrayList();
 
-	public SampleData() {
-		personData.add(new Person("Hans", "Muster"));
-		personData.add(new Person("Ruth", "Mueller"));
-		personData.add(new Person("Heinz", "Kurz"));
-		personData.add(new Person("Cornelia", "Meier"));
-		personData.add(new Person("Werner", "Meyer"));
-		personData.add(new Person("Lydia", "Kunz"));
-		personData.add(new Person("Anna", "Best"));
-		personData.add(new Person("Stefan", "Meier"));
-		personData.add(new Person("Martin", "Mueller"));
-	}
-
-	public ObservableList<Person> getPersonData() {
-		return personData;
+	public static ObservableList<Person> getPeople() {
+		ObservableList<Person> result = FXCollections.observableArrayList();
+		result.add(new Person("Hans", "Muster"));
+		result.add(new Person("Ruth", "Mueller"));
+		result.add(new Person("Heinz", "Kurz"));
+		result.add(new Person("Cornelia", "Meier"));
+		result.add(new Person("Werner", "Meyer"));
+		result.add(new Person("Lydia", "Kunz"));
+		result.add(new Person("Anna", "Best"));
+		result.add(new Person("Stefan", "Meier"));
+		result.add(new Person("Martin", "Mueller"));
+		return result;
 	}
 
 }
