@@ -3,29 +3,27 @@ package org.svenehrke.javafxdemos.address.model;
 
 import javafx.beans.property.*;
 import org.svenehrke.javafxdemos.address.util.DateUtil;
+import org.svenehrke.javafxdemos.infra.Attribute;
+import org.svenehrke.javafxdemos.infra.ModelStore;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 public class Person {
 
 	private String id;
-	private StringProperty firstName;
+	private Attribute firstName;
 	private StringProperty lastName;
 	private StringProperty street;
 	private StringProperty postalCode;
 	private StringProperty city;
 	private StringProperty birthday;
 
-	public Person() {
-		this(null, null);
-	}
-	public Person(String firstNameProperty, String lastNameProperty) {
-		id = UUID.randomUUID().toString();
-		this.firstName = new SimpleStringProperty(firstNameProperty);
+	public Person(String pmId, String lastNameProperty, Attribute firstNameAttribute) {
+		this.id = pmId == null ? ModelStore.newId() : pmId;
+		this.firstName = firstNameAttribute;
 		this.lastName = new SimpleStringProperty(lastNameProperty);
 
 		// Some initial dummy data, just for convenient testing.
@@ -35,9 +33,13 @@ public class Person {
 		this.birthday = new SimpleStringProperty("21.02.1999");
 	}
 
-	public Person populateFromPerson(Person other) {
+	public Person populateFromPerson(Person other, boolean usingQualifier) {
 		this.id = other.id;
-		this.firstName.setValue(other.firstName.getValue());
+		try {
+			this.firstName.populateFromAttribute(other.firstName, usingQualifier);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		this.lastName.setValue(other.lastName.getValue());
 		this.street.setValue(other.street.getValue());
 		this.postalCode.setValue(other.postalCode.getValue());
@@ -47,7 +49,7 @@ public class Person {
 	}
 
 	public List<StringProperty> allProperties() {
-		return Arrays.asList(firstName, lastName, street, postalCode, city, birthday);
+		return Arrays.asList(lastName, street, postalCode, city, birthday);
 	}
 
 	@XmlAttribute
@@ -61,15 +63,15 @@ public class Person {
 
 	@XmlAttribute
 	public String getFirstName() {
-		return firstName.get();
+		return firstName.getValue();
 	}
 
 	public void setFirstName(String firstName) {
-		this.firstName.set(firstName);
+		this.firstName.setValue(firstName);
 	}
 
 	public StringProperty firstNameProperty() {
-		return firstName;
+		return firstName.getValueProperty();
 	}
 
 	@XmlAttribute
@@ -140,7 +142,8 @@ public class Person {
 	@Override
 	public String toString() {
 		return "Person{" +
-			"id=" + id +
+			"sysid=" + System.identityHashCode(this) +
+			", id=" + id +
 			", firstName=" + firstName.getValue() +
 			", lastName=" + lastName.getValue() +
 			", street=" + street.getValue() +

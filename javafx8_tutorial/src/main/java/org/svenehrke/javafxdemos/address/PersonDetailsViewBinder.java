@@ -3,15 +3,16 @@ package org.svenehrke.javafxdemos.address;
 import javafx.beans.binding.Bindings;
 import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.model.Person;
+import org.svenehrke.javafxdemos.infra.ModelStore;
 
 public class PersonDetailsViewBinder {
 
-	public static void bindView(PersonDetailsView view, Model model) {
+	public static void bindView(PersonDetailsView view, Model model, ModelStore modelStore) {
 		// Initialize the person table with the two columns.
 		view.firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
 		view.lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
 
-		view.newButton.setOnAction(event -> handleNewPerson(model));
+		view.newButton.setOnAction(event -> handleNewPerson(model, modelStore));
 		view.editButton.setOnAction(event -> handleEditPerson(model) );
 		view.deleteButton.setOnAction(event -> handleDelete(model) );
 
@@ -32,8 +33,8 @@ public class PersonDetailsViewBinder {
 		view.personTable.getSelectionModel().selectedIndexProperty().addListener((s, o, n) -> model.selectedModelIndex.setValue(n));
 	}
 
-	private static void handleNewPerson(Model model) {
-		model.workPerson.populateFromPerson(model.emptyPerson);
+	private static void handleNewPerson(Model model, ModelStore modelStore) {
+		model.workPerson.populateFromPerson(modelStore.newEmptyPerson(), false);
 		model.editModeProperty.setValue(Model.EditMode.NEW);
 		PersonDialogs.showPersonDialog(model);
 	}
@@ -45,7 +46,7 @@ public class PersonDetailsViewBinder {
 	 */
 	private static void handleEditPerson(Model model) {
 		if (model.currentPerson != null) {
-			model.getWorkPerson().populateFromPerson(model.currentPerson);
+			model.getWorkPerson().populateFromPerson(model.currentPerson, false);
 			model.editModeProperty.setValue(Model.EditMode.EDIT);
 			PersonDialogs.showPersonDialog(model);
 		} else {

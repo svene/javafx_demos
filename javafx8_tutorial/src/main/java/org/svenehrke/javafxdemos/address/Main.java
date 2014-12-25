@@ -15,6 +15,8 @@ import org.svenehrke.javafxdemos.infra.*;
  */
 public class Main extends Application {
 
+	ModelStore modelStore;
+
 	public static void main(String[] args) {
 		Application.launch(Main.class, args);
 	}
@@ -31,8 +33,8 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		Model model = new Model(primaryStage);
-		model.getPeople().addAll(SampleData.getPeople());
+		Model model = new Model(primaryStage, modelStore = new ModelStore());
+		model.getPeople().addAll(SampleData.getPeople(modelStore));
 		model.getPrimaryStage().setTitle("AddressApp");
 
 		model.getPrimaryStage().getIcons().add(new Image(this.getClass().getResourceAsStream("/Address_Book.png")));
@@ -60,7 +62,7 @@ public class Main extends Application {
 	private void showPersonOverview(BorderPane rootLayout, Model model) {
 		final ViewAndRoot<PersonDetailsView, Pane> cr = FXMLLoader2.loadFXML("/PersonDetails.fxml");
 		PersonDetailsView personDetailsView = cr.getView();
-		PersonDetailsViewBinder.bindView(personDetailsView, model);
+		PersonDetailsViewBinder.bindView(personDetailsView, model, modelStore);
 		rootLayout.setCenter(cr.getRoot());
 	}
 

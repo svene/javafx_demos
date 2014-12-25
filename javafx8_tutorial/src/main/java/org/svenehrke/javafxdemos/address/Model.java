@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import org.svenehrke.javafxdemos.address.model.Person;
 import org.svenehrke.javafxdemos.infra.ImpulseListeners;
+import org.svenehrke.javafxdemos.infra.ModelStore;
 
 import java.util.function.Function;
 
@@ -17,13 +18,12 @@ public class Model {
 
 	private Stage primaryStage;
 
-	private ObservableList<Person> people = FXCollections.observableArrayList();
+	private ModelStore modelStore;
 
 	public IntegerProperty selectedModelIndex = new SimpleIntegerProperty(-1);
 
-	public final Person currentPerson = newEmptyPerson();
-	public final Person workPerson = newEmptyPerson();
-	public final Person emptyPerson = newEmptyPerson();
+	public final Person currentPerson;
+	public final Person workPerson;
 	public final BooleanProperty okButtonClicked = new SimpleBooleanProperty();
 	private final BooleanProperty editOkButtonClicked = new SimpleBooleanProperty();
 	private final BooleanProperty newOkButtonClicked = new SimpleBooleanProperty();
@@ -34,21 +34,25 @@ public class Model {
 
 	public final StringProperty applicationTitle = new SimpleStringProperty();
 
-	public Model(Stage primaryStage) {
+	public Model(Stage primaryStage, ModelStore modelStore) {
 
 		this.primaryStage = primaryStage;
+		this.modelStore = modelStore;
+
+		currentPerson = modelStore.newEmptyPerson();
+		workPerson = modelStore.newEmptyPerson();
 
 		// Update 'currentPerson', e.g. when table selection changes:
 		selectedModelIndex.addListener((s, o, n) -> {
 				if (n.intValue() >= 0) {
 					Person person = getPeople().get(n.intValue());
-					currentPerson.populateFromPerson(person);
+					currentPerson.populateFromPerson(person, true);
 				}
 			}
 		);
 
 		// Update item in 'sampleData' to which 'currentPerson' corresponds to when 'currentPerson' changes (e.g. when it is edited):
-		copyPropertyOnChange(currentPerson, Person::firstNameProperty);
+//		copyPropertyOnChange(currentPerson, Person::firstNameProperty);
 		copyPropertyOnChange(currentPerson, Person::lastNameProperty);
 		copyPropertyOnChange(currentPerson, Person::streetProperty);
 		copyPropertyOnChange(currentPerson, Person::postalCodeProperty);
@@ -60,10 +64,10 @@ public class Model {
 		newOkButtonClicked.bind(okButtonClicked.and(Bindings.equal(editModeProperty, EditMode.NEW))); // OK button for mode NEW triggered (derived from okButtonClicked)
 
 		ImpulseListeners.addImpulseListener(editOkButtonClicked, () -> {
-			currentPerson.populateFromPerson(workPerson);
+			currentPerson.populateFromPerson(workPerson, false);
 		});
 		ImpulseListeners.addImpulseListener(newOkButtonClicked, () -> {
-			getPeople().add(new Person().populateFromPerson(workPerson));
+			getPeople().add(modelStore.newPerson(ModelStore.newId(), "", "").populateFromPerson(workPerson, true));
 			selectedModelIndex.setValue(getPeople().size() - 1);
 		});
 
@@ -86,7 +90,7 @@ public class Model {
 	}
 
 	public ObservableList<Person> getPeople() {
-		return people;
+		return modelStore.getPeople();
 	}
 
 	public Person getCurrentPerson() {
@@ -98,16 +102,10 @@ public class Model {
 	}
 
 	public Person getPersonById(String id) {
-		return getPeople().stream().filter((Person p) -> p.getId().equals(id)).findFirst().get();
+		ObservableList<Person> people = getPeople();
+		return people.stream().filter((Person p) -> p.getId().equals(id)).findFirst().orElseGet(null);
 	}
 
-	private Person newEmptyPerson() {
-		Person result = new Person("", "");
-		result.setCity("");
-		result.setPostalCode(0);
-		result.setStreet("");
-		return result;
-	}
 	private void copyPropertyOnChange(Person sourcePerson, Function<Person, StringProperty> pf) {
 		pf.apply(sourcePerson).addListener((s, o, n) -> {
 			Person targetPerson = getPersonById(sourcePerson.getId());
