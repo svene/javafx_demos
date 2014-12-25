@@ -29,7 +29,7 @@ public class ModelStore {
 	}
 
 	public Person newPerson(String pmId, String firstName, String lastName) {
-		return new Person(pmId, lastName, newAttribute(firstName, pmId + "_firstname") );
+		return new Person(pmId, newAttribute(firstName, pmId + "_firstname"), newAttribute(lastName, pmId + "lastname") );
 	}
 	public Attribute newAttribute(String value, String qualifier) {
 		Attribute result = new Attribute(value, qualifier);

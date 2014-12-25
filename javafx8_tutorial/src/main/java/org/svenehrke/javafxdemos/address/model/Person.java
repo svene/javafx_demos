@@ -15,16 +15,16 @@ public class Person {
 
 	private String id;
 	private Attribute firstName;
-	private StringProperty lastName;
+	private Attribute lastName;
 	private StringProperty street;
 	private StringProperty postalCode;
 	private StringProperty city;
 	private StringProperty birthday;
 
-	public Person(String pmId, String lastNameProperty, Attribute firstNameAttribute) {
+	public Person(String pmId, Attribute firstNameAttribute, Attribute lastNameAttribute) {
 		this.id = pmId == null ? ModelStore.newId() : pmId;
 		this.firstName = firstNameAttribute;
-		this.lastName = new SimpleStringProperty(lastNameProperty);
+		this.lastName = lastNameAttribute;
 
 		// Some initial dummy data, just for convenient testing.
 		this.street = new SimpleStringProperty("some street");
@@ -35,12 +35,8 @@ public class Person {
 
 	public Person populateFromPerson(Person other, boolean usingQualifier) {
 		this.id = other.id;
-		try {
-			this.firstName.populateFromAttribute(other.firstName, usingQualifier);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		this.lastName.setValue(other.lastName.getValue());
+		this.firstName.populateFromAttribute(other.firstName, usingQualifier);
+		this.lastName.populateFromAttribute(other.lastName, usingQualifier);
 		this.street.setValue(other.street.getValue());
 		this.postalCode.setValue(other.postalCode.getValue());
 		this.city.setValue(other.city.getValue());
@@ -49,7 +45,7 @@ public class Person {
 	}
 
 	public List<StringProperty> allProperties() {
-		return Arrays.asList(lastName, street, postalCode, city, birthday);
+		return Arrays.asList(street, postalCode, city, birthday);
 	}
 
 	@XmlAttribute
@@ -76,15 +72,15 @@ public class Person {
 
 	@XmlAttribute
 	public String getLastName() {
-		return lastName.get();
+		return lastName.getValueProperty().get();
 	}
 
 	public void setLastName(String lastName) {
-		this.lastName.set(lastName);
+		this.lastName.setValue(lastName);
 	}
 
 	public StringProperty lastNameProperty() {
-		return lastName;
+		return lastName.getValueProperty();
 	}
 
 	@XmlAttribute
