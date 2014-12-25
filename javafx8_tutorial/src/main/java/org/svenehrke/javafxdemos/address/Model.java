@@ -97,6 +97,10 @@ public class Model {
 		return workPerson;
 	}
 
+	public Person getPersonById(String id) {
+		return getPeople().stream().filter((Person p) -> p.getId().equals(id)).findFirst().get();
+	}
+
 	private Person newEmptyPerson() {
 		Person result = new Person("", "");
 		result.setCity("");
@@ -106,8 +110,8 @@ public class Model {
 	}
 	private void copyPropertyOnChange(Person sourcePerson, Function<Person, StringProperty> pf) {
 		pf.apply(sourcePerson).addListener((s, o, n) -> {
-			int idx = selectedModelIndex.get();
-			pf.apply(getPeople().get(idx)).setValue(n);
+			Person targetPerson = getPersonById(sourcePerson.getId());
+			pf.apply(targetPerson).setValue(n);
 		});
 	}
 

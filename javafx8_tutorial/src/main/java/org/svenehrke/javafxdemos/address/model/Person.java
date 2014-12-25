@@ -8,9 +8,11 @@ import javax.xml.bind.annotation.XmlAttribute;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class Person {
 
+	private String id;
 	private StringProperty firstName;
 	private StringProperty lastName;
 	private StringProperty street;
@@ -22,6 +24,7 @@ public class Person {
 		this(null, null);
 	}
 	public Person(String firstNameProperty, String lastNameProperty) {
+		id = UUID.randomUUID().toString();
 		this.firstName = new SimpleStringProperty(firstNameProperty);
 		this.lastName = new SimpleStringProperty(lastNameProperty);
 
@@ -33,6 +36,7 @@ public class Person {
 	}
 
 	public Person populateFromPerson(Person other) {
+		this.id = other.id;
 		this.firstName.setValue(other.firstName.getValue());
 		this.lastName.setValue(other.lastName.getValue());
 		this.street.setValue(other.street.getValue());
@@ -44,6 +48,15 @@ public class Person {
 
 	public List<StringProperty> allProperties() {
 		return Arrays.asList(firstName, lastName, street, postalCode, city, birthday);
+	}
+
+	@XmlAttribute
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	@XmlAttribute
@@ -127,7 +140,8 @@ public class Person {
 	@Override
 	public String toString() {
 		return "Person{" +
-			"firstName=" + firstName.getValue() +
+			"id=" + id +
+			", firstName=" + firstName.getValue() +
 			", lastName=" + lastName.getValue() +
 			", street=" + street.getValue() +
 			", postalCode=" + postalCode.getValue() +
