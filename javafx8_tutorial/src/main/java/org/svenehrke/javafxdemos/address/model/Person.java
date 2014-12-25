@@ -16,21 +16,21 @@ public class Person {
 	private String id;
 	private Attribute firstName;
 	private Attribute lastName;
-	private StringProperty street;
-	private StringProperty postalCode;
-	private StringProperty city;
-	private StringProperty birthday;
+	private Attribute street;
+	private Attribute postalCode;
+	private Attribute city;
+	private Attribute birthday;
 
-	public Person(String pmId, Attribute firstNameAttribute, Attribute lastNameAttribute) {
+	public Person(ModelStore modelStore, String pmId, Attribute firstNameAttribute, Attribute lastNameAttribute) {
 		this.id = pmId == null ? ModelStore.newId() : pmId;
 		this.firstName = firstNameAttribute;
 		this.lastName = lastNameAttribute;
 
 		// Some initial dummy data, just for convenient testing.
-		this.street = new SimpleStringProperty("some street");
-		this.postalCode = new SimpleStringProperty("1234");
-		this.city = new SimpleStringProperty("some city");
-		this.birthday = new SimpleStringProperty("21.02.1999");
+		this.street = modelStore.newAttribute("some street", pmId + "street");
+		this.postalCode = modelStore.newAttribute("1234", pmId + "postalcode");
+		this.city = modelStore.newAttribute("some city", pmId + "city");
+		this.birthday = modelStore.newAttribute("21.02.1999", pmId + "birthday");
 	}
 
 	public Person populateFromPerson(Person other, boolean usingQualifier) {
@@ -45,7 +45,7 @@ public class Person {
 	}
 
 	public List<StringProperty> allProperties() {
-		return Arrays.asList(street, postalCode, city, birthday);
+		return Arrays.asList(firstNameProperty(), lastNameProperty(), streetProperty(), postalCodeProperty(), cityProperty(), birthdayProperty());
 	}
 
 	@XmlAttribute
@@ -72,7 +72,7 @@ public class Person {
 
 	@XmlAttribute
 	public String getLastName() {
-		return lastName.getValueProperty().get();
+		return lastName.getValue();
 	}
 
 	public void setLastName(String lastName) {
@@ -85,54 +85,54 @@ public class Person {
 
 	@XmlAttribute
 	public String getStreet() {
-		return street.get();
+		return street.getValue();
 	}
 
 	public void setStreet(String street) {
-		this.street.set(street);
+		this.street.setValue(street);
 	}
 
 	public StringProperty streetProperty() {
-		return street;
+		return street.getValueProperty();
 	}
 
 	@XmlAttribute
 	public int getPostalCode() {
-		return Integer.parseInt(postalCode.get());
+		return Integer.parseInt(postalCode.getValue());
 	}
 
 	public void setPostalCode(int postalCode) {
-		this.postalCode.set(String.valueOf(postalCode));
+		this.postalCode.setValue(String.valueOf(postalCode));
 	}
 
 	public StringProperty postalCodeProperty() {
-		return postalCode;
+		return postalCode.getValueProperty();
 	}
 
 	@XmlAttribute
 	public String getCity() {
-		return city.get();
+		return city.getValue();
 	}
 
 	public void setCity(String city) {
-		this.city.set(city);
+		this.city.setValue(city);
 	}
 
 	public StringProperty cityProperty() {
-		return city;
+		return city.getValueProperty();
 	}
 
 	@XmlAttribute
 	public LocalDate getBirthday() {
-		return DateUtil.parse(birthday.get());
+		return DateUtil.parse(birthday.getValue());
 	}
 
 	public void setBirthday(LocalDate birthday) {
-		this.birthday.set(DateUtil.format(birthday));
+		this.birthday.setValue(DateUtil.format(birthday));
 	}
 
 	public StringProperty birthdayProperty() {
-		return birthday;
+		return birthday.getValueProperty();
 	}
 
 	@Override

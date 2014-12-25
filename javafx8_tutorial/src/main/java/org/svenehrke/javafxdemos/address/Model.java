@@ -2,14 +2,11 @@ package org.svenehrke.javafxdemos.address;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import org.svenehrke.javafxdemos.address.model.Person;
 import org.svenehrke.javafxdemos.infra.ImpulseListeners;
 import org.svenehrke.javafxdemos.infra.ModelStore;
-
-import java.util.function.Function;
 
 public class Model {
 	public static enum EditMode {
@@ -50,13 +47,6 @@ public class Model {
 				}
 			}
 		);
-
-		// Update item in 'sampleData' to which 'currentPerson' corresponds to when 'currentPerson' changes (e.g. when it is edited):
-		copyPropertyOnChange(currentPerson, Person::lastNameProperty);
-		copyPropertyOnChange(currentPerson, Person::streetProperty);
-		copyPropertyOnChange(currentPerson, Person::postalCodeProperty);
-		copyPropertyOnChange(currentPerson, Person::cityProperty);
-		copyPropertyOnChange(currentPerson, Person::birthdayProperty);
 
 		ImpulseListeners.bindImpulseResetter(okButtonClicked); // triggers impulse: 'OK button clicked'
 		editOkButtonClicked.bind(okButtonClicked.and(Bindings.equal(editModeProperty, EditMode.EDIT))); // OK button for mode EDIT triggered (derived from okButtonClicked)
@@ -103,13 +93,6 @@ public class Model {
 	public Person getPersonById(String id) {
 		ObservableList<Person> people = getPeople();
 		return people.stream().filter((Person p) -> p.getId().equals(id)).findFirst().orElseGet(null);
-	}
-
-	private void copyPropertyOnChange(Person sourcePerson, Function<Person, StringProperty> pf) {
-		pf.apply(sourcePerson).addListener((s, o, n) -> {
-			Person targetPerson = getPersonById(sourcePerson.getId());
-			pf.apply(targetPerson).setValue(n);
-		});
 	}
 
 }
