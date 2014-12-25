@@ -52,7 +52,6 @@ public class Model {
 		);
 
 		// Update item in 'sampleData' to which 'currentPerson' corresponds to when 'currentPerson' changes (e.g. when it is edited):
-//		copyPropertyOnChange(currentPerson, Person::firstNameProperty);
 		copyPropertyOnChange(currentPerson, Person::lastNameProperty);
 		copyPropertyOnChange(currentPerson, Person::streetProperty);
 		copyPropertyOnChange(currentPerson, Person::postalCodeProperty);
