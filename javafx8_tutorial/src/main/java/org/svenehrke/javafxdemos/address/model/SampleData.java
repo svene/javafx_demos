@@ -41,12 +41,12 @@ public class SampleData {
 
 	public static Attribute[] attributes(ModelStore modelStore, String pmId, String firstname, String lastname) {
 		return new Attribute[] {
-			modelStore.newAttribute(firstname, Person.ATT_FIRST_NAME, pmId + Person.ATT_FIRST_NAME),
-			modelStore.newAttribute(lastname, Person.ATT_LAST_NAME, pmId + Person.ATT_LAST_NAME),
-			modelStore.newAttribute("some street", Person.ATT_STREET, pmId + Person.ATT_STREET),
-			modelStore.newAttribute("1234", Person.ATT_POSTAL_CODE, pmId + Person.ATT_POSTAL_CODE),
-			modelStore.newAttribute("some city", Person.ATT_CITY, pmId + Person.ATT_CITY),
-			modelStore.newAttribute("21.02.1999", Person.ATT_BIRTHDAY, pmId + Person.ATT_BIRTHDAY)
+			modelStore.newAttribute(firstname, PersonAPI.ATT_FIRST_NAME, pmId + PersonAPI.ATT_FIRST_NAME),
+			modelStore.newAttribute(lastname, PersonAPI.ATT_LAST_NAME, pmId + PersonAPI.ATT_LAST_NAME),
+			modelStore.newAttribute("some street", PersonAPI.ATT_STREET, pmId + PersonAPI.ATT_STREET),
+			modelStore.newAttribute("1234", PersonAPI.ATT_POSTAL_CODE, pmId + PersonAPI.ATT_POSTAL_CODE),
+			modelStore.newAttribute("some city", PersonAPI.ATT_CITY, pmId + PersonAPI.ATT_CITY),
+			modelStore.newAttribute("21.02.1999", PersonAPI.ATT_BIRTHDAY, pmId + PersonAPI.ATT_BIRTHDAY)
 		};
 	}
 

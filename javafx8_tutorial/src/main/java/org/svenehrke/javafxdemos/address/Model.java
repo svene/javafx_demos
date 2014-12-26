@@ -2,9 +2,7 @@ package org.svenehrke.javafxdemos.address;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.collections.ObservableList;
 import javafx.stage.Stage;
-import org.svenehrke.javafxdemos.address.model.Person;
 import org.svenehrke.javafxdemos.address.model.SampleData;
 import org.svenehrke.javafxdemos.infra.ImpulseListeners;
 import org.svenehrke.javafxdemos.infra.ModelStore;
@@ -16,8 +14,6 @@ public class Model {
 	}
 
 	private Stage primaryStage;
-
-	private ModelStore modelStore;
 
 	public IntegerProperty selectedModelIndex = new SimpleIntegerProperty(-1);
 	public final StringProperty selectedPmId = new SimpleStringProperty();
@@ -37,7 +33,6 @@ public class Model {
 	public Model(Stage primaryStage, ModelStore modelStore) {
 
 		this.primaryStage = primaryStage;
-		this.modelStore = modelStore;
 
 		currentPerson = modelStore.newEmptyPerson();
 		workPerson = modelStore.newEmptyPerson();
@@ -86,12 +81,5 @@ public class Model {
 	public PresentationModel getWorkPerson() {
 		return workPerson;
 	}
-
-/*
-	public Person getPersonById(String id) {
-		ObservableList<Person> people = getPeople();
-		return people.stream().filter((Person p) -> p.getId().equals(id)).findFirst().orElseGet(null);
-	}
-*/
 
 }
