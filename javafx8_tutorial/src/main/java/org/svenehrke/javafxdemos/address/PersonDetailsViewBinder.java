@@ -32,8 +32,7 @@ public class PersonDetailsViewBinder {
 			int idx = ObservableLists.indexForItem(view.personTable.getItems(), pm -> n.equals(pm.getId()));
 			view.personTable.getSelectionModel().select(idx);
 		});
-		ObservableList<PresentationModel> tableItems = new FilteredList<>(model.personPresentationModels, pm -> pm.hasTag(PersonAPI.TAG_REAL));
-		view.personTable.setItems(tableItems);
+		view.personTable.setItems(model.realPresentationModels);
 		view.personTable.getSelectionModel().selectedItemProperty().addListener((s, o, n) -> {
 			if (n != null) {
 				model.selectedPmId.setValue(n.getId());

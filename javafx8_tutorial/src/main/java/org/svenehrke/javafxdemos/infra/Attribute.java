@@ -49,9 +49,6 @@ public class Attribute {
 	@Override
 	public String toString() {
 		return "Attribute{" +
-			"sysid=" + System.identityHashCode(this) + '\'' +
-			", id='" + id + '\'' +
-			", qualifier='" + qualifier + '\'' +
 			", valueProperty=" + valueProperty.get() +
 			'}';
 	}

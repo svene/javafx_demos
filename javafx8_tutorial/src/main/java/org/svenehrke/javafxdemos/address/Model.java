@@ -5,6 +5,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.svenehrke.javafxdemos.address.model.PersonAPI;
@@ -34,6 +35,7 @@ public class Model {
 
 	public final StringProperty applicationTitle = new SimpleStringProperty();
 	public final ObservableList<PresentationModel> personPresentationModels;
+	public final ObservableList<PresentationModel> realPresentationModels;
 
 	public Model(Stage primaryStage, ModelStore modelStore) {
 
@@ -41,13 +43,18 @@ public class Model {
 
 		personPresentationModels = FXCollections.observableArrayList(extractor());
 		Bindings.bindContent(personPresentationModels, modelStore.allPresentationModels());
+		realPresentationModels = new FilteredList<>(personPresentationModels, pm -> pm.hasTag(PersonAPI.TAG_REAL));
 
-		currentPerson = modelStore.newEmptyPerson();
-		workPerson = modelStore.newEmptyPerson();
+		currentPerson = modelStore.newPresentationModel("current", SampleData.attributes(modelStore, "current", "", ""));
+		workPerson = modelStore.newPresentationModel("work", SampleData.attributes(modelStore, "work", "", ""));
 
 		// Update 'currentPerson', e.g. when table selection changes:
 		selectedPmId.addListener((s, o, n) -> {
 				PresentationModel pm = modelStore.getPm(selectedPmId.getValue());
+				System.out.println("---");
+				realPresentationModels.forEach(pm1 -> System.out.printf("'%s: %s/%s'%n", pm1.getId(), pm1.getAttribute(PersonAPI.ATT_FIRST_NAME).getValue(), pm1.tag.getValue()));
+				System.out.println("---");
+				modelStore.allPresentationModels().forEach(pm1 -> System.out.printf("'%s: %s/%s'%n", pm1.getId(), pm1.getAttribute(PersonAPI.ATT_FIRST_NAME).getValue(), pm1.tag.getValue()));
 				currentPerson.populateFromPresentationModel(pm, true);
 			}
 		);
@@ -61,7 +68,7 @@ public class Model {
 		});
 		ImpulseListeners.addImpulseListener(newOkButtonClicked, () -> {
 			PresentationModel pm = SampleData.presentationModel(modelStore, ModelStore.newId(), "", "");
-			pm.populateFromPresentationModel(workPerson, true);
+			pm.populateFromPresentationModel(workPerson, false);
 			pm.addTag(PersonAPI.TAG_REAL);
 			selectedPmId.setValue(pm.getId());
 		});

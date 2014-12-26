@@ -5,6 +5,8 @@ import javafx.beans.property.StringProperty;
 
 import java.util.*;
 
+import static java.util.stream.Collectors.joining;
+
 public class PresentationModel {
 	private String id;
 	private Map<String, Attribute> attributesByPropertyname = new HashMap<>();
@@ -31,7 +33,6 @@ public class PresentationModel {
 	}
 
 	public void populateFromPresentationModel(PresentationModel other, boolean usingQualifier) {
-		this.id = other.id;
 		attributesByPropertyname.values().forEach(att -> att.populateFromAttribute(other.getAttribute(att.getPropertyName()), usingQualifier));
 	}
 
@@ -41,5 +42,14 @@ public class PresentationModel {
 
 	public boolean hasTag(String tag) {
 		return tag.equals(this.tag.getValue());
+	}
+
+	@Override
+	public String toString() {
+		return "PresentationModel{" +
+			"id='" + id.substring(0, 5) + '\'' +
+			", attributes=" + attributesByPropertyname.entrySet().stream().map(me -> me.getKey()+":" + me.getValue()).collect(joining(",")) +
+			", tag=" + tag +
+			'}';
 	}
 }
