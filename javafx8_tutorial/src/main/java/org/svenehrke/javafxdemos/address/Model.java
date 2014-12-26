@@ -5,8 +5,10 @@ import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import org.svenehrke.javafxdemos.address.model.Person;
+import org.svenehrke.javafxdemos.address.model.SampleData;
 import org.svenehrke.javafxdemos.infra.ImpulseListeners;
 import org.svenehrke.javafxdemos.infra.ModelStore;
+import org.svenehrke.javafxdemos.infra.PresentationModel;
 
 public class Model {
 	public static enum EditMode {
@@ -18,9 +20,10 @@ public class Model {
 	private ModelStore modelStore;
 
 	public IntegerProperty selectedModelIndex = new SimpleIntegerProperty(-1);
+	public final StringProperty selectedPmId = new SimpleStringProperty();
 
-	public final Person currentPerson;
-	public final Person workPerson;
+	public final PresentationModel currentPerson;
+	public final PresentationModel workPerson;
 	public final BooleanProperty okButtonClicked = new SimpleBooleanProperty();
 	private final BooleanProperty editOkButtonClicked = new SimpleBooleanProperty();
 	private final BooleanProperty newOkButtonClicked = new SimpleBooleanProperty();
@@ -40,11 +43,9 @@ public class Model {
 		workPerson = modelStore.newEmptyPerson();
 
 		// Update 'currentPerson', e.g. when table selection changes:
-		selectedModelIndex.addListener((s, o, n) -> {
-				if (n.intValue() >= 0) {
-					Person person = getPeople().get(n.intValue());
-					currentPerson.populateFromPerson(person, true);
-				}
+		selectedPmId.addListener((s, o, n) -> {
+				PresentationModel pm = modelStore.getPm(selectedPmId.getValue());
+				currentPerson.populateFromPresentationModel(pm, true);
 			}
 		);
 
@@ -53,15 +54,15 @@ public class Model {
 		newOkButtonClicked.bind(okButtonClicked.and(Bindings.equal(editModeProperty, EditMode.NEW))); // OK button for mode NEW triggered (derived from okButtonClicked)
 
 		ImpulseListeners.addImpulseListener(editOkButtonClicked, () -> {
-			currentPerson.populateFromPerson(workPerson, false);
+			currentPerson.populateFromPresentationModel(workPerson, false);
 		});
 		ImpulseListeners.addImpulseListener(newOkButtonClicked, () -> {
-			getPeople().add(modelStore.newPerson(ModelStore.newId(), "", "").populateFromPerson(workPerson, true));
-			selectedModelIndex.setValue(getPeople().size() - 1);
+			SampleData.presentationModel(modelStore, ModelStore.newId(), "", "").populateFromPresentationModel(workPerson, true);
+			selectedModelIndex.setValue(modelStore.allPresentationModels().size() - 1);
 		});
 
-		workPerson.allProperties().forEach(sp -> {
-			sp.addListener((s,o,n) -> new EditPersonValidator(this).validate());
+		workPerson.allAttributes().forEach(att -> {
+			att.getValueProperty().addListener((s, o, n) -> new EditPersonValidator(this).validate());
 		});
 
 		workPersonValid.bind(Bindings.equal(validationMessage, ""));
@@ -78,21 +79,19 @@ public class Model {
 		return primaryStage;
 	}
 
-	public ObservableList<Person> getPeople() {
-		return modelStore.getPeople();
-	}
-
-	public Person getCurrentPerson() {
+	public PresentationModel getCurrentPerson() {
 		return currentPerson;
 	}
 
-	public Person getWorkPerson() {
+	public PresentationModel getWorkPerson() {
 		return workPerson;
 	}
 
+/*
 	public Person getPersonById(String id) {
 		ObservableList<Person> people = getPeople();
 		return people.stream().filter((Person p) -> p.getId().equals(id)).findFirst().orElseGet(null);
 	}
+*/
 
 }

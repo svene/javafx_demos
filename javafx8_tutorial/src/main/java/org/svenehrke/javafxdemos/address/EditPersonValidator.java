@@ -2,6 +2,7 @@ package org.svenehrke.javafxdemos.address;
 
 import org.svenehrke.javafxdemos.address.model.Person;
 import org.svenehrke.javafxdemos.address.util.DateUtil;
+import org.svenehrke.javafxdemos.infra.PresentationModel;
 
 public class EditPersonValidator {
 
@@ -19,38 +20,45 @@ public class EditPersonValidator {
 		validate(model.workPerson);
 	}
 
-	private void validate(Person person) {
+	private void validate(PresentationModel personPM) {
 		String errorMessage = "";
 
-		if (person.getFirstName() == null || person.getFirstName().length() == 0) {
+		String value = personPM.getAttribute(Person.ATT_FIRST_NAME).getValue();
+		if (value == null || value.length() == 0) {
 			errorMessage += "No valid first name!\n";
 		}
-		if (person.getLastName() == null || person.getLastName().length() == 0) {
+
+		value = personPM.getAttribute(Person.ATT_FIRST_NAME).getValue();
+		if (value == null || value.length() == 0) {
 			errorMessage += "No valid last name!\n";
 		}
-		if (person.getStreet() == null || person.getStreet().length() == 0) {
+		value = personPM.getAttribute(Person.ATT_STREET).getValue();
+		if (value == null || value.length() == 0) {
 			errorMessage += "No valid street!\n";
 		}
 
-		if (person.postalCodeProperty().get() == null || person.postalCodeProperty().get().length() == 0) {
+		value = personPM.getAttribute(Person.ATT_POSTAL_CODE).getValue();
+		if (value == null || value.length() == 0) {
 			errorMessage += "No valid postal code!\n";
 		} else {
 			// try to parse the postal code into an int.
 			try {
-				Integer.parseInt(person.postalCodeProperty().get());
+				Integer.parseInt(value);
 			} catch (NumberFormatException e) {
 				errorMessage += "No valid postal code (must be an integer)!\n";
 			}
 		}
 
-		if (person.getCity() == null || person.getCity().length() == 0) {
+		value = personPM.getAttribute(Person.ATT_CITY).getValue();
+		if (value == null || value.length() == 0) {
 			errorMessage += "No valid city!\n";
 		}
 
-		if (person.birthdayProperty().get() == null || person.birthdayProperty().get().length() == 0) {
+		value = personPM.getAttribute(Person.ATT_BIRTHDAY).getValue();
+		if (value == null || value.length() == 0) {
 			errorMessage += "No valid birthday!\n";
 		} else {
-			if (!DateUtil.validDate(person.birthdayProperty().get())) {
+			if (!DateUtil.validDate(value)) {
 				errorMessage += "No valid birthday. Use the format dd.mm.yyyy!\n";
 			}
 		}

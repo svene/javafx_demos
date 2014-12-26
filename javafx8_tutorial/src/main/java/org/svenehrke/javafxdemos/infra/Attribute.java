@@ -5,17 +5,23 @@ import javafx.beans.property.StringProperty;
 
 public class Attribute {
 	private String id;
+	private String propertyName;
 	private String qualifier;
 	private StringProperty valueProperty = new SimpleStringProperty();
 
-	public Attribute(String value, String qualifier) {
+	public Attribute(String value, String propertyName, String qualifier) {
 		id = ModelStore.newId();
+		this.propertyName = propertyName;
 		this.valueProperty.setValue(value);
 		this.qualifier = qualifier;
 	}
 
 	public String getId() {
 		return id;
+	}
+
+	public String getPropertyName() {
+		return propertyName;
 	}
 
 	public String getQualifier() {

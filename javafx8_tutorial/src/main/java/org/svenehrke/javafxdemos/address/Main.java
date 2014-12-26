@@ -34,7 +34,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		Model model = new Model(primaryStage, modelStore = new ModelStore());
-		model.getPeople().addAll(SampleData.getPeople(modelStore));
+		SampleData.createSampleData(modelStore);
 		model.getPrimaryStage().setTitle("AddressApp");
 
 		model.getPrimaryStage().getIcons().add(new Image(this.getClass().getResourceAsStream("/Address_Book.png")));
@@ -49,7 +49,7 @@ public class Main extends Application {
 		RootLayoutView view = cr.getView();
 		BorderPane rootLayout = cr.getRoot();
 
-		new RootLayoutViewBinder().bindView(view, model);
+		new RootLayoutViewBinder().bindView(view, model, modelStore);
 		model.getPrimaryStage().titleProperty().bind(model.applicationTitle);
 
 		Scene scene = new Scene(rootLayout);

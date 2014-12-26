@@ -13,6 +13,13 @@ import java.util.List;
 
 public class Person {
 
+	public static final String ATT_FIRST_NAME = "ATT_FIRST_NAME";
+	public static final String ATT_LAST_NAME = "ATT_LAST_NAME";
+	public static final String ATT_STREET = "ATT_STREET";
+	public static final String ATT_POSTAL_CODE = "ATT_POSTAL_CODE";
+	public static final String ATT_CITY = "ATT_CITY";
+	public static final String ATT_BIRTHDAY = "ATT_BIRTHDAY";
+
 	private String id;
 	private Attribute firstName;
 	private Attribute lastName;
@@ -27,12 +34,13 @@ public class Person {
 		this.lastName = lastNameAttribute;
 
 		// Some initial dummy data, just for convenient testing.
-		this.street = modelStore.newAttribute("some street", pmId + "street");
-		this.postalCode = modelStore.newAttribute("1234", pmId + "postalcode");
-		this.city = modelStore.newAttribute("some city", pmId + "city");
-		this.birthday = modelStore.newAttribute("21.02.1999", pmId + "birthday");
+		this.street = modelStore.newAttribute("some street", "street", pmId + "street");
+		this.postalCode = modelStore.newAttribute("1234", "postalcode", pmId + "postalcode");
+		this.city = modelStore.newAttribute("some city", "city", pmId + "city");
+		this.birthday = modelStore.newAttribute("21.02.1999", "birthday", pmId + "birthday");
 	}
 
+/*
 	public Person populateFromPerson(Person other, boolean usingQualifier) {
 		this.id = other.id;
 		this.firstName.populateFromAttribute(other.firstName, usingQualifier);
@@ -43,6 +51,7 @@ public class Person {
 		this.birthday.setValue(other.birthday.getValue());
 		return this;
 	}
+*/
 
 	public List<StringProperty> allProperties() {
 		return Arrays.asList(firstNameProperty(), lastNameProperty(), streetProperty(), postalCodeProperty(), cityProperty(), birthdayProperty());

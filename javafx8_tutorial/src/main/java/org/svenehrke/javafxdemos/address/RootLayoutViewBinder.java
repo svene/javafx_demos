@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.model.Person;
 import org.svenehrke.javafxdemos.address.model.PersonListWrapper;
+import org.svenehrke.javafxdemos.infra.ModelStore;
 import org.svenehrke.javafxdemos.infra.ViewAndRoot;
 import org.svenehrke.javafxdemos.infra.FXMLLoader2;
 
@@ -21,17 +22,17 @@ public class RootLayoutViewBinder {
 
 	AddressFileHelper addressFileHelper = new AddressFileHelper();
 
-	public void bindView(RootLayoutView view, Model model) {
+	public void bindView(RootLayoutView view, Model model, ModelStore modelStore) {
 
-		view.miNew.setOnAction(event -> handleNewAddressBookRequest(model));
+		view.miNew.setOnAction(event -> handleNewAddressBookRequest(model, modelStore));
 		view.miOpen.setOnAction(event -> handleOpenFileRequest(model));
 		view.miSave.setOnAction(event -> handleSaveRequest(model) );
 		view.miSaveAs.setOnAction(event -> handleSaveAs(model) );
 		view.miShowStatistics.setOnAction(event -> showBirthdayStatistics(model));
 	}
 
-	private void handleNewAddressBookRequest(Model model) {
-		model.getPeople().clear();
+	private void handleNewAddressBookRequest(Model model, ModelStore modelStore) {
+		modelStore.clear();
 		addressFileHelper.setPersonFilePath(null, model.applicationTitle);
 	}
 
@@ -48,14 +49,14 @@ public class RootLayoutViewBinder {
 		File file = fileChooser.showOpenDialog(model.getPrimaryStage());
 
 		if (file != null) {
-			addressFileHelper.loadPersonDataFromFile(file, model.getPeople(), model.applicationTitle);
+			addressFileHelper.loadPersonDataFromFile(file, null, model.applicationTitle);
 		}
 	}
 
 	private void handleSaveRequest(Model model) {
 		File personFile = addressFileHelper.getPersonFilePath();
 		if (personFile != null) {
-			savePersonDataToFile(personFile, model.getPeople(), model.applicationTitle);
+			savePersonDataToFile(personFile, null, model.applicationTitle);
 		} else {
 			handleSaveAs(model);
 		}
@@ -112,7 +113,7 @@ public class RootLayoutViewBinder {
 			if (!file.getPath().endsWith(".xml")) {
 				file = new File(file.getPath() + ".xml");
 			}
-			savePersonDataToFile(file, model.getPeople(), model.applicationTitle);
+			savePersonDataToFile(file, null, model.applicationTitle);
 		}
 	}
 
@@ -131,7 +132,7 @@ public class RootLayoutViewBinder {
 
 		// Set the persons into the view.
 		BirthdayStatisticsView view = cr.getView();
-		view.setPersonData(model.getPeople());
+		view.setPersonData(null);
 
 		dialogStage.show();
 

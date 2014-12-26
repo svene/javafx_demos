@@ -2,37 +2,46 @@ package org.svenehrke.javafxdemos.infra;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableListBase;
 import org.svenehrke.javafxdemos.address.model.Person;
+import org.svenehrke.javafxdemos.address.model.SampleData;
 
 import java.util.*;
 
 public class ModelStore {
 
-	private ObservableList<Person> people = FXCollections.observableArrayList();
+	ObservableList<PresentationModel> presentationModels = FXCollections.observableArrayList();
 
+	private final Map<String, PresentationModel> presentationModelsById = new HashMap<>();
 	private final Map<String, List<Attribute>> attributesPerQualifier = new HashMap<>();
 
 	public static String newId() {
 		return UUID.randomUUID().toString();
 	}
 
-	public ObservableList<Person> getPeople() {
-		return people;
+	public void clear() {
+		presentationModels.clear();
+		presentationModels.clear();
+		attributesPerQualifier.clear();
 	}
 
-	public Person newEmptyPerson() {
-		Person result = newPerson(ModelStore.newId(), "", "");
-		result.setCity("");
-		result.setPostalCode(0);
-		result.setStreet("");
-		return result;
+	public PresentationModel newEmptyPerson() {
+		return newPresentationModel(newId(), SampleData.attributes(this, newId(), "", ""));
 	}
 
 	public Person newPerson(String pmId, String firstName, String lastName) {
-		return new Person(this, pmId, newAttribute(firstName, pmId + "_firstname"), newAttribute(lastName, pmId + "lastname") );
+		return new Person(this, pmId, newAttribute(firstName, "firstname", pmId + "firstname"), newAttribute(lastName, "lastname", pmId + "lastname") );
 	}
-	public Attribute newAttribute(String value, String qualifier) {
-		Attribute result = new Attribute(value, qualifier);
+
+	public PresentationModel newPresentationModel(String id, Attribute...attributes) {
+		PresentationModel result = new PresentationModel(id, attributes);
+		presentationModels.add(result);
+		presentationModelsById.put(id, result);
+		return result;
+	}
+
+	public Attribute newAttribute(String value, String propertyName, String qualifier) {
+		Attribute result = new Attribute(value, propertyName, qualifier);
 		attributesPerQualifier.putIfAbsent(qualifier, new ArrayList<>());
 		attributesPerQualifier.get(qualifier).add(result);
 
@@ -46,6 +55,14 @@ public class ModelStore {
 		});
 
 		return result;
+	}
+
+	public ObservableList<PresentationModel> allPresentationModels() {
+		return presentationModels;
+	}
+
+	public PresentationModel getPm(String id) {
+		return presentationModelsById.get(id);
 	}
 
 	public List<Attribute> findAllAttributesPerQualifier(String qualifier) {

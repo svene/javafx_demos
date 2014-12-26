@@ -6,16 +6,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.svenehrke.javafxdemos.address.model.Person;
+import org.svenehrke.javafxdemos.infra.PresentationModel;
 
 public class PersonDetailsView {
 
 	@FXML
-	TableView<Person> personTable;
+	TableView<PresentationModel> personTable;
 
 	@FXML
-	TableColumn<Person, String> firstNameColumn;
+	TableColumn<PresentationModel, String> firstNameColumn;
 	@FXML
-	TableColumn<Person, String> lastNameColumn;
+	TableColumn<PresentationModel, String> lastNameColumn;
 
 	@FXML
 	Label firstNameLabel;
