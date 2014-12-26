@@ -20,7 +20,6 @@ public class Model {
 
 	private Stage primaryStage;
 
-	public IntegerProperty selectedModelIndex = new SimpleIntegerProperty(-1);
 	public final StringProperty selectedPmId = new SimpleStringProperty();
 
 	public final PresentationModel currentPerson;
@@ -64,7 +63,7 @@ public class Model {
 			PresentationModel pm = SampleData.presentationModel(modelStore, ModelStore.newId(), "", "");
 			pm.populateFromPresentationModel(workPerson, true);
 			pm.addTag(PersonAPI.TAG_REAL);
-			selectedModelIndex.setValue(modelStore.allPresentationModels().size() - 1);
+			selectedPmId.setValue(pm.getId());
 		});
 
 		workPerson.allAttributes().forEach(att -> {
@@ -82,10 +81,8 @@ public class Model {
 	}
 
 	private static Callback<PresentationModel, Observable[]> extractor() {
-		return (PresentationModel pm) -> new Observable[]{
-			pm.getAttribute(PersonAPI.ATT_FIRST_NAME).getValueProperty()
-			,pm.getAttribute(PersonAPI.ATT_LAST_NAME).getValueProperty()
-			,pm.tag
+		return (PresentationModel pm) -> new Observable[] {
+			pm.tag
 		};
 	}
 

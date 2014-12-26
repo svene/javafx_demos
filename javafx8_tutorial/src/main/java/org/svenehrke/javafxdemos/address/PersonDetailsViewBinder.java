@@ -5,6 +5,7 @@ import javafx.collections.transformation.FilteredList;
 import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.model.PersonAPI;
 import org.svenehrke.javafxdemos.infra.ModelStore;
+import org.svenehrke.javafxdemos.infra.ObservableLists;
 import org.svenehrke.javafxdemos.infra.PresentationModel;
 
 public class PersonDetailsViewBinder {
@@ -27,15 +28,16 @@ public class PersonDetailsViewBinder {
 		view.birthdayLabel.textProperty().bind(cp.getAttribute(PersonAPI.ATT_BIRTHDAY).getValueProperty());
 
 		// When model.selectedModelIndex changes: change selected row of table:
-		model.selectedModelIndex.addListener((s,o,n) -> {
-			view.personTable.getSelectionModel().select(model.selectedModelIndex.intValue());
+		model.selectedPmId.addListener((s,o,n) -> {
+			int idx = ObservableLists.indexForItem(view.personTable.getItems(), pm -> n.equals(pm.getId()));
+			view.personTable.getSelectionModel().select(idx);
 		});
 		ObservableList<PresentationModel> tableItems = new FilteredList<>(model.personPresentationModels, pm -> pm.hasTag(PersonAPI.TAG_REAL));
 		view.personTable.setItems(tableItems);
-		view.personTable.getSelectionModel().selectedIndexProperty().addListener((s, o, n) -> {
-			String pmId = view.personTable.getSelectionModel().getSelectedItem().getId();
-			model.selectedPmId.setValue(pmId);
-			model.selectedModelIndex.setValue(n);
+		view.personTable.getSelectionModel().selectedItemProperty().addListener((s, o, n) -> {
+			if (n != null) {
+				model.selectedPmId.setValue(n.getId());
+			}
 		});
 	}
 
@@ -67,7 +69,8 @@ public class PersonDetailsViewBinder {
 	}
 
 	private static void handleDelete(Model model) {
-		int selectedIndex = model.selectedModelIndex.intValue();
+/*
+		model.selectedPmId;
 		if (selectedIndex >= 0) {
 			//todo: model.getPeople().remove(selectedIndex);
 		} else {
@@ -78,6 +81,7 @@ public class PersonDetailsViewBinder {
 				.message("Please select a person in the table.")
 				.showWarning();
 		}
+*/
 
 	}
 }
