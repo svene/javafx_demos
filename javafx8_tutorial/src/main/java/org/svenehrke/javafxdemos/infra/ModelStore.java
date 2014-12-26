@@ -2,8 +2,6 @@ package org.svenehrke.javafxdemos.infra;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
-import org.svenehrke.javafxdemos.address.model.Person;
 import org.svenehrke.javafxdemos.address.model.SampleData;
 
 import java.util.*;
@@ -27,10 +25,6 @@ public class ModelStore {
 
 	public PresentationModel newEmptyPerson() {
 		return newPresentationModel(newId(), SampleData.attributes(this, newId(), "", ""));
-	}
-
-	public Person newPerson(String pmId, String firstName, String lastName) {
-		return new Person(this, pmId, newAttribute(firstName, "firstname", pmId + "firstname"), newAttribute(lastName, "lastname", pmId + "lastname") );
 	}
 
 	public PresentationModel newPresentationModel(String id, Attribute...attributes) {

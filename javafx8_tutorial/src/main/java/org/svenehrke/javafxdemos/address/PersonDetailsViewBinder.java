@@ -1,5 +1,7 @@
 package org.svenehrke.javafxdemos.address;
 
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.model.PersonAPI;
 import org.svenehrke.javafxdemos.infra.ModelStore;
@@ -28,8 +30,8 @@ public class PersonDetailsViewBinder {
 		model.selectedModelIndex.addListener((s,o,n) -> {
 			view.personTable.getSelectionModel().select(model.selectedModelIndex.intValue());
 		});
-
-		view.personTable.setItems(modelStore.allPresentationModels());
+		ObservableList<PresentationModel> tableItems = new FilteredList<>(model.personPresentationModels, pm -> pm.hasTag(PersonAPI.TAG_REAL));
+		view.personTable.setItems(tableItems);
 		view.personTable.getSelectionModel().selectedIndexProperty().addListener((s, o, n) -> {
 			String pmId = view.personTable.getSelectionModel().getSelectedItem().getId();
 			model.selectedPmId.setValue(pmId);

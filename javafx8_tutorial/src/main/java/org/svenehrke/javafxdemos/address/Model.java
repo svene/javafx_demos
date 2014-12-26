@@ -1,8 +1,13 @@
 package org.svenehrke.javafxdemos.address;
 
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import org.svenehrke.javafxdemos.address.model.PersonAPI;
 import org.svenehrke.javafxdemos.address.model.SampleData;
 import org.svenehrke.javafxdemos.infra.ImpulseListeners;
 import org.svenehrke.javafxdemos.infra.ModelStore;
@@ -29,10 +34,14 @@ public class Model {
 	public final StringProperty validationMessage = new SimpleStringProperty();
 
 	public final StringProperty applicationTitle = new SimpleStringProperty();
+	public final ObservableList<PresentationModel> personPresentationModels;
 
 	public Model(Stage primaryStage, ModelStore modelStore) {
 
 		this.primaryStage = primaryStage;
+
+		personPresentationModels = FXCollections.observableArrayList(extractor());
+		Bindings.bindContent(personPresentationModels, modelStore.allPresentationModels());
 
 		currentPerson = modelStore.newEmptyPerson();
 		workPerson = modelStore.newEmptyPerson();
@@ -52,7 +61,9 @@ public class Model {
 			currentPerson.populateFromPresentationModel(workPerson, false);
 		});
 		ImpulseListeners.addImpulseListener(newOkButtonClicked, () -> {
-			SampleData.presentationModel(modelStore, ModelStore.newId(), "", "").populateFromPresentationModel(workPerson, true);
+			PresentationModel pm = SampleData.presentationModel(modelStore, ModelStore.newId(), "", "");
+			pm.populateFromPresentationModel(workPerson, true);
+			pm.addTag(PersonAPI.TAG_REAL);
 			selectedModelIndex.setValue(modelStore.allPresentationModels().size() - 1);
 		});
 
@@ -68,6 +79,14 @@ public class Model {
 
 		// Initial Data:
 		applicationTitle.setValue("Address Application");
+	}
+
+	private static Callback<PresentationModel, Observable[]> extractor() {
+		return (PresentationModel pm) -> new Observable[]{
+			pm.getAttribute(PersonAPI.ATT_FIRST_NAME).getValueProperty()
+			,pm.getAttribute(PersonAPI.ATT_LAST_NAME).getValueProperty()
+			,pm.tag
+		};
 	}
 
 	public Stage getPrimaryStage() {
