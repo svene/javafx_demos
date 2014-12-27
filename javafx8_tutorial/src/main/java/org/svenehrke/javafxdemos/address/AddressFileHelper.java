@@ -1,10 +1,14 @@
 package org.svenehrke.javafxdemos.address;
 
 import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
 import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.model.Person;
+import org.svenehrke.javafxdemos.address.model.PersonAPI;
 import org.svenehrke.javafxdemos.address.model.PersonListWrapper;
+import org.svenehrke.javafxdemos.address.model.SampleData;
+import org.svenehrke.javafxdemos.address.util.DateUtil;
+import org.svenehrke.javafxdemos.infra.Attribute;
+import org.svenehrke.javafxdemos.infra.ModelStore;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -18,11 +22,12 @@ public class AddressFileHelper {
 	 * Loads person data from the specified file. The current person data will
 	 * be replaced.
 	 *
-	 * @param people
-	 * @param applicationTitle
 	 * @param file
+	 * @param applicationTitle
+	 * @param modelStore
 	 */
-	public void loadPersonDataFromFile(File file, ObservableList<Person> people, StringProperty applicationTitle) {
+	public void loadPersonDataFromFile(File file, StringProperty applicationTitle, ModelStore modelStore) {
+
 		try {
 			JAXBContext context = JAXBContext.newInstance(PersonListWrapper.class);
 			Unmarshaller um = context.createUnmarshaller();
@@ -31,9 +36,11 @@ public class AddressFileHelper {
 			System.out.println("file.getAbsolutePath() = " + file.getAbsolutePath());
 			PersonListWrapper wrapper = (PersonListWrapper) um.unmarshal(file);
 
-//			people.clear();
 			List<Person> persons = wrapper.getPersons();
-			people.addAll(persons);
+			persons.forEach(p -> {
+				Attribute[] attributes = SampleData.attributes(modelStore, p.getId(), p.getFirstName(), p.getLastName(), p.getStreet(), String.valueOf(p.getPostalCode()), p.getCity(), DateUtil.format(p.getBirthday()));
+				modelStore.newPresentationModel(p.getId(), PersonAPI.TYPE_PERSON, attributes);
+			});
 
 			// Save the file path to the registry.
 			setPersonFilePath(file, applicationTitle);

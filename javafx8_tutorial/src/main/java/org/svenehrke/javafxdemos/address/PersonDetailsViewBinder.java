@@ -41,7 +41,7 @@ public class PersonDetailsViewBinder {
 	}
 
 	private static void handleNewPerson(Model model) {
-		model.workPerson.populateFromPresentationModel(model.emptyPerson, false);
+		model.workPerson.populateFromPresentationModel(model.preparedPerson, false);
 		model.editModeProperty.setValue(Model.EditMode.NEW);
 		PersonDialogs.showPersonDialog(model);
 	}

@@ -24,7 +24,7 @@ public class Model {
 	public final StringProperty selectedPmId = new SimpleStringProperty();
 
 	public final PresentationModel currentPerson;
-	public final PresentationModel workPerson, emptyPerson;
+	public final PresentationModel workPerson, preparedPerson, emptyPerson;
 	public final BooleanProperty okButtonClicked = new SimpleBooleanProperty();
 	private final BooleanProperty editOkButtonClicked = new SimpleBooleanProperty();
 	private final BooleanProperty newOkButtonClicked = new SimpleBooleanProperty();
@@ -45,9 +45,10 @@ public class Model {
 		Bindings.bindContent(personPresentationModels, modelStore.allPresentationModels());
 		realPresentationModels = new FilteredList<>(personPresentationModels, pm -> PersonAPI.TYPE_PERSON.equals(pm.getType()));
 
-		emptyPerson = modelStore.newPresentationModel("empty", PersonAPI.TYPE_TECHNICAL_PERSON, SampleData.attributes(modelStore, "empty", "", ""));
-		currentPerson = modelStore.newPresentationModel("current", PersonAPI.TYPE_TECHNICAL_PERSON, SampleData.attributes(modelStore, "current", "", ""));
-		workPerson = modelStore.newPresentationModel("work", PersonAPI.TYPE_TECHNICAL_PERSON, SampleData.attributes(modelStore, "work", "", ""));
+		emptyPerson = modelStore.newPresentationModel("empty", PersonAPI.TYPE_TECHNICAL_PERSON, SampleData.newEmptyAttributes(modelStore, "empty"));
+		preparedPerson = modelStore.newPresentationModel("prepared", PersonAPI.TYPE_TECHNICAL_PERSON, SampleData.preparedAttributes(modelStore, "prepared", "", ""));
+		currentPerson = modelStore.newPresentationModel("current", PersonAPI.TYPE_TECHNICAL_PERSON, SampleData.newEmptyAttributes(modelStore, "current"));
+		workPerson = modelStore.newPresentationModel("work", PersonAPI.TYPE_TECHNICAL_PERSON, SampleData.newEmptyAttributes(modelStore, "work"));
 
 		// Update 'currentPerson', e.g. when table selection changes:
 		selectedPmId.addListener((s, o, n) -> {
@@ -68,7 +69,7 @@ public class Model {
 			currentPerson.populateFromPresentationModel(workPerson, false);
 		});
 		ImpulseListeners.addImpulseListener(newOkButtonClicked, () -> {
-			PresentationModel pm = SampleData.presentationModel(modelStore, ModelStore.newId(), "", "");
+			PresentationModel pm = SampleData.newEmptyPresentationModel(modelStore, ModelStore.newId());
 			pm.populateFromPresentationModel(workPerson, false);
 			selectedPmId.setValue(pm.getId());
 		});
@@ -85,6 +86,15 @@ public class Model {
 
 		// Initial Data:
 		applicationTitle.setValue("Address Application");
+	}
+
+	public void clear(ModelStore modelStore) {
+		modelStore.presentationModelsWithType(PersonAPI.TYPE_PERSON).forEach(pm -> {
+			modelStore.removePresentationModel(pm.getId());
+		});
+		currentPerson.populateFromPresentationModel(emptyPerson, false);
+		workPerson.populateFromPresentationModel(emptyPerson, false);
+		System.out.println("removed");
 	}
 
 	private static Callback<PresentationModel, Observable[]> extractor() {

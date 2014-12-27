@@ -30,7 +30,7 @@ public class RootLayoutViewBinder {
 	public void bindView(RootLayoutView view, Model model, ModelStore modelStore) {
 
 		view.miNew.setOnAction(event -> handleNewAddressBookRequest(model, modelStore));
-		view.miOpen.setOnAction(event -> handleOpenFileRequest(model));
+		view.miOpen.setOnAction(event -> handleOpenFileRequest(model, modelStore));
 		view.miSave.setOnAction(event -> handleSaveRequest(model) );
 		view.miSaveAs.setOnAction(event -> handleSaveAs(model) );
 		view.miShowStatistics.setOnAction(event -> showBirthdayStatistics(model));
@@ -38,13 +38,13 @@ public class RootLayoutViewBinder {
 
 	private void handleNewAddressBookRequest(Model model, ModelStore modelStore) {
 		modelStore.clear();
-		addressFileHelper.setPersonFilePath(null, model.applicationTitle);
+		//todo: addressFileHelper.setPersonFilePath(null, model.applicationTitle, modelStore);
 	}
 
 	/**
 	 * Opens a FileChooser to let the user select an address book to load.
 	 */
-	private void handleOpenFileRequest(Model model) {
+	private void handleOpenFileRequest(Model model, ModelStore modelStore) {
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter
@@ -54,7 +54,8 @@ public class RootLayoutViewBinder {
 		File file = fileChooser.showOpenDialog(model.getPrimaryStage());
 
 		if (file != null) {
-			addressFileHelper.loadPersonDataFromFile(file, null, model.applicationTitle);
+			model.clear(modelStore);
+			addressFileHelper.loadPersonDataFromFile(file, model.applicationTitle, modelStore);
 		}
 	}
 

@@ -46,7 +46,7 @@ public class PresentationModel {
 	@Override
 	public String toString() {
 		return "PresentationModel{" +
-			"id='" + id.substring(0, 5) + '\'' +
+			"id='" + id + '\'' +
 			", attributes=" + attributesByPropertyname.entrySet().stream().map(me -> me.getKey() + ":" + me.getValue()).collect(joining(",")) +
 			", type=" + type +
 			'}';

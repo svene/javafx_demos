@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 
 import java.util.*;
 
+import static java.util.stream.Collectors.toList;
+
 public class ModelStore {
 
 	ObservableList<PresentationModel> presentationModels = FXCollections.observableArrayList();
@@ -17,7 +19,6 @@ public class ModelStore {
 	}
 
 	public void clear() {
-		presentationModels.clear();
 		presentationModels.clear();
 		attributesPerQualifier.clear();
 	}
@@ -49,6 +50,25 @@ public class ModelStore {
 
 	public ObservableList<PresentationModel> allPresentationModels() {
 		return presentationModels;
+	}
+	public List<PresentationModel> presentationModelsWithType(String type) {
+		return presentationModels.stream().filter(pm -> type.equals(pm.getType())).collect(toList());
+	}
+
+	public void removePresentationModel(String id) {
+		PresentationModel pm = getPm(id);
+		if (pm != null) {
+			presentationModels.removeIf(it -> pm.getId().equals(it.getId()));
+			presentationModelsById.remove(id);
+			// for each attribute in pm remove it from attributesPerQualifier:
+			pm.allAttributes().forEach(a1 -> {
+				String q = a1.getQualifier();
+				if (q != null) {
+					List<Attribute> lst = attributesPerQualifier.get(q);
+					lst.removeIf(a2 -> a2 == a1);
+				}
+			});
+		}
 	}
 
 	public PresentationModel getPm(String id) {
