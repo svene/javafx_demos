@@ -35,12 +35,12 @@ public class PresentationModel {
 		attributesByPropertyname.values().forEach(att -> att.populateFromAttribute(other.getAttribute(att.getPropertyName()), usingQualifier));
 	}
 
-	public void addTag(String tag) {
+	public void setType(String tag) {
 		this.type.setValue(tag);
 	}
 
-	public boolean hasTag(String tag) {
-		return tag.equals(this.type.getValue());
+	public String getType() {
+		return type.get();
 	}
 
 	@Override
