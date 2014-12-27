@@ -2,12 +2,13 @@ package org.svenehrke.javafxdemos.address;
 
 import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.model.PersonAPI;
+import org.svenehrke.javafxdemos.infra.ModelStore;
 import org.svenehrke.javafxdemos.infra.ObservableLists;
 import org.svenehrke.javafxdemos.infra.PresentationModel;
 
 public class PersonDetailsViewBinder {
 
-	public static void bindView(PersonDetailsView view, Model model) {
+	public static void bindView(PersonDetailsView view, Model model, ModelStore modelStore) {
 		// Initialize the person table with the two columns.
 		view.firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().getAttribute(PersonAPI.ATT_FIRST_NAME).getValueProperty());
 		view.lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().getAttribute(PersonAPI.ATT_LAST_NAME).getValueProperty());
@@ -17,7 +18,7 @@ public class PersonDetailsViewBinder {
 			view.personTable.requestFocus();
 		});
 		view.editButton.setOnAction(event -> handleEditPerson(model) );
-		view.deleteButton.setOnAction(event -> handleDelete(model) );
+		view.deleteButton.setOnAction(event -> handleDelete(model, modelStore) );
 
 		PresentationModel cp = model.currentPerson;
 		view.firstNameLabel.textProperty().bind(cp.getAttribute(PersonAPI.ATT_FIRST_NAME).getValueProperty());
@@ -67,11 +68,10 @@ public class PersonDetailsViewBinder {
 		}
 	}
 
-	private static void handleDelete(Model model) {
-/*
-		model.selectedPmId;
-		if (selectedIndex >= 0) {
-			//todo: model.getPeople().remove(selectedIndex);
+	private static void handleDelete(Model model, ModelStore modelStore) {
+		String id = model.selectedPmId.get();
+		if (id != null && id.length() > 0) {
+			modelStore.removePresentationModel(id);
 		} else {
 			// Nothing selected.
 			Dialogs.create()
@@ -80,7 +80,5 @@ public class PersonDetailsViewBinder {
 				.message("Please select a person in the table.")
 				.showWarning();
 		}
-*/
-
 	}
 }
