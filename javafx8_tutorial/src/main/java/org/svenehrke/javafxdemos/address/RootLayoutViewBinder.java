@@ -106,8 +106,7 @@ public class RootLayoutViewBinder {
 		FileChooser fileChooser = new FileChooser();
 
 		// Set extension filter
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
-			"XML files (*.xml)", "*.xml");
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
 		fileChooser.getExtensionFilters().add(extFilter);
 
 		// Show save file dialog

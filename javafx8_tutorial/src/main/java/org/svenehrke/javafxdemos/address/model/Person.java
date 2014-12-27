@@ -14,20 +14,6 @@ public class Person {
 	private String city;
 	private LocalDate birthday;
 
-/*
-	public Person(String id, Attribute firstNameAttribute, Attribute lastNameAttribute) {
-		this.id = id;
-		this.firstName = firstNameAttribute;
-		this.lastName = lastNameAttribute;
-
-		// Some initial dummy data, just for convenient testing.
-		this.street = modelStore.newAttribute("some street", "street", id + "street");
-		this.postalCode = modelStore.newAttribute("1234", "postalcode", id + "postalcode");
-		this.city = modelStore.newAttribute("some city", "city", id + "city");
-		this.birthday = modelStore.newAttribute("21.02.1999", "birthday", id + "birthday");
-	}
-*/
-
 	@XmlAttribute
 	public String getId() {
 		return id;
@@ -67,12 +53,10 @@ public class Person {
 	@XmlAttribute
 	public int getPostalCode() {
 		return postalCode;
-//		return Integer.parseInt(postalCode.getValue());
 	}
 
 	public void setPostalCode(int postalCode) {
 		this.postalCode = postalCode;
-//		this.postalCode = .setValue(String.valueOf(postalCode));
 	}
 
 	@XmlAttribute
@@ -87,11 +71,9 @@ public class Person {
 	@XmlAttribute
 	public LocalDate getBirthday() {
 		return birthday;
-//		return DateUtil.parse(birthday.getValue());
 	}
 
 	public void setBirthday(LocalDate birthday) {
-//		this.birthday = .setValue(DateUtil.format(birthday));
 		this.birthday = birthday;
 	}
 
