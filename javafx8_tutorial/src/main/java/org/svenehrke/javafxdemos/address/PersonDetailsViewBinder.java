@@ -15,7 +15,10 @@ public class PersonDetailsViewBinder {
 		view.firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().getAttribute(PersonAPI.ATT_FIRST_NAME).getValueProperty());
 		view.lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().getAttribute(PersonAPI.ATT_LAST_NAME).getValueProperty());
 
-		view.newButton.setOnAction(event -> handleNewPerson(model, modelStore));
+		view.newButton.setOnAction(event -> {
+			handleNewPerson(model, modelStore);
+			view.personTable.requestFocus();
+		});
 		view.editButton.setOnAction(event -> handleEditPerson(model) );
 		view.deleteButton.setOnAction(event -> handleDelete(model) );
 

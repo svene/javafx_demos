@@ -52,9 +52,9 @@ public class Model {
 		selectedPmId.addListener((s, o, n) -> {
 				PresentationModel pm = modelStore.getPm(selectedPmId.getValue());
 				System.out.println("---");
-				realPresentationModels.forEach(pm1 -> System.out.printf("'%s: %s/%s'%n", pm1.getId(), pm1.getAttribute(PersonAPI.ATT_FIRST_NAME).getValue(), pm1.tag.getValue()));
+				realPresentationModels.forEach(pm1 -> System.out.printf("'%s: %s/%s'%n", pm1.getId(), pm1.getAttribute(PersonAPI.ATT_FIRST_NAME).getValue(), pm1.type.getValue()));
 				System.out.println("---");
-				modelStore.allPresentationModels().forEach(pm1 -> System.out.printf("'%s: %s/%s'%n", pm1.getId(), pm1.getAttribute(PersonAPI.ATT_FIRST_NAME).getValue(), pm1.tag.getValue()));
+				modelStore.allPresentationModels().forEach(pm1 -> System.out.printf("'%s: %s/%s'%n", pm1.getId(), pm1.getAttribute(PersonAPI.ATT_FIRST_NAME).getValue(), pm1.type.getValue()));
 				currentPerson.populateFromPresentationModel(pm, true);
 			}
 		);
@@ -89,7 +89,7 @@ public class Model {
 
 	private static Callback<PresentationModel, Observable[]> extractor() {
 		return (PresentationModel pm) -> new Observable[] {
-			pm.tag
+			pm.type
 		};
 	}
 

@@ -10,8 +10,7 @@ import static java.util.stream.Collectors.joining;
 public class PresentationModel {
 	private String id;
 	private Map<String, Attribute> attributesByPropertyname = new HashMap<>();
-//	private Set<String> tags = new HashSet<>();
-	public StringProperty tag = new SimpleStringProperty();
+	public StringProperty type = new SimpleStringProperty();
 
 	public PresentationModel(String id, Attribute...attributes) {
 		this.id = id;
@@ -37,19 +36,19 @@ public class PresentationModel {
 	}
 
 	public void addTag(String tag) {
-		this.tag.setValue(tag);
+		this.type.setValue(tag);
 	}
 
 	public boolean hasTag(String tag) {
-		return tag.equals(this.tag.getValue());
+		return tag.equals(this.type.getValue());
 	}
 
 	@Override
 	public String toString() {
 		return "PresentationModel{" +
 			"id='" + id.substring(0, 5) + '\'' +
-			", attributes=" + attributesByPropertyname.entrySet().stream().map(me -> me.getKey()+":" + me.getValue()).collect(joining(",")) +
-			", tag=" + tag +
+			", attributes=" + attributesByPropertyname.entrySet().stream().map(me -> me.getKey() + ":" + me.getValue()).collect(joining(",")) +
+			", type=" + type +
 			'}';
 	}
 }
