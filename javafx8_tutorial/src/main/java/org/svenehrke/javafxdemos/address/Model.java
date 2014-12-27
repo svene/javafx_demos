@@ -43,7 +43,7 @@ public class Model {
 
 		personPresentationModels = FXCollections.observableArrayList(extractor());
 		Bindings.bindContent(personPresentationModels, modelStore.allPresentationModels());
-		realPresentationModels = new FilteredList<>(personPresentationModels, pm -> pm.hasTag(PersonAPI.TAG_REAL));
+		realPresentationModels = new FilteredList<>(personPresentationModels, pm -> pm.hasTag(PersonAPI.TYPE_PERSON));
 
 		currentPerson = modelStore.newPresentationModel("current", SampleData.attributes(modelStore, "current", "", ""));
 		workPerson = modelStore.newPresentationModel("work", SampleData.attributes(modelStore, "work", "", ""));
@@ -69,7 +69,7 @@ public class Model {
 		ImpulseListeners.addImpulseListener(newOkButtonClicked, () -> {
 			PresentationModel pm = SampleData.presentationModel(modelStore, ModelStore.newId(), "", "");
 			pm.populateFromPresentationModel(workPerson, false);
-			pm.addTag(PersonAPI.TAG_REAL);
+			pm.addTag(PersonAPI.TYPE_PERSON);
 			selectedPmId.setValue(pm.getId());
 		});
 

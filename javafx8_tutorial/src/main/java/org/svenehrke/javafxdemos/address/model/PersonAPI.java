@@ -8,5 +8,7 @@ public class PersonAPI {
 	public static final String ATT_CITY = "ATT_CITY";
 	public static final String ATT_BIRTHDAY = "ATT_BIRTHDAY";
 
-	public static final String TAG_REAL = "real";
+	public static final String TYPE_PERSON = "TYPE_PERSON";
+	public static final String TYPE_TECHNICAL_PERSON = "TYPE_TECHNICAL_PERSON";
+
 }

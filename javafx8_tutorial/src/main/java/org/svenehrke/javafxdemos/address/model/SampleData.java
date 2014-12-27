@@ -20,7 +20,7 @@ public class SampleData {
 		result.add(presentationModel(modelStore, "pm7", "Anna", "Best"));
 		result.add(presentationModel(modelStore, "pm8", "Stefan", "Meier"));
 		result.add(presentationModel(modelStore, "pm9", "Martin", "Mueller"));
-		result.forEach(pm -> pm.addTag(PersonAPI.TAG_REAL));
+		result.forEach(pm -> pm.addTag(PersonAPI.TYPE_PERSON));
 	}
 
 	public static PresentationModel presentationModel(ModelStore modelStore, String pm1, String firstName, String lastName) {
