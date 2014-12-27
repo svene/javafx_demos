@@ -1,7 +1,6 @@
 package org.svenehrke.javafxdemos.address;
 
 import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -9,14 +8,20 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.model.Person;
+import org.svenehrke.javafxdemos.address.model.PersonAPI;
 import org.svenehrke.javafxdemos.address.model.PersonListWrapper;
+import org.svenehrke.javafxdemos.address.util.DateUtil;
 import org.svenehrke.javafxdemos.infra.ModelStore;
+import org.svenehrke.javafxdemos.infra.PresentationModel;
 import org.svenehrke.javafxdemos.infra.ViewAndRoot;
 import org.svenehrke.javafxdemos.infra.FXMLLoader2;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import java.io.File;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 public class RootLayoutViewBinder {
 
@@ -56,7 +61,7 @@ public class RootLayoutViewBinder {
 	private void handleSaveRequest(Model model) {
 		File personFile = addressFileHelper.getPersonFilePath();
 		if (personFile != null) {
-			savePersonDataToFile(personFile, null, model.applicationTitle);
+			savePersonDataToFile(personFile, model.realPresentationModels, model.applicationTitle);
 		} else {
 			handleSaveAs(model);
 		}
@@ -66,18 +71,18 @@ public class RootLayoutViewBinder {
 	 * Saves the current person data to the specified file.
 	 *
 	 * @param file
-	 * @param people
+	 * @param pms
 	 * @param applicationTitle
 	 */
-	private void savePersonDataToFile(File file, ObservableList<Person> people, StringProperty applicationTitle) {
+	private void savePersonDataToFile(File file, List<PresentationModel> pms, StringProperty applicationTitle) {
 		try {
-			JAXBContext context = JAXBContext
-				.newInstance(PersonListWrapper.class);
+			JAXBContext context = JAXBContext.newInstance(PersonListWrapper.class);
 			Marshaller m = context.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
 			// Wrapping our person data.
 			PersonListWrapper wrapper = new PersonListWrapper();
+			List<Person> people = pms.stream().map(RootLayoutViewBinder::fromPM).collect(toList());
 			wrapper.setPersons(people);
 
 			// Marshalling and saving XML to the file.
@@ -91,6 +96,18 @@ public class RootLayoutViewBinder {
 				.masthead("Could not save data to file:\n" + file.getPath())
 				.showException(e);
 		}
+	}
+
+	public static Person fromPM(PresentationModel pm) {
+		Person person = new Person();
+		person.setId(pm.getId()); // todo: should PM-id and Entity-ID correspond or should PM have something like a persistentId ?
+		person.setFirstName(pm.getAttribute(PersonAPI.ATT_FIRST_NAME).getValue());
+		person.setLastName(pm.getAttribute(PersonAPI.ATT_LAST_NAME).getValue());
+		person.setStreet(pm.getAttribute(PersonAPI.ATT_STREET).getValue());
+		person.setPostalCode(Integer.parseInt(pm.getAttribute(PersonAPI.ATT_POSTAL_CODE).getValue()));
+		person.setCity(pm.getAttribute(PersonAPI.ATT_CITY).getValue());
+		person.setBirthday(DateUtil.parse((pm.getAttribute(PersonAPI.ATT_BIRTHDAY).getValue())));
+		return person;
 	}
 
 	/**
@@ -113,7 +130,7 @@ public class RootLayoutViewBinder {
 			if (!file.getPath().endsWith(".xml")) {
 				file = new File(file.getPath() + ".xml");
 			}
-			savePersonDataToFile(file, null, model.applicationTitle);
+			savePersonDataToFile(file, model.realPresentationModels, model.applicationTitle);
 		}
 	}
 

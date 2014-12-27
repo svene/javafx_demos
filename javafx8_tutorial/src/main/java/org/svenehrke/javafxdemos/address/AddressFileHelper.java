@@ -9,6 +9,7 @@ import org.svenehrke.javafxdemos.address.model.PersonListWrapper;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 public class AddressFileHelper {
@@ -30,8 +31,9 @@ public class AddressFileHelper {
 			System.out.println("file.getAbsolutePath() = " + file.getAbsolutePath());
 			PersonListWrapper wrapper = (PersonListWrapper) um.unmarshal(file);
 
-			people.clear();
-			people.addAll(wrapper.getPersons());
+//			people.clear();
+			List<Person> persons = wrapper.getPersons();
+			people.addAll(persons);
 
 			// Save the file path to the registry.
 			setPersonFilePath(file, applicationTitle);
