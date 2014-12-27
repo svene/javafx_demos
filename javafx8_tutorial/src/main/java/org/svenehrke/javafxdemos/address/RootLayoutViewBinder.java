@@ -8,9 +8,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.model.Person;
-import org.svenehrke.javafxdemos.address.model.PersonAPI;
 import org.svenehrke.javafxdemos.address.model.PersonListWrapper;
-import org.svenehrke.javafxdemos.address.util.DateUtil;
+import org.svenehrke.javafxdemos.address.model.Persons;
 import org.svenehrke.javafxdemos.infra.ModelStore;
 import org.svenehrke.javafxdemos.infra.PresentationModel;
 import org.svenehrke.javafxdemos.infra.ViewAndRoot;
@@ -83,7 +82,7 @@ public class RootLayoutViewBinder {
 
 			// Wrapping our person data.
 			PersonListWrapper wrapper = new PersonListWrapper();
-			List<Person> people = pms.stream().map(RootLayoutViewBinder::fromPM).collect(toList());
+			List<Person> people = pms.stream().map(Persons::fromPM).collect(toList());
 			wrapper.setPersons(people);
 
 			// Marshalling and saving XML to the file.
@@ -97,18 +96,6 @@ public class RootLayoutViewBinder {
 				.masthead("Could not save data to file:\n" + file.getPath())
 				.showException(e);
 		}
-	}
-
-	public static Person fromPM(PresentationModel pm) {
-		Person person = new Person();
-		person.setId(pm.getId()); // todo: should PM-id and Entity-ID correspond or should PM have something like a persistentId ?
-		person.setFirstName(pm.getAttribute(PersonAPI.ATT_FIRST_NAME).getValue());
-		person.setLastName(pm.getAttribute(PersonAPI.ATT_LAST_NAME).getValue());
-		person.setStreet(pm.getAttribute(PersonAPI.ATT_STREET).getValue());
-		person.setPostalCode(Integer.parseInt(pm.getAttribute(PersonAPI.ATT_POSTAL_CODE).getValue()));
-		person.setCity(pm.getAttribute(PersonAPI.ATT_CITY).getValue());
-		person.setBirthday(DateUtil.parse((pm.getAttribute(PersonAPI.ATT_BIRTHDAY).getValue())));
-		return person;
 	}
 
 	/**

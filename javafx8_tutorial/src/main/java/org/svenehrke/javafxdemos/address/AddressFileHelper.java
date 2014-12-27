@@ -2,18 +2,12 @@ package org.svenehrke.javafxdemos.address;
 
 import javafx.beans.property.StringProperty;
 import org.controlsfx.dialog.Dialogs;
-import org.svenehrke.javafxdemos.address.model.Person;
-import org.svenehrke.javafxdemos.address.model.PersonAPI;
-import org.svenehrke.javafxdemos.address.model.PersonListWrapper;
-import org.svenehrke.javafxdemos.address.model.SampleData;
-import org.svenehrke.javafxdemos.address.util.DateUtil;
-import org.svenehrke.javafxdemos.infra.Attribute;
+import org.svenehrke.javafxdemos.address.model.*;
 import org.svenehrke.javafxdemos.infra.ModelStore;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
-import java.util.List;
 import java.util.prefs.Preferences;
 
 public class AddressFileHelper {
@@ -36,11 +30,7 @@ public class AddressFileHelper {
 			System.out.println("file.getAbsolutePath() = " + file.getAbsolutePath());
 			PersonListWrapper wrapper = (PersonListWrapper) um.unmarshal(file);
 
-			List<Person> persons = wrapper.getPersons();
-			persons.forEach(p -> {
-				Attribute[] attributes = SampleData.attributes(modelStore, p.getId(), p.getFirstName(), p.getLastName(), p.getStreet(), String.valueOf(p.getPostalCode()), p.getCity(), DateUtil.format(p.getBirthday()));
-				modelStore.newPresentationModel(p.getId(), PersonAPI.TYPE_PERSON, attributes);
-			});
+			wrapper.getPersons().forEach(p -> Persons.newPresentationModelFromPerson(modelStore, p));
 
 			// Save the file path to the registry.
 			setPersonFilePath(file, applicationTitle);

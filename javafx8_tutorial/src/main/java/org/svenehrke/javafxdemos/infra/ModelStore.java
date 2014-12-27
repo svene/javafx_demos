@@ -31,7 +31,7 @@ public class ModelStore {
 		return result;
 	}
 
-	public Attribute newAttribute(String value, String propertyName, String qualifier) {
+	public Attribute newAttribute(String propertyName, String value, String qualifier) {
 		Attribute result = new Attribute(value, propertyName, qualifier);
 		attributesPerQualifier.putIfAbsent(qualifier, new ArrayList<>());
 		attributesPerQualifier.get(qualifier).add(result);
