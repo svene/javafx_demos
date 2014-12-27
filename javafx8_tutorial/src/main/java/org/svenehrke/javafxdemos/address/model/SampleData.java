@@ -20,11 +20,10 @@ public class SampleData {
 		result.add(presentationModel(modelStore, "pm7", "Anna", "Best"));
 		result.add(presentationModel(modelStore, "pm8", "Stefan", "Meier"));
 		result.add(presentationModel(modelStore, "pm9", "Martin", "Mueller"));
-		result.forEach(pm -> pm.setType(PersonAPI.TYPE_PERSON));
 	}
 
 	public static PresentationModel presentationModel(ModelStore modelStore, String pm1, String firstName, String lastName) {
-		return modelStore.newPresentationModel(pm1, attributes(modelStore, pm1, firstName, lastName));
+		return modelStore.newPresentationModel(pm1, PersonAPI.TYPE_PERSON, attributes(modelStore, pm1, firstName, lastName));
 	}
 
 	public static Attribute[] attributes(ModelStore modelStore, String pmId, String firstname, String lastname) {

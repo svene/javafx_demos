@@ -62,7 +62,7 @@ public class Main extends Application {
 	private void showPersonOverview(BorderPane rootLayout, Model model) {
 		final ViewAndRoot<PersonDetailsView, Pane> cr = FXMLLoader2.loadFXML("/PersonDetails.fxml");
 		PersonDetailsView personDetailsView = cr.getView();
-		PersonDetailsViewBinder.bindView(personDetailsView, model, modelStore);
+		PersonDetailsViewBinder.bindView(personDetailsView, model);
 		rootLayout.setCenter(cr.getRoot());
 	}
 

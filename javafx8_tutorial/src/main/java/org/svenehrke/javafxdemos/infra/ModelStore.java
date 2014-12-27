@@ -2,7 +2,6 @@ package org.svenehrke.javafxdemos.infra;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.svenehrke.javafxdemos.address.model.SampleData;
 
 import java.util.*;
 
@@ -23,12 +22,9 @@ public class ModelStore {
 		attributesPerQualifier.clear();
 	}
 
-	public PresentationModel newEmptyPerson() {
-		return newPresentationModel(newId(), SampleData.attributes(this, newId(), "", ""));
-	}
-
-	public PresentationModel newPresentationModel(String id, Attribute...attributes) {
+	public PresentationModel newPresentationModel(String id, String type, Attribute... attributes) {
 		PresentationModel result = new PresentationModel(id, attributes);
+		result.setType(type);
 		presentationModels.add(result);
 		presentationModelsById.put(id, result);
 		return result;

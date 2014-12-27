@@ -1,22 +1,19 @@
 package org.svenehrke.javafxdemos.address;
 
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import org.controlsfx.dialog.Dialogs;
 import org.svenehrke.javafxdemos.address.model.PersonAPI;
-import org.svenehrke.javafxdemos.infra.ModelStore;
 import org.svenehrke.javafxdemos.infra.ObservableLists;
 import org.svenehrke.javafxdemos.infra.PresentationModel;
 
 public class PersonDetailsViewBinder {
 
-	public static void bindView(PersonDetailsView view, Model model, ModelStore modelStore) {
+	public static void bindView(PersonDetailsView view, Model model) {
 		// Initialize the person table with the two columns.
 		view.firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().getAttribute(PersonAPI.ATT_FIRST_NAME).getValueProperty());
 		view.lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().getAttribute(PersonAPI.ATT_LAST_NAME).getValueProperty());
 
 		view.newButton.setOnAction(event -> {
-			handleNewPerson(model, modelStore);
+			handleNewPerson(model);
 			view.personTable.requestFocus();
 		});
 		view.editButton.setOnAction(event -> handleEditPerson(model) );
@@ -43,8 +40,8 @@ public class PersonDetailsViewBinder {
 		});
 	}
 
-	private static void handleNewPerson(Model model, ModelStore modelStore) {
-		model.workPerson.populateFromPresentationModel(modelStore.newEmptyPerson(), false);
+	private static void handleNewPerson(Model model) {
+		model.workPerson.populateFromPresentationModel(model.emptyPerson, false);
 		model.editModeProperty.setValue(Model.EditMode.NEW);
 		PersonDialogs.showPersonDialog(model);
 	}

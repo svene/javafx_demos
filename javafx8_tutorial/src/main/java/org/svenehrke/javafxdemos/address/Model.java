@@ -24,7 +24,7 @@ public class Model {
 	public final StringProperty selectedPmId = new SimpleStringProperty();
 
 	public final PresentationModel currentPerson;
-	public final PresentationModel workPerson;
+	public final PresentationModel workPerson, emptyPerson;
 	public final BooleanProperty okButtonClicked = new SimpleBooleanProperty();
 	private final BooleanProperty editOkButtonClicked = new SimpleBooleanProperty();
 	private final BooleanProperty newOkButtonClicked = new SimpleBooleanProperty();
@@ -45,8 +45,9 @@ public class Model {
 		Bindings.bindContent(personPresentationModels, modelStore.allPresentationModels());
 		realPresentationModels = new FilteredList<>(personPresentationModels, pm -> PersonAPI.TYPE_PERSON.equals(pm.getType()));
 
-		currentPerson = modelStore.newPresentationModel("current", SampleData.attributes(modelStore, "current", "", ""));
-		workPerson = modelStore.newPresentationModel("work", SampleData.attributes(modelStore, "work", "", ""));
+		emptyPerson = modelStore.newPresentationModel("empty", PersonAPI.TYPE_TECHNICAL_PERSON, SampleData.attributes(modelStore, "empty", "", ""));
+		currentPerson = modelStore.newPresentationModel("current", PersonAPI.TYPE_TECHNICAL_PERSON, SampleData.attributes(modelStore, "current", "", ""));
+		workPerson = modelStore.newPresentationModel("work", PersonAPI.TYPE_TECHNICAL_PERSON, SampleData.attributes(modelStore, "work", "", ""));
 
 		// Update 'currentPerson', e.g. when table selection changes:
 		selectedPmId.addListener((s, o, n) -> {
@@ -69,7 +70,6 @@ public class Model {
 		ImpulseListeners.addImpulseListener(newOkButtonClicked, () -> {
 			PresentationModel pm = SampleData.presentationModel(modelStore, ModelStore.newId(), "", "");
 			pm.populateFromPresentationModel(workPerson, false);
-			pm.setType(PersonAPI.TYPE_PERSON);
 			selectedPmId.setValue(pm.getId());
 		});
 
