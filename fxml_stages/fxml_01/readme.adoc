@@ -1,7 +1,6 @@
 = JavaFX fxml Files
 
 The examples in this project demonstrate several different ways to use fxml files.
-At the end it becomes clear why Adam Bien's mini framework http://afterburner.adam-bien.com/[afterburner.fx] makes sense in addition to fxml.
 
 == Example 1
 
@@ -70,3 +69,6 @@ So first the controller is created, then its prefix is set to _Good morning_ and
 
 So now it becomes clear that at this point we could use a general dependency injection mechanism for the controller. And this is exactly what
 Adam Bien's mini framework http://afterburner.adam-bien.com/[afterburner.fx] is for.
+
+== Example 4
+
