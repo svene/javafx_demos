@@ -27,6 +27,6 @@ public class GreetPresenter implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		nameTextField.setText("Duke");
-		greetingButton.setOnAction(event -> greetingLabel.setText(String.format("GreetController2: %s %s", prefix, nameTextField.getText())) );
+		greetingButton.setOnAction(event -> greetingLabel.setText(String.format("%s %s", prefix, nameTextField.getText())) );
 	}
 }
