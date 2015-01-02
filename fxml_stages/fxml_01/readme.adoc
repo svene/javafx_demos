@@ -74,9 +74,10 @@ You can find a variant of this Greeting Application using afterburner.fx here: h
 
 == Think about it
 
-It is very easy to end up with the situation in Example 3. When a new GUI is created from scratch it all starts very seductively with the fact that we want to
-see something happen quickly, for example when we click a button (step 1):
+It is very easy to end up with the situation in Example 3. When a new GUI is created from scratch it all starts with the fact that we want to
+see something happen quickly, for example when we click a button:
 [source,java]
+.Step 1
 ----
 greetingButton.setOnAction(event -> System.out.println("button pressed");
 ----
@@ -98,31 +99,33 @@ greetingButton.setOnAction(event -> greetingLabel.setText("Hello " + nameTextFie
 And then it would be great if we could somehow pass in the greeting prefix ("Hello") from outside so that it can easily be changed to "Good morning" for example:
 
 [source,java]
-.GreetController3.java
 ----
-greetingButton.setOnAction(event -> greetingLabel.setText(String.format("GreetController2: %s %s", prefix, nameTextField.getText())) );
+greetingButton.setOnAction(event -> greetingLabel.setText(
+  String.format("GreetController2: %s %s", prefix, nameTextField.getText()))
+);
 ----
 
-This means the view needs to provide a means that code which uses the view can pass in the prefix.
-With more complex views you need to pass more and more information into the view. This can be somehow alleviated by passing in a model holding the information the view needs. Using DI can even
+This means the view needs to provide a means that client code can pass in the prefix.
+The more complex the view becomes the more information needs to be passed into the view. This can be somehow alleviated by passing in a model holding the information the view needs. Using DI can even
 eliminate this. But then there is still the behavior (the code handling a button click for example) mixed into the view and it all becomes very complex and messy. This also leads to an increasing number
 of dependencies from the view to other parts of our application. So in summary the most important disadvantages of this approach are:
 
 * Initialization of the view and dependency injection of the right things at the right time can become difficult
-* With an increasing number of widgets the more dependent the view becomes upon non GUI related things
-* The coupling between view and behaviour becomes very tight and entangled
+* With an increasing number of widgets the the view becomes more and more dependent upon non GUI related things
+* The coupling between view and behaviour becomes very entangled
 
-In my opinion the approach starting with step 1 is a huge seductive trap and many applications fall into it because it seems to be the obvious way to take.
+Although it works and some of the issues might be a matter of taste in my opinion the approach starting with step 1 is a huge seductive trap and many applications fall into it because
+it seems to be the obvious way to take.
 
-But an alternative way: keep the view to an absolute minimum in the sense of a http://martinfowler.com/eaaDev/PassiveScreen.html[_Passive View_].
-The next example demonstrates how this is done.
+Personally I prefer and recommend the following alternative approach: keep the view to an absolute minimum in the sense of a http://martinfowler.com/eaaDev/PassiveScreen.html[_Passive View_].
+The next section demonstrates how this is done with our example.
 
 == Example 4
 
-A passive view version kept to the absolute minimum for our example looks as follows:
+A _Passive View_ version kept to the absolute minimum for our example looks as follows:
 
 [source,java]
-.GreetView4
+.GreetView4.java
 ----
 public class GreetView4 {
 
@@ -140,7 +143,7 @@ public class GreetView4 {
 To bind behavior and state to the view a so called _ViewBinder_ is used:
 
 [source,java]
-.ViewBinder4
+.ViewBinder4.java
 ----
 public class ViewBinder4 {
   public void bind(GreetView4 view, Context4 context) {
@@ -155,7 +158,7 @@ public class ViewBinder4 {
 
 Initialization is easy:
 [source,java]
-.Main4
+.Main4.java
 ----
 ...
   @Override
@@ -177,7 +180,9 @@ Initialization is easy:
 ...
 ----
 
-Taking this approach the disadvantages with the previous approach are eliminated. Also notice that we do not need a _ControllerFactory_ and no injection into the view anymore.
+Taking this approach the disadvantages with the previous approach are gone. Also notice that we do not need a _ControllerFactory_ and no injection into the view anymore. Note that this approach is
+not restricted to cases where you use fxml. For me it makes perfect sense for programmatically built views as well.
+
 
 === Terms
 The _View_ (Greetview4) is the JavaFX Scenebuilder Controller. Since it does not control anything anymore _View_ makes more sense to me.
