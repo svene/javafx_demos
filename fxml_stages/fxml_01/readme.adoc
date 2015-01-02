@@ -70,5 +70,116 @@ So first the controller is created, then its prefix is set to _Good morning_ and
 So now it becomes clear that at this point we could use a general dependency injection mechanism for the controller. And this is exactly what
 Adam Bien's mini framework http://afterburner.adam-bien.com/[afterburner.fx] is for.
 
+You can find a variant of this Greeting Application using afterburner.fx here: https://github.com/svene/javafx_demos/tree/master/fxml_stages/fxml_02
+
+== Think about it
+
+It is very easy to end up with the situation in Example 3. When a new GUI is created from scratch it all starts very seductively with the fact that we want to
+see something happen quickly, for example when we click a button (step 1):
+[source,java]
+----
+greetingButton.setOnAction(event -> System.out.println("button pressed");
+----
+
+We are happy because it is working. But printing static text is not really the goal. So the next step is to take the TextField into account:
+
+[source,java]
+----
+greetingButton.setOnAction(event -> System.out.println("Hello " + nameTextField.getText());
+----
+
+Great it is working! But printing to the console is not what we want so let us add a label which displays the text:
+
+[source,java]
+----
+greetingButton.setOnAction(event -> greetingLabel.setText("Hello " + nameTextField.getText());
+----
+
+And then it would be great if we could somehow pass in the greeting prefix ("Hello") from outside so that it can easily be changed to "Good morning" for example:
+
+[source,java]
+.GreetController3.java
+----
+greetingButton.setOnAction(event -> greetingLabel.setText(String.format("GreetController2: %s %s", prefix, nameTextField.getText())) );
+----
+
+This means the view needs to provide a means that code which uses the view can pass in the prefix.
+With more complex views you need to pass more and more information into the view. This can be somehow alleviated by passing in a model holding the information the view needs. Using DI can even
+eliminate this. But then there is still the behavior (the code handling a button click for example) mixed into the view and it all becomes very complex and messy. This also leads to an increasing number
+of dependencies from the view to other parts of our application. So in summary the most important disadvantages of this approach are:
+
+* Initialization of the view and dependency injection of the right things at the right time can become difficult
+* With an increasing number of widgets the more dependent the view becomes upon non GUI related things
+* The coupling between view and behaviour becomes very tight and entangled
+
+In my opinion the approach starting with step 1 is a huge seductive trap and many applications fall into it because it seems to be the obvious way to take.
+
+But an alternative way: keep the view to an absolute minimum in the sense of a http://martinfowler.com/eaaDev/PassiveScreen.html[_Passive View_].
+The next example demonstrates how this is done.
+
 == Example 4
+
+A passive view version kept to the absolute minimum for our example looks as follows:
+
+[source,java]
+.GreetView4
+----
+public class GreetView4 {
+
+  @FXML
+  Button greetingButton;
+
+  @FXML
+  TextField nameTextField;
+
+  @FXML
+  Label greetingLabel;
+}
+----
+
+To bind behavior and state to the view a so called _ViewBinder_ is used:
+
+[source,java]
+.ViewBinder4
+----
+public class ViewBinder4 {
+  public void bind(GreetView4 view, Context4 context) {
+    view.nameTextField.textProperty().bindBidirectional(context.name);
+    view.greetingLabel.textProperty().bind(context.greeting);
+    view.greetingButton.setOnAction(event -> {
+      context.greeting.setValue(String.format("%s %s", context.prefix.getValue(), context.name.getValue()));
+    } );
+  }
+}
+----
+
+Initialization is easy:
+[source,java]
+.Main4
+----
+...
+  @Override
+  public void start(Stage primaryStage) throws Exception {
+    Context4 context = new Context4();
+    context.prefix.setValue("Good morning");
+    context.name.setValue("Duke");
+
+    FXMLLoader loader = new FXMLLoader(Main4.class.getResource("/greet4.fxml"));
+    Pane pane = loader.load();
+    GreetView4 view = loader.getController();
+
+    new ViewBinder4().bind(view, context);
+
+    Scene scene = new Scene(pane);
+    primaryStage.setScene(scene);
+    primaryStage.setTitle("Greet 4 FXML");
+    primaryStage.show();
+...
+----
+
+Taking this approach the disadvantages with the previous approach are eliminated. Also notice that we do not need a _ControllerFactory_ and no injection into the view anymore.
+
+=== Terms
+The _View_ (Greetview4) is the JavaFX Scenebuilder Controller. Since it does not control anything anymore _View_ makes more sense to me.
+_ViewBinder_ corresponds to _Controller_ in the _Passive View_ pattern but since it binds state and behavior to widgets and does not control anything itself _ViewBinder_ sounds better to me.
 
