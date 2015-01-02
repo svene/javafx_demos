@@ -27,7 +27,8 @@ public class Main4 extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		try {
 			Context4 context = new Context4();
-			context.prefix = "Good morning";
+			context.prefix.setValue("Good morning");
+			context.name.setValue("Duke");
 
 			FXMLLoader loader = new FXMLLoader(Main4.class.getResource("/greet4.fxml"));
 			Pane pane = loader.load();
