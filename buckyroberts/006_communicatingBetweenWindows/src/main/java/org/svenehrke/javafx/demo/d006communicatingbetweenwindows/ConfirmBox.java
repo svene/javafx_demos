@@ -6,12 +6,11 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.geometry.*;
 
+import java.util.function.Consumer;
+
 public class ConfirmBox {
 
-	//Create variable
-	static boolean answer;
-
-	public static boolean display(String title, String message) {
+	public static void display(String title, String message, Consumer<Boolean> consumer) {
 		Stage window = new Stage();
 		window.initModality(Modality.APPLICATION_MODAL);
 		window.setTitle(title);
@@ -25,11 +24,11 @@ public class ConfirmBox {
 
 		//Clicking will set answer and close window
 		yesButton.setOnAction(e -> {
-			answer = true;
+			consumer.accept(Boolean.TRUE);
 			window.close();
 		});
 		noButton.setOnAction(e -> {
-			answer = false;
+			consumer.accept(Boolean.FALSE);
 			window.close();
 		});
 
@@ -41,9 +40,6 @@ public class ConfirmBox {
 		Scene scene = new Scene(layout);
 		window.setScene(scene);
 		window.showAndWait();
-
-		//Make sure to return answer
-		return answer;
 	}
 
 }

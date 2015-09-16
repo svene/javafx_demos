@@ -22,8 +22,7 @@ public class Main extends Application {
 		button = new Button("Click Me");
 
 		button.setOnAction(e -> {
-			boolean result = ConfirmBox.display("Title of Window", "Are you sure you want to send that pic?");
-			System.out.println(result);
+			ConfirmBox.display("Title of Window", "Are you sure you want to send that pic?", b -> System.out.println("result: " + b));
 		});
 
 		StackPane layout = new StackPane();
