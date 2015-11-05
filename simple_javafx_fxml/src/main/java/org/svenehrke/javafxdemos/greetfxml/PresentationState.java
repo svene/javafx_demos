@@ -8,7 +8,7 @@ public class PresentationState {
 	public StringProperty name = new SimpleStringProperty();
 	public StringProperty greeting = new SimpleStringProperty();
 
-	public void setupBinding() {
+	public void initBinding() {
 	}
 
 	public void initData() {

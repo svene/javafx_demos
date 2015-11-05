@@ -14,18 +14,18 @@ public class GUIBinder {
 	}
 
 	void bindAndInitialize() {
-		presentationState.setupBinding();
-		setupWidgetBinding();
-		setupActionListeners();
+		presentationState.initBinding();
+		initWidgetBinding();
+		initActionHandlers();
 		presentationState.initData();
 	}
 
-	private void setupWidgetBinding() {
+	private void initWidgetBinding() {
 		JavaFxWidgetBindings.bindTextField(controller.nameTextField, presentationState.name);
 		JavaFxWidgetBindings.bindLabel(controller.greetingLabel, presentationState.greeting);
 	}
 
-	private void setupActionListeners() {
+	private void initActionHandlers() {
 		JavaFxWidgetBindings.bindButton(controller.greetingButton, ActionHandlers.greetHandler(presentationState));
 	}
 }

@@ -10,7 +10,7 @@ public class PresentationStateTest {
 	@Test
 	public void test1() throws Exception {
 		PresentationState presentationState = new PresentationState();
-		presentationState.setupBinding();
+		presentationState.initBinding();
 
 		assertEquals(null, presentationState.greeting.getValue());
 
