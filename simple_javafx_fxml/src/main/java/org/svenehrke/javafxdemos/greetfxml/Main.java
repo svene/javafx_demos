@@ -12,10 +12,10 @@ public class Main extends Application {
 
 	private final Logger logger = Logger.getLogger(Main.class.getName());
 
-	private static ApplicationConfig applicationConfig;
+	private static ApplicationSupporter applicationSupporter;
 
 	public static void main(String[] args) {
-		Main.applicationConfig = new ApplicationConfig("/greet.fxml", "bundles.app");
+		Main.applicationSupporter = new ApplicationSupporter("/greet.fxml", "bundles.app");
 		Application.launch(Main.class, args);
 	}
 
@@ -30,7 +30,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {
-			FXMLLoader loader = new FXMLLoader(applicationConfig.fxmlUrl(), applicationConfig.resources());
+			FXMLLoader loader = new FXMLLoader(applicationSupporter.fxmlUrl(), applicationSupporter.resources());
 			loader.load();
 			new GUIBinder(loader.getController(), new PresentationState()).bindAndInitialize();
 

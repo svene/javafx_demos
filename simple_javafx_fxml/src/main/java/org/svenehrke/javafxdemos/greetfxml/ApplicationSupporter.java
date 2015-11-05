@@ -5,18 +5,18 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-public class ApplicationConfig {
+public class ApplicationSupporter {
 
 	private final String fxmlUrl;
 	private final String resourceBundleName;
 
-	public ApplicationConfig(String fxmlUrl, String resourceBundleName) {
+	public ApplicationSupporter(String fxmlUrl, String resourceBundleName) {
 		this.fxmlUrl = fxmlUrl;
 		this.resourceBundleName = resourceBundleName;
 	}
 
 	URL fxmlUrl() {
-		return ApplicationConfig.class.getResource(fxmlUrl);
+		return ApplicationSupporter.class.getResource(fxmlUrl);
 	}
 
 	ResourceBundle resources() {
