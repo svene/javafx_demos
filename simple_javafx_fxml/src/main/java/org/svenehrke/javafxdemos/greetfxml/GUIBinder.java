@@ -16,12 +16,16 @@ public class GUIBinder {
 	void bindAndInitialize() {
 		presentationState.setupBinding();
 		setupWidgetBinding();
+		setupActionListeners();
 		presentationState.initData();
 	}
 
 	private void setupWidgetBinding() {
 		JavaFxWidgetBindings.bindTextField(controller.nameTextField, presentationState.name);
 		JavaFxWidgetBindings.bindLabel(controller.greetingLabel, presentationState.greeting);
-		JavaFxWidgetBindings.bindButton(controller.greetingButton, presentationState.greetTrigger);
+	}
+
+	private void setupActionListeners() {
+		JavaFxWidgetBindings.bindButton(controller.greetingButton, ActionHandlers.greetHandler(presentationState));
 	}
 }
