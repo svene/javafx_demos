@@ -17,10 +17,10 @@ public class JavaFxWidgetBindings {
 
 	}
 	public static void bindButton(Button button, InvalidationListener invalidationListener) {
-		button.setOnAction(event -> trigger(invalidationListener));
+		button.setOnAction(event -> triggerAction(invalidationListener));
 	}
 
-	public static void trigger(InvalidationListener invalidationListener) {
+	public static void triggerAction(InvalidationListener invalidationListener) {
 		invalidationListener.invalidated(null);
 	}
 }

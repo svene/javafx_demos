@@ -17,7 +17,7 @@ public class PresentationStateTest {
 		presentationState.name.setValue("Duke");
 		assertEquals(null, presentationState.greeting.getValue());
 
-		JavaFxWidgetBindings.trigger(ActionHandlers.greetHandler(presentationState));
+		JavaFxWidgetBindings.triggerAction(ActionHandlers.greetHandler(presentationState));
 
 		assertEquals("Hello Duke", presentationState.greeting.getValue());
 	}
