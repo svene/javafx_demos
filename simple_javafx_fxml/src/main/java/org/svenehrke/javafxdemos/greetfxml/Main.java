@@ -2,7 +2,6 @@ package org.svenehrke.javafxdemos.greetfxml;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -16,7 +15,7 @@ public class Main extends Application {
 	private static ApplicationConfig applicationConfig;
 
 	public static void main(String[] args) {
-		Main.applicationConfig = new ApplicationConfig();
+		Main.applicationConfig = new ApplicationConfig("/greet.fxml", "bundles.app");
 		Application.launch(Main.class, args);
 	}
 
@@ -31,14 +30,11 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {
-			FXMLLoader loader = new FXMLLoader(applicationConfig.fxmlUrlSupplier().get(), applicationConfig.resources().get());
+			FXMLLoader loader = new FXMLLoader(applicationConfig.fxmlUrl(), applicationConfig.resources());
 			loader.load();
-			Parent parent = loader.getRoot();
-
-			applicationConfig.binder().accept(loader);
 			new GUIBinder(loader.getController(), new PresentationState()).bindAndInitialize();
 
-			Scene scene = new Scene(parent);
+			Scene scene = new Scene(loader.getRoot());
 			scene.getStylesheets().add(getClass().getResource("/app.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.setTitle(loader.getResources().getString("title"));
