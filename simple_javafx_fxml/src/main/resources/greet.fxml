@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.svenehrke.javafxdemos.greetfxml.GreetController">
+   <children>
+      <VBox alignment="CENTER_LEFT" layoutX="58.0" layoutY="28.0" prefHeight="133.0" prefWidth="249.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <TextField fx:id="nameTextField" />
+            <Button fx:id="greetingButton" mnemonicParsing="false" text="Greet" />
+            <Label fx:id="greetingLabel" text="some text" />
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>
