@@ -8,8 +8,8 @@ public class GUIBinder {
 	private final GreetController controller;
 	private final PresentationState presentationState;
 
-	public GUIBinder(GreetController controller, PresentationState presentationState) {
-		this.controller = controller;
+	public GUIBinder(MainController controller, PresentationState presentationState) {
+		this.controller = controller.greetController;
 		this.presentationState = presentationState;
 	}
 
