@@ -5,8 +5,8 @@ import javafx.beans.property.StringProperty;
 
 public class PresentationState {
 
-	public StringProperty name = new SimpleStringProperty();
-	public StringProperty greeting = new SimpleStringProperty();
+	public final StringProperty name = new SimpleStringProperty();
+	public final StringProperty greeting = new SimpleStringProperty();
 
 	public void initBinding() {
 	}
