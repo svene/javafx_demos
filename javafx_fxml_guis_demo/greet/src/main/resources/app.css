@@ -1,0 +1,14 @@
+.text-field:error {
+	-fx-background-color: red;
+	-fx-text-fill: white;
+}
+
+.root {
+	-fx-background-color: #008000;
+}
+
+.label {
+	-fx-text-fill: white;
+	/*-fx-wrap-text: true;*/
+}
+

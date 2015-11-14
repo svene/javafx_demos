@@ -1,0 +1,22 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'application'
+
+mainClassName = 'org.svenehrke.javafxdemos.greetfxml.Main'
+
+group='org.svenehrke.javafxdemos.greetfxml'
+version = '0.0.1'
+
+repositories {
+	mavenLocal()
+	jcenter()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+	compile 'org.svenehrke:fxmlguis:0.0.1'
+	testCompile 'junit:junit:4.10'
+}
