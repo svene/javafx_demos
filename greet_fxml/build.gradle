@@ -8,15 +8,6 @@ mainClassName = 'org.svenehrke.javafxdemos.greetfxml.Main'
 group='org.svenehrke.javafxdemos.greetfxml'
 version = '0.0.1'
 
-idea {
-	project {
-		jdkName = '1.8'
-	}
-	module {
-		downloadSources = false
-		downloadJavadoc = false
-	}
-}
 repositories {
 	mavenCentral()
 }
