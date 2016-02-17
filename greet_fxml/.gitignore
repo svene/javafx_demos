@@ -4,4 +4,6 @@ build/
 .idea/
 *.iml
 classes/
+pom.xml
+
 
